@@ -9,6 +9,7 @@ from src.srs_engine import update_card_srs
 from src.quiz import generate_input_question, generate_sentence_question
 from src.models import Vocabulary
 from src.sentence_builder import check_sentence_answer, Sentence, load_sentences, get_random_sentence
+from src.search import search_vocab
 
 def get_due_vocab(vocab_list):
     today = datetime.now().strftime('%Y-%m-%d')
@@ -71,6 +72,11 @@ def run_headless(args):
             "streak": profile.streak
         }
         print(json.dumps(stats))
+        return
+
+    if hasattr(args, 'search') and args.search:
+        results = search_vocab(args.search, vocab)
+        print(json.dumps(results))
         return
 
     # Simple Question Selection Logic

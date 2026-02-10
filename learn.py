@@ -10,6 +10,8 @@ sys.path.append(os.path.dirname(__file__))
 
 from src.main import main as cli_main
 from src.headless import run_headless
+from src.data_manager import load_vocab
+from src.search import search_vocab
 
 def serve():
     print("Starting Japanese Learning API Server...")
@@ -21,6 +23,7 @@ if __name__ == "__main__":
     parser.add_argument("--headless", action="store_true", help="Run in headless JSON mode (one-shot)")
     parser.add_argument("--study", action="store_true", help="Run in headless study mode (fetch new items)")
     parser.add_argument("--get-stats", action="store_true", help="Get user stats in headless mode")
+    parser.add_argument("--search", help="Search term for headless mode")
 
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
@@ -29,6 +32,10 @@ if __name__ == "__main__":
 
     # Server command
     serve_parser = subparsers.add_parser("serve", help="Start the API server")
+
+    # Search command
+    search_parser = subparsers.add_parser("search", help="Search dictionary")
+    search_parser.add_argument("query", help="Word to search for")
 
     args = parser.parse_args()
 
@@ -40,6 +47,10 @@ if __name__ == "__main__":
         serve()
     elif args.command == "cli":
         cli_main()
+    elif args.command == "search":
+        vocab = load_vocab()
+        results = search_vocab(args.query, vocab)
+        print(json.dumps(results, ensure_ascii=False, indent=2))
     else:
         # Default to CLI if no command provided, for backward compatibility
         cli_main()

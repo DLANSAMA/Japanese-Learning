@@ -6,12 +6,28 @@
     "explanation": "In Japanese, the particle 'wa' (written as は) marks the topic of the sentence. 'Desu' (です) acts like 'is/am/are'.",
     "structure": "X は Y です",
     "examples": [
-      {"jp": "私は学生です", "romaji": "Watashi wa gakusei desu", "en": "I am a student"},
-      {"jp": "これはペンです", "romaji": "Kore wa pen desu", "en": "This is a pen"}
+      {
+        "jp": "私は学生です",
+        "romaji": "Watashi wa gakusei desu",
+        "en": "I am a student"
+      },
+      {
+        "jp": "これはペンです",
+        "romaji": "Kore wa pen desu",
+        "en": "This is a pen"
+      }
     ],
     "exercises": [
-      {"question": "Translate: I am a student", "answer": "watashi wa gakusei desu", "type": "translate"},
-      {"question": "Fill in the particle: Watashi _ gakusei desu", "answer": "wa", "type": "fill_blank"}
+      {
+        "question": "Translate: I am a student",
+        "answer": "watashi wa gakusei desu",
+        "type": "translate"
+      },
+      {
+        "question": "Fill in the particle: Watashi _ gakusei desu",
+        "answer": "wa",
+        "type": "fill_blank"
+      }
     ]
   },
   {
@@ -21,12 +37,152 @@
     "explanation": "The particle 'no' (の) connects two nouns, where the first modifies the second. It often works like 's in English.",
     "structure": "Noun1 の Noun2",
     "examples": [
-      {"jp": "私の本", "romaji": "Watashi no hon", "en": "My book"},
-      {"jp": "日本語の先生", "romaji": "Nihongo no sensei", "en": "Japanese teacher"}
+      {
+        "jp": "私の本",
+        "romaji": "Watashi no hon",
+        "en": "My book"
+      },
+      {
+        "jp": "日本語の先生",
+        "romaji": "Nihongo no sensei",
+        "en": "Japanese teacher"
+      }
     ],
     "exercises": [
-      {"question": "Translate: My book", "answer": "watashi no hon", "type": "translate"},
-      {"question": "Fill in the particle: Watashi _ hon", "answer": "no", "type": "fill_blank"}
+      {
+        "question": "Translate: My book",
+        "answer": "watashi no hon",
+        "type": "translate"
+      },
+      {
+        "question": "Fill in the particle: Watashi _ hon",
+        "answer": "no",
+        "type": "fill_blank"
+      }
+    ]
+  },
+  {
+    "id": "g2_object_o",
+    "title": "Object Marker (o)",
+    "description": "Indicates the direct object of an action.",
+    "explanation": "The particle 'o' (written as を) marks the object that receives the action of the verb.",
+    "structure": "Noun を Verb",
+    "examples": [
+      {
+        "jp": "りんごを食べます",
+        "romaji": "Ringo o tabemasu",
+        "en": "I eat an apple"
+      },
+      {
+        "jp": "水を飲みます",
+        "romaji": "Mizu o nomimasu",
+        "en": "I drink water"
+      }
+    ],
+    "exercises": [
+      {
+        "question": "Translate: I eat an apple",
+        "answer": "ringo o tabemasu",
+        "type": "translate"
+      },
+      {
+        "question": "Fill in the particle: Mizu _ nomimasu",
+        "answer": "o",
+        "type": "fill_blank"
+      }
+    ]
+  },
+  {
+    "id": "g3_direction_ni_he",
+    "title": "Direction/Destination (ni/he)",
+    "description": "Indicates movement towards a place.",
+    "explanation": "The particles 'ni' (に) and 'he' (へ, pronounced 'e') indicate the destination of movement verbs like 'go', 'come', and 'return'.",
+    "structure": "Place に/へ Verb (Motion)",
+    "examples": [
+      {
+        "jp": "学校に行きます",
+        "romaji": "Gakkou ni ikimasu",
+        "en": "I go to school"
+      },
+      {
+        "jp": "日本へ来ました",
+        "romaji": "Nihon he kimashita",
+        "en": "I came to Japan"
+      }
+    ],
+    "exercises": [
+      {
+        "question": "Translate: I go to school",
+        "answer": "gakkou ni ikimasu",
+        "type": "translate"
+      },
+      {
+        "question": "Fill in the particle: Gakkou _ ikimasu",
+        "answer": "ni",
+        "type": "fill_blank"
+      }
+    ]
+  },
+  {
+    "id": "g4_context_tool_de",
+    "title": "Context/Tool (de)",
+    "description": "Indicates where an action takes place or the tool used.",
+    "explanation": "The particle 'de' (で) marks the location where an action occurs, or the means/tool by which an action is performed.",
+    "structure": "Place/Tool で Action",
+    "examples": [
+      {
+        "jp": "バスで行きます",
+        "romaji": "Basu de ikimasu",
+        "en": "I go by bus"
+      },
+      {
+        "jp": "図書館で勉強します",
+        "romaji": "Toshokan de benkyou shimasu",
+        "en": "I study at the library"
+      }
+    ],
+    "exercises": [
+      {
+        "question": "Translate: I go by bus",
+        "answer": "basu de ikimasu",
+        "type": "translate"
+      },
+      {
+        "question": "Fill in the particle: Toshokan _ benkyou shimasu",
+        "answer": "de",
+        "type": "fill_blank"
+      }
+    ]
+  },
+  {
+    "id": "g5_question_ka",
+    "title": "Question Particle (ka)",
+    "description": "Turns a sentence into a question.",
+    "explanation": "The particle 'ka' (か) is added to the end of a sentence to turn it into a question. It acts like a question mark.",
+    "structure": "Sentence + か",
+    "examples": [
+      {
+        "jp": "これは何ですか",
+        "romaji": "Kore wa nan desu ka",
+        "en": "What is this?"
+      },
+      {
+        "jp": "学生ですか",
+        "romaji": "Gakusei desu ka",
+        "en": "Are you a student?"
+      }
+    ],
+    "exercises": [
+      {
+        "question": "Translate: What is this?",
+        "answer": "kore wa nan desu ka",
+        "type": "translate"
+      },
+      {
+        "question": "Make it a question: Kore wa pen desu",
+        "answer": "kore wa pen desu ka",
+        "type": "transform"
+      }
     ]
   }
 ]
