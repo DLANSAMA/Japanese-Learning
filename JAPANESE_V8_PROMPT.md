@@ -4,9 +4,9 @@
 
 ## 1. The Data Source: JMdict 📖
 **Task:** Integrate `JMdict` (Open Source Japanese Dictionary).
-- **Format:** XML or simplified JSON export.
-- **Scale:** 180,000+ entries.
-- **Fields:** Kanji, Kana, Meanings, PoS (Part of Speech), Frequency Ratings (news1, ichi1).
+**Constraint:** DO NOT parse raw XML on every startup. It is too slow.
+- **Solution:** Use `jamdict` (Python library) OR download XML and convert to **SQLite** (`data/dictionary.db`) on first run.
+- **Library:** Add `jamdict` or `lxml` to requirements.
 
 ## 2. Dynamic Track Generation 🚂
 **Logic:** Instead of manually curated lists, generate lessons on the fly.
@@ -34,5 +34,10 @@
     - Automatically convert dictionary entries -> `Vocabulary` objects.
     - Save to `vocab.json`.
 
-## 5. Result
-The app never runs out of content. It generates a personalized textbook forever.
+## 6. Housekeeping 🧹
+- **GitIgnore:** Update `.gitignore` to exclude:
+  - `data/user.json` (User progress should be local only).
+  - `data/*.db` (Dictionary database).
+  - `data/*.xml` (Raw dictionary files).
+  - `__pycache__/`
+  - `venv/`
