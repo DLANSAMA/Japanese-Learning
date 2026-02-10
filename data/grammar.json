@@ -1,0 +1,32 @@
+[
+  {
+    "id": "g1_basic_wa_desu",
+    "title": "X is Y (wa/desu)",
+    "description": "The topic marker 'wa' and the copula 'desu'.",
+    "explanation": "In Japanese, the particle 'wa' (written as は) marks the topic of the sentence. 'Desu' (です) acts like 'is/am/are'.",
+    "structure": "X は Y です",
+    "examples": [
+      {"jp": "私は学生です", "romaji": "Watashi wa gakusei desu", "en": "I am a student"},
+      {"jp": "これはペンです", "romaji": "Kore wa pen desu", "en": "This is a pen"}
+    ],
+    "exercises": [
+      {"question": "Translate: I am a student", "answer": "watashi wa gakusei desu", "type": "translate"},
+      {"question": "Fill in the particle: Watashi _ gakusei desu", "answer": "wa", "type": "fill_blank"}
+    ]
+  },
+  {
+    "id": "g2_possessive_no",
+    "title": "Possessive Particle (no)",
+    "description": "Indicates possession or modification.",
+    "explanation": "The particle 'no' (の) connects two nouns, where the first modifies the second. It often works like 's in English.",
+    "structure": "Noun1 の Noun2",
+    "examples": [
+      {"jp": "私の本", "romaji": "Watashi no hon", "en": "My book"},
+      {"jp": "日本語の先生", "romaji": "Nihongo no sensei", "en": "Japanese teacher"}
+    ],
+    "exercises": [
+      {"question": "Translate: My book", "answer": "watashi no hon", "type": "translate"},
+      {"question": "Fill in the particle: Watashi _ hon", "answer": "no", "type": "fill_blank"}
+    ]
+  }
+]
