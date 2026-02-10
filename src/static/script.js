@@ -43,7 +43,13 @@ async function startStudy() {
     }
 
     showView('study-view');
+    updateStudyProgress();
     showStudyCard();
+}
+
+function updateStudyProgress() {
+    const percent = (currentStudyIndex / currentStudyQueue.length) * 100;
+    document.getElementById('study-progress').style.width = `${percent}%`;
 }
 
 function showStudyCard() {
@@ -52,16 +58,25 @@ function showStudyCard() {
         returnToDashboard();
         return;
     }
+    updateStudyProgress();
 
     currentStudyItem = currentStudyQueue[currentStudyIndex];
     const container = document.getElementById('study-card-container');
+
+    // Ruby Text Logic
+    const kanji = currentStudyItem.word;
+    const reading = currentStudyItem.kana;
+
+    const frontContent = `
+        <ruby class="text-6xl font-bold mb-4 block">${kanji}<rt>${reading}</rt></ruby>
+    `;
 
     container.innerHTML = `
         <div class="flip-card" onclick="this.classList.toggle('flipped')">
             <div class="flip-card-inner">
                 <div class="flip-card-front">
-                    <div class="text-6xl font-bold mb-4">${currentStudyItem.word}</div>
-                    <div class="text-xl text-cyan-400">Click to Flip</div>
+                    ${frontContent}
+                    <div class="text-xl text-cyan-400 mt-8">Click to Flip</div>
                 </div>
                 <div class="flip-card-back">
                     <div class="text-3xl font-bold mb-2">${currentStudyItem.kana}</div>
@@ -96,7 +111,9 @@ async function startQuiz() {
 }
 
 async function loadNextQuestion() {
-    document.getElementById('quiz-feedback').textContent = '';
+    const feedback = document.getElementById('quiz-feedback');
+    feedback.textContent = '';
+    feedback.className = '';
     document.getElementById('quiz-input').value = '';
 
     const res = await fetch('/api/quiz/vocab');
@@ -110,7 +127,25 @@ async function loadNextQuestion() {
     const q = await res.json();
     currentQuizId = q.question_id;
 
-    document.getElementById('quiz-question').textContent = q.question_text;
+    // Render Question with Ruby if word data is present
+    const qEl = document.getElementById('quiz-question');
+
+    if (q.word && q.kana && q.question_text.includes(q.word)) {
+        // Replace the plain word with ruby tag in the question text
+        // Need to be careful replacing text content.
+        // If question text is "Meaning of: Word (Kana)", we want "Meaning of: <ruby>Word<rt>Kana</rt></ruby>"
+        // Backend text format: "Meaning of: Word (Kana)" or just "Word" depending on logic.
+        // Let's assume we construct it manually if we have data.
+
+        if (q.type === 'input') {
+             // Reconstruct meaningful display
+             qEl.innerHTML = `Meaning of: <ruby>${q.word}<rt>${q.kana}</rt></ruby>`;
+        } else {
+             qEl.textContent = q.question_text;
+        }
+    } else {
+        qEl.textContent = q.question_text;
+    }
 
     const inputContainer = document.getElementById('quiz-input-container');
     const optionsContainer = document.getElementById('quiz-options');
@@ -122,7 +157,7 @@ async function loadNextQuestion() {
 
         q.options.forEach(opt => {
             const btn = document.createElement('button');
-            btn.className = "p-4 bg-gray-700 hover:bg-gray-600 rounded text-xl font-bold transition";
+            btn.className = "p-4 bg-gray-700 hover:bg-gray-600 rounded text-xl font-bold transition border border-gray-600";
             btn.textContent = opt;
             btn.onclick = () => submitQuizAnswer(opt);
             optionsContainer.appendChild(btn);
@@ -130,6 +165,7 @@ async function loadNextQuestion() {
     } else {
         inputContainer.classList.remove('hidden');
         optionsContainer.classList.add('hidden');
+        document.getElementById('quiz-input').focus();
     }
 }
 
@@ -137,6 +173,8 @@ async function submitQuizAnswer(answer = null) {
     if (!answer) {
         answer = document.getElementById('quiz-input').value;
     }
+
+    const card = document.getElementById('quiz-card');
 
     const res = await fetch('/api/quiz/answer', {
         method: 'POST',
@@ -152,11 +190,16 @@ async function submitQuizAnswer(answer = null) {
 
     if (result.correct) {
         feedback.textContent = "✅ Correct! + " + result.xp_gained + " XP";
-        feedback.className = "mt-4 text-xl font-bold h-8 text-green-400";
-        playAudio(result.correct_answers[0]); // simplistic TTS trigger
+        feedback.className = "mt-4 text-xl font-bold h-8 text-green-400 animate-pulse";
+        card.classList.add('border-green-500');
+        setTimeout(() => card.classList.remove('border-green-500'), 500);
+        playAudio(result.correct_answers[0]);
     } else {
         feedback.textContent = `❌ Wrong! Answer: ${result.correct_answers[0]}`;
         feedback.className = "mt-4 text-xl font-bold h-8 text-red-400";
+        // Shake animation
+        card.classList.add('animate-shake', 'border-red-500');
+        setTimeout(() => card.classList.remove('animate-shake', 'border-red-500'), 500);
     }
 
     setTimeout(loadNextQuestion, 2000);
