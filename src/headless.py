@@ -18,6 +18,10 @@ def get_due_vocab(vocab_list):
     sorted_vocab = sorted(vocab_list, key=lambda v: v.due_date if v.due_date else "0000-00-00")
 
     for card in sorted_vocab:
+        # Exclude new items
+        if card.status == 'new':
+            continue
+
         if not card.due_date:
             due.append(card)
         elif card.due_date <= today:
@@ -59,8 +63,14 @@ def run_headless():
         if due_items:
              item = random.choice(due_items)
         else:
-             # Fallback to random review if nothing due
-             item = random.choice(vocab)
+             # Fallback to random review if nothing due, BUT avoid 'new' items
+             learned_items = [v for v in vocab if v.status != 'new']
+             if learned_items:
+                 item = random.choice(learned_items)
+             else:
+                 # If everything is new, we can't quiz. Suggest study mode.
+                 print(json.dumps({"error": "No learned vocabulary. Please use Study Mode first."}))
+                 return
 
         context = item
 

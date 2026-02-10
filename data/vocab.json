@@ -12,7 +12,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "learning"
   },
   {
     "word": "青",
@@ -27,7 +28,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "learning"
   },
   {
     "word": "食べる",
@@ -42,7 +44,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "learning"
   },
   {
     "word": "銀行",
@@ -57,7 +60,8 @@
     ],
     "ease_factor": 2.3,
     "interval": 1,
-    "due_date": "2026-02-11"
+    "due_date": "2026-02-11",
+    "status": "learning"
   },
   {
     "word": "先生",
@@ -72,7 +76,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "learning"
   },
   {
     "word": "飲む",
@@ -87,7 +92,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "learning"
   },
   {
     "word": "水",
@@ -102,7 +108,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "learning"
   },
   {
     "word": "待って",
@@ -117,7 +124,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "learning"
   },
   {
     "word": "了解",
@@ -132,7 +140,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "learning"
   },
   {
     "word": "おやすみなさい",
@@ -147,7 +156,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "learning"
   },
   {
     "word": "攻撃",
@@ -162,7 +172,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "learning"
   },
   {
     "word": "防御",
@@ -177,7 +188,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   },
   {
     "word": "回復",
@@ -192,7 +204,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   },
   {
     "word": "魔法",
@@ -207,7 +220,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   },
   {
     "word": "剣",
@@ -222,7 +236,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   },
   {
     "word": "盾",
@@ -237,7 +252,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   },
   {
     "word": "仲間",
@@ -252,7 +268,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   },
   {
     "word": "経験値",
@@ -267,7 +284,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   },
   {
     "word": "レベル",
@@ -282,7 +300,8 @@
     ],
     "ease_factor": 2.3,
     "interval": 1,
-    "due_date": "2026-02-11"
+    "due_date": "2026-02-11",
+    "status": "learning"
   },
   {
     "word": "クエスト",
@@ -297,7 +316,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   },
   {
     "word": "株",
@@ -312,7 +332,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   },
   {
     "word": "投資",
@@ -327,7 +348,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   },
   {
     "word": "利益",
@@ -342,7 +364,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   },
   {
     "word": "損失",
@@ -357,7 +380,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   },
   {
     "word": "買う",
@@ -372,7 +396,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   },
   {
     "word": "売る",
@@ -387,7 +412,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   },
   {
     "word": "市場",
@@ -402,7 +428,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   },
   {
     "word": "金",
@@ -417,7 +444,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "learning"
   },
   {
     "word": "円",
@@ -432,7 +460,8 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   },
   {
     "word": "ドル",
@@ -447,6 +476,7 @@
     ],
     "ease_factor": 2.5,
     "interval": 0,
-    "due_date": null
+    "due_date": null,
+    "status": "new"
   }
 ]
