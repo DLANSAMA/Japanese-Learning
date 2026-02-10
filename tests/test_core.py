@@ -34,6 +34,11 @@ class TestCore(unittest.TestCase):
         p = UserProfile()
         self.assertTrue(p.settings.show_furigana)
         self.assertEqual(p.settings.max_jlpt_level, 5)
+        self.assertEqual(p.settings.theme, "default")
+
+    def test_user_tracks(self):
+        p = UserProfile()
+        self.assertEqual(p.selected_track, "General")
 
 if __name__ == '__main__':
     unittest.main()

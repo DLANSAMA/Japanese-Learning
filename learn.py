@@ -19,6 +19,7 @@ def serve():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Japanese Learning App")
     parser.add_argument("--headless", action="store_true", help="Run in headless JSON mode (one-shot)")
+    parser.add_argument("--study", action="store_true", help="Use Study Mode in headless (learn new items)")
 
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
@@ -31,7 +32,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.headless:
-        run_headless()
+        mode = "study" if args.study else "quiz"
+        run_headless(mode)
         sys.exit(0)
 
     if args.command == "serve":

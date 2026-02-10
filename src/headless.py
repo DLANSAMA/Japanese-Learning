@@ -9,31 +9,57 @@ from src.srs_engine import update_card_srs
 from src.quiz import generate_input_question, generate_sentence_question
 from src.models import Vocabulary
 from src.sentence_builder import check_sentence_answer, Sentence, load_sentences, get_random_sentence
+from src.study import get_new_items, mark_as_learning
 
 def get_due_vocab(vocab_list):
     today = datetime.now().strftime('%Y-%m-%d')
     due = []
-    # Sort vocab by due date to prioritize overdue items
-    # If no due date (new item), treat as due now
     sorted_vocab = sorted(vocab_list, key=lambda v: v.due_date if v.due_date else "0000-00-00")
-
     for card in sorted_vocab:
-        # Exclude new items
         if card.status == 'new':
             continue
-
         if not card.due_date:
             due.append(card)
         elif card.due_date <= today:
             due.append(card)
     return due
 
-def run_headless():
+def run_headless_study():
+    # Headless Study Mode: Fetch new items and output them
+    vocab = load_vocab()
+    profile = load_user_profile()
+
+    # Get 1 new item for headless interaction
+    new_items = get_new_items(limit=1, track=profile.selected_track)
+
+    if not new_items:
+        print(json.dumps({"error": "No new items to learn in current track"}))
+        return
+
+    item = new_items[0]
+    # Mark as learning immediately in headless mode so next call gets next item
+    mark_as_learning(item)
+    save_vocab(vocab)
+
+    # Output Study Card JSON
+    study_data = {
+        "type": "study",
+        "word": item.word,
+        "kana": item.kana,
+        "romaji": item.romaji,
+        "meaning": item.meaning,
+        "tags": item.tags,
+        "tts_text": item.word # Requested TTS field
+    }
+    print(json.dumps(study_data))
+    sys.stdout.flush()
+    # No input expected for study mode one-shot, just acknowledgment by consumer
+
+def run_headless_quiz():
     vocab = load_vocab()
     profile = load_user_profile()
 
     # Simple Question Selection Logic
-    # 20% Chance of Sentence if sentences exist
     q_type = "vocab"
     q_data = {}
     context = None
@@ -44,12 +70,12 @@ def run_headless():
         if s:
             q_type = "sentence"
             context = s
-            # Prepare question payload
             q_data = {
                 "type": "sentence",
                 "question": f"Translate: {s.english}",
                 "hint": s.broken_down,
-                "id": f"sentence:{s.english[:10]}"
+                "id": f"sentence:{s.english[:10]}",
+                "tts_text": s.japanese
             }
 
     # Fallback to Vocab
@@ -58,29 +84,26 @@ def run_headless():
             print(json.dumps({"error": "No vocabulary data found"}))
             return
 
-        # Pick a due item
         due_items = get_due_vocab(vocab)
         if due_items:
              item = random.choice(due_items)
         else:
-             # Fallback to random review if nothing due, BUT avoid 'new' items
              learned_items = [v for v in vocab if v.status != 'new']
              if learned_items:
                  item = random.choice(learned_items)
              else:
-                 # If everything is new, we can't quiz. Suggest study mode.
                  print(json.dumps({"error": "No learned vocabulary. Please use Study Mode first."}))
                  return
 
         context = item
-
         show_furi = profile.settings.show_furigana
         display = f"{item.word} ({item.kana})" if show_furi else item.word
 
         q_data = {
             "type": "vocab",
             "question": f"Meaning of: {display}",
-            "id": f"vocab:{item.word}"
+            "id": f"vocab:{item.word}",
+            "tts_text": item.word
         }
 
     # 1. Output Question JSON
@@ -89,7 +112,6 @@ def run_headless():
 
     # 2. Wait for Input JSON
     try:
-        # Read a single line
         raw_input = sys.stdin.readline()
         if not raw_input:
             return
@@ -102,25 +124,25 @@ def run_headless():
     # 3. Validation Logic
     is_correct = False
     correct_ans_str = ""
+    tts_feedback = ""
 
     if q_type == "sentence":
         is_correct = check_sentence_answer(context, answer)
         correct_ans_str = context.romaji
+        tts_feedback = context.japanese
         if is_correct:
             profile.xp += 20
     else:
-        # Vocab
         is_correct = answer.strip().lower() == context.meaning.lower()
         correct_ans_str = context.meaning
+        tts_feedback = context.word
 
-        # SRS Update
         rating = 5 if is_correct else 0
         update_card_srs(context, rating)
         save_vocab(vocab)
 
         if is_correct:
             profile.xp += 10
-            # Simple streak update
             profile.streak += 1
 
     save_user_profile(profile)
@@ -131,6 +153,13 @@ def run_headless():
         "correct_answer": correct_ans_str,
         "xp_gained": 20 if (is_correct and q_type == "sentence") else (10 if is_correct else 0),
         "new_xp": profile.xp,
-        "new_level": profile.level
+        "new_level": profile.level,
+        "tts_text": tts_feedback if is_correct else "" # Maybe read correct answer?
     }
     print(json.dumps(result))
+
+def run_headless(mode="quiz"):
+    if mode == "study":
+        run_headless_study()
+    else:
+        run_headless_quiz()

@@ -12,11 +12,27 @@ from .models import UserProfile, Vocabulary, GrammarLesson
 
 console = Console()
 
+THEMES = {
+    "default": {"border": "blue", "title": "bold green", "highlight": "yellow"},
+    "cyberpunk": {"border": "magenta", "title": "bold cyan", "highlight": "bright_green"},
+    "zen": {"border": "white", "title": "italic white", "highlight": "dim cyan"}
+}
+
+MASCOT = r"""
+ /\_/\
+( o.o )
+ > ^ <
+"""
+
+def get_theme(theme_name: str):
+    return THEMES.get(theme_name, THEMES["default"])
+
 def clear_screen():
     console.clear()
 
 def display_dashboard(profile: UserProfile, vocab_count: int, grammar_count: int):
     clear_screen()
+    theme = get_theme(profile.settings.theme)
 
     grid = Table.grid(expand=True)
     grid.add_column(justify="center", ratio=1)
@@ -24,16 +40,24 @@ def display_dashboard(profile: UserProfile, vocab_count: int, grammar_count: int
     grid.add_column(justify="center", ratio=1)
 
     grid.add_row(
-        Panel(f"[bold cyan]{profile.level}[/bold cyan]", title="Level", border_style="cyan"),
-        Panel(f"[bold yellow]{profile.xp}[/bold yellow]", title="XP", border_style="yellow"),
-        Panel(f"[bold red]{profile.streak} Days[/bold red]", title="Streak", border_style="red")
+        Panel(f"[{theme['highlight']}]{profile.level}[/{theme['highlight']}]", title="Level", border_style=theme['border']),
+        Panel(f"[{theme['highlight']}]{profile.xp}[/{theme['highlight']}]", title="XP", border_style=theme['border']),
+        Panel(f"[{theme['highlight']}]{profile.streak} Days[/{theme['highlight']}]", title="Streak", border_style=theme['border'])
     )
 
-    console.print(Panel(
-        Align.center(f"[bold green]Welcome back, Learner![/bold green]\n\nCards Mastered: {vocab_count}\nGrammar Lessons: {grammar_count}"),
-        title="🇯🇵 Japanese Learning Hub",
-        subtitle="Keep going!"
-    ))
+    header_content = f"[{theme['title']}]Welcome back, Learner![/{theme['title']}]\n\nCards Mastered: {vocab_count}\nGrammar Lessons: {grammar_count}\n\n[dim]Track: {profile.selected_track}[/dim]"
+
+    # Add Mascot
+    mascot_panel = Panel(Align.center(MASCOT), border_style=theme['border'], width=20)
+    info_panel = Panel(Align.center(header_content), title="🇯🇵 Japanese Learning Hub", subtitle="Keep going!", border_style=theme['border'])
+
+    # Layout header with mascot
+    header_grid = Table.grid(expand=True)
+    header_grid.add_column(ratio=1)
+    header_grid.add_column(ratio=3)
+    header_grid.add_row(mascot_panel, info_panel)
+
+    console.print(header_grid)
     console.print(grid)
     console.print("\n")
 
@@ -42,11 +66,43 @@ def display_menu() -> str:
     table.add_row("[1] 👨‍🏫 Start Lesson (Study Mode)")
     table.add_row("[2] 📝 Quiz (Review Due Cards)")
     table.add_row("[3] 📖 Learn Grammar")
-    table.add_row("[4] 📊 View Stats")
+    table.add_row("[4] ⚙️ Settings (Track/Theme)")
     table.add_row("[5] ❌ Exit")
 
     console.print(table)
     return Prompt.ask("Select an option", choices=["1", "2", "3", "4", "5"], default="2")
+
+def display_settings_menu(profile: UserProfile):
+    clear_screen()
+    console.print(Panel("[bold]Settings[/bold]", border_style="blue"))
+
+    rprint(f"Current Track: [green]{profile.selected_track}[/green]")
+    rprint(f"Current Theme: [cyan]{profile.settings.theme}[/cyan]")
+    rprint("\n[1] Change Track")
+    rprint("[2] Change Theme")
+    rprint("[3] Back")
+
+    choice = Prompt.ask("Select option", choices=["1", "2", "3"])
+
+    if choice == "1":
+        rprint("\nAvailable Tracks:")
+        tracks = ["General", "Pop Culture", "Business", "Travel"]
+        for i, t in enumerate(tracks):
+            rprint(f"[{i+1}] {t}")
+        sel = Prompt.ask("Select Track", choices=[str(i+1) for i in range(len(tracks))])
+        profile.selected_track = tracks[int(sel)-1]
+        rprint(f"Track updated to {profile.selected_track}!")
+        time.sleep(1)
+
+    elif choice == "2":
+        rprint("\nAvailable Themes:")
+        themes = list(THEMES.keys())
+        for i, t in enumerate(themes):
+            rprint(f"[{i+1}] {t}")
+        sel = Prompt.ask("Select Theme", choices=[str(i+1) for i in range(len(themes))])
+        profile.settings.theme = themes[int(sel)-1]
+        rprint(f"Theme updated to {profile.settings.theme}!")
+        time.sleep(1)
 
 def display_grammar_list(lessons: list[GrammarLesson]) -> str:
     clear_screen()

@@ -41,6 +41,7 @@ class GrammarLesson:
 class UserSettings:
     show_furigana: bool = True
     max_jlpt_level: int = 5
+    theme: str = "default"
 
 @dataclass
 class UserProfile:
@@ -51,6 +52,7 @@ class UserProfile:
     hearts: int = 5
     completed_lessons: List[str] = field(default_factory=list)
     settings: UserSettings = field(default_factory=UserSettings)
+    selected_track: str = "General"
 
     def __post_init__(self):
         if isinstance(self.settings, dict):

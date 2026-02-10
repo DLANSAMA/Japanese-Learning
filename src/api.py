@@ -8,6 +8,7 @@ from .data_manager import load_vocab, save_vocab, load_user_profile, save_user_p
 from .models import Vocabulary, UserProfile
 from .quiz import generate_input_question, generate_mc_question
 from .gamification import add_xp, update_streak
+from .srs_engine import update_card_srs
 
 app = FastAPI(title="Japanese Learning API", version="1.0")
 
@@ -108,7 +109,6 @@ def submit_answer(payload: AnswerRequest):
         raise HTTPException(status_code=404, detail="Word not found")
 
     # Check Answer
-    # We need to recreate the check logic. The simple check is against meaning.
     correct_answers = [item.meaning.lower()]
     user_ans = payload.answer.strip().lower()
     is_correct = user_ans in correct_answers
@@ -119,10 +119,11 @@ def submit_answer(payload: AnswerRequest):
         item.last_review = datetime.now().strftime('%Y-%m-%d')
         xp_gained = 10
         add_xp(profile, xp_gained)
-        # TODO: Use SRS update here too
+        update_card_srs(item, 5) # Assume easy for API for now
     else:
         item.level = max(0, item.level - 1)
         item.last_review = datetime.now().strftime('%Y-%m-%d')
+        update_card_srs(item, 0)
 
     save_vocab(vocab)
     save_user_profile(profile)
