@@ -26,6 +26,10 @@ class QuizQuestionResponse(BaseModel):
     type: str
     question_text: str
     options: Optional[List[str]] = None
+    # New fields for frontend rendering
+    word: Optional[str] = None
+    kana: Optional[str] = None
+    romaji: Optional[str] = None
 
 class AnswerRequest(BaseModel):
     question_id: str
@@ -100,7 +104,10 @@ def get_vocab_question():
         question_id=qid,
         type=q.type,
         question_text=q.question_text,
-        options=q.options
+        options=q.options,
+        word=item.word,
+        kana=item.kana,
+        romaji=item.romaji
     )
 
 @app.post("/api/quiz/answer", response_model=AnswerResponse)
