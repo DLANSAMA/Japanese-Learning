@@ -13,6 +13,30 @@ class Question:
     explanation: Optional[str] = None # Shown after answer
     context: Optional[Any] = None # The Vocabulary or GrammarExercise object
 
+def generate_input_question(item: Vocabulary) -> Question:
+    return Question(
+        type="input",
+        question_text=f"What is the meaning of: {item.word} ({item.kana})?",
+        correct_answers=[item.meaning.lower()],
+        explanation=f"{item.word} ({item.kana}) means '{item.meaning}'",
+        context=item
+    )
+
+def generate_mc_question(item: Vocabulary, all_vocab: List[Vocabulary]) -> Question:
+    distractors = random.sample([v for v in all_vocab if v.word != item.word], 3)
+    options = [d.meaning for d in distractors]
+    options.append(item.meaning)
+    random.shuffle(options)
+
+    return Question(
+        type="multiple_choice",
+        question_text=f"Select the correct meaning for: {item.word}",
+        correct_answers=[item.meaning.lower()], # Check against lowercase for robustness
+        options=options,
+        explanation=f"{item.word} means '{item.meaning}'",
+        context=item
+    )
+
 class QuizSession:
     def __init__(self, items: List[Vocabulary], all_vocab: List[Vocabulary]):
         self.items = items
@@ -30,33 +54,9 @@ class QuizSession:
 
         # 50% chance of Multiple Choice if enough items exist
         if len(self.all_vocab) >= 4 and random.random() > 0.5:
-            return self._generate_mc_question(item)
+            return generate_mc_question(item, self.all_vocab)
         else:
-            return self._generate_input_question(item)
-
-    def _generate_input_question(self, item: Vocabulary) -> Question:
-        return Question(
-            type="input",
-            question_text=f"What is the meaning of: {item.word} ({item.kana})?",
-            correct_answers=[item.meaning.lower()],
-            explanation=f"{item.word} ({item.kana}) means '{item.meaning}'",
-            context=item
-        )
-
-    def _generate_mc_question(self, item: Vocabulary) -> Question:
-        distractors = random.sample([v for v in self.all_vocab if v.word != item.word], 3)
-        options = [d.meaning for d in distractors]
-        options.append(item.meaning)
-        random.shuffle(options)
-
-        return Question(
-            type="multiple_choice",
-            question_text=f"Select the correct meaning for: {item.word}",
-            correct_answers=[item.meaning.lower()], # Check against lowercase for robustness
-            options=options,
-            explanation=f"{item.word} means '{item.meaning}'",
-            context=item
-        )
+            return generate_input_question(item)
 
     def check_answer(self, question: Question, user_answer: str) -> bool:
         is_correct = user_answer.strip().lower() in [a.lower() for a in question.correct_answers]

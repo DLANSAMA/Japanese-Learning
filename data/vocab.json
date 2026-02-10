@@ -1,32 +1,362 @@
 [
-  { "word": "猫", "kana": "ねこ", "romaji": "Neko", "meaning": "Cat", "level": 1, "last_review": "2026-02-08", "tags": ["core", "animal"] },
-  { "word": "青", "kana": "あお", "romaji": "Ao", "meaning": "Blue", "level": 1, "last_review": "2026-02-05", "tags": ["core", "color"] },
-  { "word": "食べる", "kana": "たべる", "romaji": "Taberu", "meaning": "To Eat", "level": 1, "last_review": "2026-02-07", "tags": ["core", "verb"] },
-  { "word": "銀行", "kana": "ぎんこう", "romaji": "Ginkou", "meaning": "Bank", "level": 1, "last_review": "2026-02-07", "tags": ["core", "place"] },
-  { "word": "先生", "kana": "せんせい", "romaji": "Sensei", "meaning": "Teacher", "level": 1, "last_review": "2026-02-08", "tags": ["core", "person"] },
-  { "word": "飲む", "kana": "のむ", "romaji": "Nomu", "meaning": "To Drink", "level": 1, "last_review": "2026-02-07", "tags": ["core", "verb"] },
-  { "word": "水", "kana": "みず", "romaji": "Mizu", "meaning": "Water", "level": 1, "last_review": "2026-02-08", "tags": ["core", "noun"] },
-  { "word": "待って", "kana": "まって", "romaji": "Matte", "meaning": "Wait", "level": 1, "last_review": "2026-02-07", "tags": ["core", "phrase"] },
-  { "word": "了解", "kana": "りょうかい", "romaji": "Ryoukai", "meaning": "Roger", "level": 1, "last_review": "2026-02-07", "tags": ["core", "phrase"] },
-  { "word": "おやすみなさい", "kana": "おやすみなさい", "romaji": "Oyasuminasai", "meaning": "Good Night", "level": 1, "last_review": "2026-02-08", "tags": ["core", "phrase"] },
-  { "word": "攻撃", "kana": "こうげき", "romaji": "Kougeki", "meaning": "Attack", "level": 0, "last_review": null, "tags": ["rpg", "combat"] },
-  { "word": "防御", "kana": "ぼうぎょ", "romaji": "Bougyo", "meaning": "Defense", "level": 0, "last_review": null, "tags": ["rpg", "combat"] },
-  { "word": "回復", "kana": "かいふく", "romaji": "Kaifuku", "meaning": "Recovery/Heal", "level": 0, "last_review": null, "tags": ["rpg", "action"] },
-  { "word": "魔法", "kana": "まほう", "romaji": "Mahou", "meaning": "Magic", "level": 0, "last_review": null, "tags": ["rpg", "magic"] },
-  { "word": "剣", "kana": "けん", "romaji": "Ken", "meaning": "Sword", "level": 0, "last_review": null, "tags": ["rpg", "gear"] },
-  { "word": "盾", "kana": "たて", "romaji": "Tate", "meaning": "Shield", "level": 0, "last_review": null, "tags": ["rpg", "gear"] },
-  { "word": "仲間", "kana": "なかま", "romaji": "Nakama", "meaning": "Party/Comrade", "level": 0, "last_review": null, "tags": ["rpg", "social"] },
-  { "word": "経験値", "kana": "けいけんち", "romaji": "Keikenchi", "meaning": "XP/Experience", "level": 0, "last_review": null, "tags": ["rpg", "stats"] },
-  { "word": "レベル", "kana": "れべる", "romaji": "Reberu", "meaning": "Level", "level": 0, "last_review": null, "tags": ["rpg", "stats"] },
-  { "word": "クエスト", "kana": "くえすと", "romaji": "Kuesuto", "meaning": "Quest", "level": 0, "last_review": null, "tags": ["rpg", "gameplay"] },
-  { "word": "株", "kana": "かぶ", "romaji": "Kabu", "meaning": "Stock", "level": 0, "last_review": null, "tags": ["finance", "asset"] },
-  { "word": "投資", "kana": "とうし", "romaji": "Toushi", "meaning": "Investment", "level": 0, "last_review": null, "tags": ["finance", "action"] },
-  { "word": "利益", "kana": "りえき", "romaji": "Rieki", "meaning": "Profit", "level": 0, "last_review": null, "tags": ["finance", "money"] },
-  { "word": "損失", "kana": "そんしつ", "romaji": "Sonshitsu", "meaning": "Loss", "level": 0, "last_review": null, "tags": ["finance", "money"] },
-  { "word": "買う", "kana": "かう", "romaji": "Kau", "meaning": "To Buy", "level": 0, "last_review": null, "tags": ["finance", "verb"] },
-  { "word": "売る", "kana": "うる", "romaji": "Uru", "meaning": "To Sell", "level": 0, "last_review": null, "tags": ["finance", "verb"] },
-  { "word": "市場", "kana": "しじょう", "romaji": "Shijou", "meaning": "Market", "level": 0, "last_review": null, "tags": ["finance", "noun"] },
-  { "word": "金", "kana": "かね", "romaji": "Kane", "meaning": "Money/Gold", "level": 0, "last_review": null, "tags": ["finance", "noun"] },
-  { "word": "円", "kana": "えん", "romaji": "En", "meaning": "Yen", "level": 0, "last_review": null, "tags": ["finance", "currency"] },
-  { "word": "ドル", "kana": "どる", "romaji": "Doru", "meaning": "Dollar", "level": 0, "last_review": null, "tags": ["finance", "currency"] }
+  {
+    "word": "猫",
+    "kana": "ねこ",
+    "romaji": "Neko",
+    "meaning": "Cat",
+    "level": 1,
+    "last_review": "2026-02-08",
+    "tags": [
+      "core",
+      "animal"
+    ]
+  },
+  {
+    "word": "青",
+    "kana": "あお",
+    "romaji": "Ao",
+    "meaning": "Blue",
+    "level": 1,
+    "last_review": "2026-02-05",
+    "tags": [
+      "core",
+      "color"
+    ]
+  },
+  {
+    "word": "食べる",
+    "kana": "たべる",
+    "romaji": "Taberu",
+    "meaning": "To Eat",
+    "level": 1,
+    "last_review": "2026-02-07",
+    "tags": [
+      "core",
+      "verb"
+    ]
+  },
+  {
+    "word": "銀行",
+    "kana": "ぎんこう",
+    "romaji": "Ginkou",
+    "meaning": "Bank",
+    "level": 1,
+    "last_review": "2026-02-07",
+    "tags": [
+      "core",
+      "place"
+    ]
+  },
+  {
+    "word": "先生",
+    "kana": "せんせい",
+    "romaji": "Sensei",
+    "meaning": "Teacher",
+    "level": 1,
+    "last_review": "2026-02-08",
+    "tags": [
+      "core",
+      "person"
+    ]
+  },
+  {
+    "word": "飲む",
+    "kana": "のむ",
+    "romaji": "Nomu",
+    "meaning": "To Drink",
+    "level": 1,
+    "last_review": "2026-02-07",
+    "tags": [
+      "core",
+      "verb"
+    ]
+  },
+  {
+    "word": "水",
+    "kana": "みず",
+    "romaji": "Mizu",
+    "meaning": "Water",
+    "level": 1,
+    "last_review": "2026-02-08",
+    "tags": [
+      "core",
+      "noun"
+    ]
+  },
+  {
+    "word": "待って",
+    "kana": "まって",
+    "romaji": "Matte",
+    "meaning": "Wait",
+    "level": 1,
+    "last_review": "2026-02-07",
+    "tags": [
+      "core",
+      "phrase"
+    ]
+  },
+  {
+    "word": "了解",
+    "kana": "りょうかい",
+    "romaji": "Ryoukai",
+    "meaning": "Roger",
+    "level": 1,
+    "last_review": "2026-02-07",
+    "tags": [
+      "core",
+      "phrase"
+    ]
+  },
+  {
+    "word": "おやすみなさい",
+    "kana": "おやすみなさい",
+    "romaji": "Oyasuminasai",
+    "meaning": "Good Night",
+    "level": 1,
+    "last_review": "2026-02-08",
+    "tags": [
+      "core",
+      "phrase"
+    ]
+  },
+  {
+    "word": "攻撃",
+    "kana": "こうげき",
+    "romaji": "Kougeki",
+    "meaning": "Attack",
+    "level": 0,
+    "last_review": "2026-02-10",
+    "tags": [
+      "rpg",
+      "combat"
+    ]
+  },
+  {
+    "word": "防御",
+    "kana": "ぼうぎょ",
+    "romaji": "Bougyo",
+    "meaning": "Defense",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "rpg",
+      "combat"
+    ]
+  },
+  {
+    "word": "回復",
+    "kana": "かいふく",
+    "romaji": "Kaifuku",
+    "meaning": "Recovery/Heal",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "rpg",
+      "action"
+    ]
+  },
+  {
+    "word": "魔法",
+    "kana": "まほう",
+    "romaji": "Mahou",
+    "meaning": "Magic",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "rpg",
+      "magic"
+    ]
+  },
+  {
+    "word": "剣",
+    "kana": "けん",
+    "romaji": "Ken",
+    "meaning": "Sword",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "rpg",
+      "gear"
+    ]
+  },
+  {
+    "word": "盾",
+    "kana": "たて",
+    "romaji": "Tate",
+    "meaning": "Shield",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "rpg",
+      "gear"
+    ]
+  },
+  {
+    "word": "仲間",
+    "kana": "なかま",
+    "romaji": "Nakama",
+    "meaning": "Party/Comrade",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "rpg",
+      "social"
+    ]
+  },
+  {
+    "word": "経験値",
+    "kana": "けいけんち",
+    "romaji": "Keikenchi",
+    "meaning": "XP/Experience",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "rpg",
+      "stats"
+    ]
+  },
+  {
+    "word": "レベル",
+    "kana": "れべる",
+    "romaji": "Reberu",
+    "meaning": "Level",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "rpg",
+      "stats"
+    ]
+  },
+  {
+    "word": "クエスト",
+    "kana": "くえすと",
+    "romaji": "Kuesuto",
+    "meaning": "Quest",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "rpg",
+      "gameplay"
+    ]
+  },
+  {
+    "word": "株",
+    "kana": "かぶ",
+    "romaji": "Kabu",
+    "meaning": "Stock",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "finance",
+      "asset"
+    ]
+  },
+  {
+    "word": "投資",
+    "kana": "とうし",
+    "romaji": "Toushi",
+    "meaning": "Investment",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "finance",
+      "action"
+    ]
+  },
+  {
+    "word": "利益",
+    "kana": "りえき",
+    "romaji": "Rieki",
+    "meaning": "Profit",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "finance",
+      "money"
+    ]
+  },
+  {
+    "word": "損失",
+    "kana": "そんしつ",
+    "romaji": "Sonshitsu",
+    "meaning": "Loss",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "finance",
+      "money"
+    ]
+  },
+  {
+    "word": "買う",
+    "kana": "かう",
+    "romaji": "Kau",
+    "meaning": "To Buy",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "finance",
+      "verb"
+    ]
+  },
+  {
+    "word": "売る",
+    "kana": "うる",
+    "romaji": "Uru",
+    "meaning": "To Sell",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "finance",
+      "verb"
+    ]
+  },
+  {
+    "word": "市場",
+    "kana": "しじょう",
+    "romaji": "Shijou",
+    "meaning": "Market",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "finance",
+      "noun"
+    ]
+  },
+  {
+    "word": "金",
+    "kana": "かね",
+    "romaji": "Kane",
+    "meaning": "Money/Gold",
+    "level": 0,
+    "last_review": "2026-02-10",
+    "tags": [
+      "finance",
+      "noun"
+    ]
+  },
+  {
+    "word": "円",
+    "kana": "えん",
+    "romaji": "En",
+    "meaning": "Yen",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "finance",
+      "currency"
+    ]
+  },
+  {
+    "word": "ドル",
+    "kana": "どる",
+    "romaji": "Doru",
+    "meaning": "Dollar",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "finance",
+      "currency"
+    ]
+  }
 ]
