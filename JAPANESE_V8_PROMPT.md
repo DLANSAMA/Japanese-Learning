@@ -18,11 +18,12 @@
   4.  Add to User's `vocab.json`.
 
 ## 3. "Smart" Selection Algorithm 🧠
-- **General Track:** Prioritize `news1` / `ichi1` frequency flags.
-- **Business Track:** Search for `keigo`, `business`, `economics` tags.
-- **Pop Culture:** Search for `colloquial`, `slang`.
-- **Custom Interests:** Allow user to add keywords (e.g., "Cooking").
-  - App searches dictionary for "Cooking" related terms.
+- **The Golden Ratio:** 70% Core / 30% Interest.
+  - **Study Session (10 items):**
+    - 7 items from "Core" (N5 Frequency List, Grammar).
+    - 3 items from "Interest Track" (RPG, Anime, Business).
+- **Core Track:** Prioritize `news1` / `ichi1` frequency flags and JLPT N5/N4 lists.
+- **Interest Track:** Search for tags matching user preference.
 
 ## 4. Implementation Plan 🛠️
 1.  **Download Script:** `src/download_dict.py` to fetch JMdict (or a lighter `jmdict-simplified` JSON).
