@@ -12,10 +12,8 @@ def get_new_items(limit: int = 5, track: str = "General") -> List[Vocabulary]:
     # Filter by Track
     if track == "General":
         # Prioritize 'core' tags, or fallback to any
-        # Let's say General means anything OR specific core
         filtered = [v for v in new_items if 'core' in v.tags]
         if not filtered:
-             # Fallback if no core items left
              filtered = new_items
     elif track == "Pop Culture":
         filtered = [v for v in new_items if any(t in v.tags for t in ['anime', 'manga', 'game', 'rpg'])]
