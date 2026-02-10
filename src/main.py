@@ -11,7 +11,7 @@ from .ui import (
     display_dashboard, display_menu, display_grammar_list,
     display_lesson, display_question, get_user_answer,
     display_feedback, display_session_summary, clear_screen,
-    display_study_session
+    display_study_session, display_settings_menu
 )
 from .study import get_new_items, mark_as_learning
 from .migrate_data import migrate
@@ -22,6 +22,7 @@ def get_due_cards(vocab_list):
     due = []
 
     # Sort vocab by due date to prioritize overdue items
+    # If no due date (new item), treat as due now
     sorted_vocab = sorted(vocab_list, key=lambda v: v.due_date if v.due_date else "0000-00-00")
 
     for card in sorted_vocab:
@@ -38,10 +39,12 @@ def get_due_cards(vocab_list):
     return due
 
 def run_study_mode(vocab, profile):
-    # Get 5 new items
-    new_items = [v for v in vocab if v.status == 'new'][:5]
+    # Get 5 new items based on selected track
+    track = profile.selected_track
+    new_items = get_new_items(limit=5, track=track)
+
     if not new_items:
-        rprint("[bold green]🎉 No new items to learn! You've seen everything![/bold green]")
+        rprint(f"[bold green]🎉 No new items found for track '{track}'! Try changing tracks or you've learned it all![/bold green]")
         import time
         time.sleep(2)
         return
@@ -101,10 +104,6 @@ def run_grammar_lesson(lesson, profile):
 def main():
     try:
         # Auto-migrate data if needed
-        # We call the migrate function directly. It checks and runs if needed.
-        # This ensures users don't start with "new" status for learned cards.
-        # Ideally this should be silent or minimal output unless migration happens.
-        # But migrate() prints. Let's assume that's fine for CLI startup.
         try:
              migrate()
         except Exception as e:
@@ -156,9 +155,9 @@ def main():
                     time.sleep(1)
 
             elif choice == "4":
-                # Stats view logic could go here or separate function
-                # For now just refresh dashboard
-                pass
+                # Settings
+                display_settings_menu(profile)
+                save_user_profile(profile)
 
             elif choice == "5":
                 clear_screen()

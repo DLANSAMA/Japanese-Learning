@@ -19,7 +19,7 @@
         "kana": "ねこ",
         "meaning": "Cat",
         "example": "猫が好きです (I like cats)",
-        "tts_text": "ねこ" 
+        "tts_text": "ねこ"
       },
       ...
     ]
