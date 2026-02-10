@@ -9,7 +9,10 @@
     "tags": [
       "core",
       "animal"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "青",
@@ -21,7 +24,10 @@
     "tags": [
       "core",
       "color"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "食べる",
@@ -33,19 +39,25 @@
     "tags": [
       "core",
       "verb"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "銀行",
     "kana": "ぎんこう",
     "romaji": "Ginkou",
     "meaning": "Bank",
-    "level": 1,
-    "last_review": "2026-02-07",
+    "level": 0,
+    "last_review": "2026-02-10",
     "tags": [
       "core",
       "place"
-    ]
+    ],
+    "ease_factor": 2.3,
+    "interval": 1,
+    "due_date": "2026-02-11"
   },
   {
     "word": "先生",
@@ -57,7 +69,10 @@
     "tags": [
       "core",
       "person"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "飲む",
@@ -69,7 +84,10 @@
     "tags": [
       "core",
       "verb"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "水",
@@ -81,7 +99,10 @@
     "tags": [
       "core",
       "noun"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "待って",
@@ -93,7 +114,10 @@
     "tags": [
       "core",
       "phrase"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "了解",
@@ -105,7 +129,10 @@
     "tags": [
       "core",
       "phrase"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "おやすみなさい",
@@ -117,7 +144,10 @@
     "tags": [
       "core",
       "phrase"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "攻撃",
@@ -129,7 +159,10 @@
     "tags": [
       "rpg",
       "combat"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "防御",
@@ -141,7 +174,10 @@
     "tags": [
       "rpg",
       "combat"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "回復",
@@ -153,7 +189,10 @@
     "tags": [
       "rpg",
       "action"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "魔法",
@@ -165,7 +204,10 @@
     "tags": [
       "rpg",
       "magic"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "剣",
@@ -177,7 +219,10 @@
     "tags": [
       "rpg",
       "gear"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "盾",
@@ -189,7 +234,10 @@
     "tags": [
       "rpg",
       "gear"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "仲間",
@@ -201,7 +249,10 @@
     "tags": [
       "rpg",
       "social"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "経験値",
@@ -213,7 +264,10 @@
     "tags": [
       "rpg",
       "stats"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "レベル",
@@ -221,11 +275,14 @@
     "romaji": "Reberu",
     "meaning": "Level",
     "level": 0,
-    "last_review": null,
+    "last_review": "2026-02-10",
     "tags": [
       "rpg",
       "stats"
-    ]
+    ],
+    "ease_factor": 2.3,
+    "interval": 1,
+    "due_date": "2026-02-11"
   },
   {
     "word": "クエスト",
@@ -237,7 +294,10 @@
     "tags": [
       "rpg",
       "gameplay"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "株",
@@ -249,7 +309,10 @@
     "tags": [
       "finance",
       "asset"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "投資",
@@ -261,7 +324,10 @@
     "tags": [
       "finance",
       "action"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "利益",
@@ -273,7 +339,10 @@
     "tags": [
       "finance",
       "money"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "損失",
@@ -285,7 +354,10 @@
     "tags": [
       "finance",
       "money"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "買う",
@@ -297,7 +369,10 @@
     "tags": [
       "finance",
       "verb"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "売る",
@@ -309,7 +384,10 @@
     "tags": [
       "finance",
       "verb"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "市場",
@@ -321,7 +399,10 @@
     "tags": [
       "finance",
       "noun"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "金",
@@ -333,7 +414,10 @@
     "tags": [
       "finance",
       "noun"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "円",
@@ -345,7 +429,10 @@
     "tags": [
       "finance",
       "currency"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   },
   {
     "word": "ドル",
@@ -357,6 +444,9 @@
     "tags": [
       "finance",
       "currency"
-    ]
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null
   }
 ]

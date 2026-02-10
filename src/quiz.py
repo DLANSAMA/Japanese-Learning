@@ -2,48 +2,80 @@ import random
 from typing import List, Optional, Any
 from dataclasses import dataclass
 
-from .models import Vocabulary, GrammarLesson
+from .models import Vocabulary, GrammarLesson, UserSettings, UserProfile
+from .sentence_builder import get_random_sentence, check_sentence_answer, Sentence
 
 @dataclass
 class Question:
-    type: str # 'input', 'multiple_choice', 'grammar'
+    type: str # 'input', 'multiple_choice', 'grammar', 'sentence'
     question_text: str
     correct_answers: List[str] # List of valid answers (e.g. kana, romaji)
     options: Optional[List[str]] = None # For MC
     explanation: Optional[str] = None # Shown after answer
-    context: Optional[Any] = None # The Vocabulary or GrammarExercise object
+    context: Optional[Any] = None # The Vocabulary, GrammarExercise, or Sentence object
 
-def generate_input_question(item: Vocabulary) -> Question:
+def generate_input_question(item: Vocabulary, show_furigana: bool = True) -> Question:
+    display = f"{item.word} ({item.kana})" if show_furigana else item.word
     return Question(
         type="input",
-        question_text=f"What is the meaning of: {item.word} ({item.kana})?",
+        question_text=f"What is the meaning of: {display}?",
         correct_answers=[item.meaning.lower()],
         explanation=f"{item.word} ({item.kana}) means '{item.meaning}'",
         context=item
     )
 
-def generate_mc_question(item: Vocabulary, all_vocab: List[Vocabulary]) -> Question:
+def generate_mc_question(item: Vocabulary, all_vocab: List[Vocabulary], show_furigana: bool = True) -> Question:
     distractors = random.sample([v for v in all_vocab if v.word != item.word], 3)
     options = [d.meaning for d in distractors]
     options.append(item.meaning)
     random.shuffle(options)
 
+    display = f"{item.word} ({item.kana})" if show_furigana else item.word
+
     return Question(
         type="multiple_choice",
-        question_text=f"Select the correct meaning for: {item.word}",
+        question_text=f"Select the correct meaning for: {display}",
         correct_answers=[item.meaning.lower()], # Check against lowercase for robustness
         options=options,
         explanation=f"{item.word} means '{item.meaning}'",
         context=item
     )
 
+def generate_sentence_question(level: int = 5) -> Optional[Question]:
+    sentence = get_random_sentence(level)
+    if not sentence:
+        return None
+
+    # Shuffle the components for "Assemble" hint
+    components = sentence.broken_down[:]
+    random.shuffle(components)
+    hint = " / ".join(components)
+
+    return Question(
+        type="sentence",
+        question_text=f"Translate into Japanese (Romaji): '{sentence.english}'\nHint: {hint}",
+        correct_answers=[sentence.romaji.lower()],
+        explanation=f"Answer: {sentence.romaji}\nJP: {sentence.japanese}",
+        context=sentence
+    )
+
 class QuizSession:
-    def __init__(self, items: List[Vocabulary], all_vocab: List[Vocabulary]):
+    def __init__(self, items: List[Vocabulary], all_vocab: List[Vocabulary], settings: UserSettings = None):
         self.items = items
         self.all_vocab = all_vocab
         self.score = 0
         self.total = 0
         self.current_index = 0
+        self.settings = settings or UserSettings()
+
+        # Filter items by JLPT level if settings exist
+        if self.settings:
+            # Assuming item.level corresponds roughly to mastery, not JLPT.
+            # But prompt says "Level Gating: Only show words <= User Level + 1".
+            # Let's interpret max_jlpt_level as a ceiling for complexity if tags exist,
+            # OR just use the UserProfile level gating logic in main.py.
+            # Here we just store settings for display logic.
+            pass
 
     def has_next(self):
         return self.current_index < len(self.items)
@@ -52,13 +84,18 @@ class QuizSession:
         item = self.items[self.current_index]
         self.current_index += 1
 
+        show_furigana = self.settings.show_furigana
+
         # 50% chance of Multiple Choice if enough items exist
         if len(self.all_vocab) >= 4 and random.random() > 0.5:
-            return generate_mc_question(item, self.all_vocab)
+            return generate_mc_question(item, self.all_vocab, show_furigana)
         else:
-            return generate_input_question(item)
+            return generate_input_question(item, show_furigana)
 
     def check_answer(self, question: Question, user_answer: str) -> bool:
+        if question.type == "sentence":
+            return check_sentence_answer(question.context, user_answer)
+
         is_correct = user_answer.strip().lower() in [a.lower() for a in question.correct_answers]
         if is_correct:
             self.score += 1

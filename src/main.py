@@ -6,6 +6,7 @@ from .data_manager import load_vocab, save_vocab, load_grammar, load_user_profil
 from .models import Vocabulary, GrammarLesson
 from .quiz import QuizSession, GrammarQuizSession
 from .gamification import add_xp, update_streak
+from .srs_engine import update_card_srs
 from .ui import (
     display_dashboard, display_menu, display_grammar_list,
     display_lesson, display_question, get_user_answer,
@@ -14,19 +15,24 @@ from .ui import (
 
 def get_due_cards(vocab_list):
     now = datetime.now()
+    today_str = now.strftime('%Y-%m-%d')
     due = []
-    for card in vocab_list:
-        if not card.last_review:
+
+    # Sort vocab by due date to prioritize overdue items
+    # If no due date (new item), treat as due now
+    # Handle None due_date safely by using a very old date string
+    sorted_vocab = sorted(vocab_list, key=lambda v: v.due_date if v.due_date else "0000-00-00")
+
+    for card in sorted_vocab:
+        if not card.due_date:
             due.append(card)
-            continue
-        last_date = datetime.strptime(card.last_review, '%Y-%m-%d')
-        days_wait = 2 ** card.level
-        if now > last_date + timedelta(days=days_wait):
+        elif card.due_date <= today_str:
             due.append(card)
+
     return due
 
 def run_quiz(vocab_list, all_vocab, profile):
-    session = QuizSession(vocab_list, all_vocab)
+    session = QuizSession(vocab_list, all_vocab, settings=profile.settings)
     while session.has_next():
         q = session.next_question()
         display_question(q, session.current_index, len(session.items))
@@ -37,12 +43,11 @@ def run_quiz(vocab_list, all_vocab, profile):
 
         # Update SRS
         if isinstance(q.context, Vocabulary):
-            if is_correct:
-                q.context.level += 1
-                q.context.last_review = datetime.now().strftime('%Y-%m-%d')
-            else:
-                q.context.level = max(0, q.context.level - 1)
-                q.context.last_review = datetime.now().strftime('%Y-%m-%d')
+            # Map correctness to rating:
+            # Correct -> 5 (Easy) for now
+            # Incorrect -> 0 (Fail)
+            rating = 5 if is_correct else 0
+            update_card_srs(q.context, rating)
 
     xp_gained = session.score * 10
     add_xp(profile, xp_gained)
@@ -75,7 +80,8 @@ def main():
         save_user_profile(profile)
 
         while True:
-            mastered_count = sum(1 for v in vocab if v.level >= 5)
+            # Mastered count based on interval > 30 days (roughly "mastered" in SRS)
+            mastered_count = sum(1 for v in vocab if v.interval > 30)
             display_dashboard(profile, mastered_count, len(profile.completed_lessons))
             choice = display_menu()
 

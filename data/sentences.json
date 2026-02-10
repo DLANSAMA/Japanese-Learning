@@ -1,0 +1,23 @@
+[
+  {
+    "japanese": "私は寿司を食べます",
+    "romaji": "Watashi wa sushi o tabemasu",
+    "english": "I eat sushi",
+    "broken_down": ["Watashi", "wa", "sushi", "o", "tabemasu"],
+    "level": 5
+  },
+  {
+    "japanese": "これは私の本です",
+    "romaji": "Kore wa watashi no hon desu",
+    "english": "This is my book",
+    "broken_down": ["Kore", "wa", "watashi", "no", "hon", "desu"],
+    "level": 5
+  },
+  {
+    "japanese": "駅はどこですか",
+    "romaji": "Eki wa doko desu ka",
+    "english": "Where is the station?",
+    "broken_down": ["Eki", "wa", "doko", "desu", "ka"],
+    "level": 5
+  }
+]

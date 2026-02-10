@@ -3,11 +3,13 @@ import sys
 import os
 import argparse
 import uvicorn
+import json
 
 # Ensure src is in path
 sys.path.append(os.path.dirname(__file__))
 
 from src.main import main as cli_main
+from src.headless import run_headless
 
 def serve():
     print("Starting Japanese Learning API Server...")
@@ -16,6 +18,8 @@ def serve():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Japanese Learning App")
+    parser.add_argument("--headless", action="store_true", help="Run in headless JSON mode (one-shot)")
+
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # CLI command (default if no args)
@@ -25,6 +29,10 @@ if __name__ == "__main__":
     serve_parser = subparsers.add_parser("serve", help="Start the API server")
 
     args = parser.parse_args()
+
+    if args.headless:
+        run_headless()
+        sys.exit(0)
 
     if args.command == "serve":
         serve()
