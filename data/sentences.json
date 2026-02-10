@@ -3,21 +3,612 @@
     "japanese": "私は寿司を食べます",
     "romaji": "Watashi wa sushi o tabemasu",
     "english": "I eat sushi",
-    "broken_down": ["Watashi", "wa", "sushi", "o", "tabemasu"],
+    "broken_down": [
+      "Watashi",
+      "wa",
+      "sushi",
+      "o",
+      "tabemasu"
+    ],
     "level": 5
   },
   {
     "japanese": "これは私の本です",
     "romaji": "Kore wa watashi no hon desu",
     "english": "This is my book",
-    "broken_down": ["Kore", "wa", "watashi", "no", "hon", "desu"],
+    "broken_down": [
+      "Kore",
+      "wa",
+      "watashi",
+      "no",
+      "hon",
+      "desu"
+    ],
     "level": 5
   },
   {
     "japanese": "駅はどこですか",
     "romaji": "Eki wa doko desu ka",
     "english": "Where is the station?",
-    "broken_down": ["Eki", "wa", "doko", "desu", "ka"],
+    "broken_down": [
+      "Eki",
+      "wa",
+      "doko",
+      "desu",
+      "ka"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "はじめまして",
+    "romaji": "Hajimemashite",
+    "english": "Nice to meet you",
+    "broken_down": [
+      "Hajimemashite"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "元気ですか",
+    "romaji": "Genki desu ka",
+    "english": "How are you?",
+    "broken_down": [
+      "Genki",
+      "desu",
+      "ka"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "おはようございます",
+    "romaji": "Ohayou gozaimasu",
+    "english": "Good morning",
+    "broken_down": [
+      "Ohayou",
+      "gozaimasu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "こんにちは",
+    "romaji": "Konnichiwa",
+    "english": "Hello",
+    "broken_down": [
+      "Konnichiwa"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "こんばんは",
+    "romaji": "Konbanwa",
+    "english": "Good evening",
+    "broken_down": [
+      "Konbanwa"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "さようなら",
+    "romaji": "Sayounara",
+    "english": "Goodbye",
+    "broken_down": [
+      "Sayounara"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "ありがとうございます",
+    "romaji": "Arigatou gozaimasu",
+    "english": "Thank you",
+    "broken_down": [
+      "Arigatou",
+      "gozaimasu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "すみません",
+    "romaji": "Sumimasen",
+    "english": "Excuse me / I'm sorry",
+    "broken_down": [
+      "Sumimasen"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "ごめんなさい",
+    "romaji": "Gomennasai",
+    "english": "I am sorry",
+    "broken_down": [
+      "Gomennasai"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "よろしくお願いします",
+    "romaji": "Yoroshiku onegaishimasu",
+    "english": "Please treat me well",
+    "broken_down": [
+      "Yoroshiku",
+      "onegaishimasu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "攻撃します",
+    "romaji": "Kougeki shimasu",
+    "english": "I attack",
+    "broken_down": [
+      "Kougeki",
+      "shimasu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "逃げる",
+    "romaji": "Nigeru",
+    "english": "Run away!",
+    "broken_down": [
+      "Nigeru"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "敵が現れた",
+    "romaji": "Teki ga arawareta",
+    "english": "An enemy appeared",
+    "broken_down": [
+      "Teki",
+      "ga",
+      "arawareta"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "魔法を使う",
+    "romaji": "Mahou o tsukau",
+    "english": "Use magic",
+    "broken_down": [
+      "Mahou",
+      "o",
+      "tsukau"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "レベルが上がった",
+    "romaji": "Reberu ga agatta",
+    "english": "Level up",
+    "broken_down": [
+      "Reberu",
+      "ga",
+      "agatta"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "回復してください",
+    "romaji": "Kaifuku shite kudasai",
+    "english": "Please heal me",
+    "broken_down": [
+      "Kaifuku",
+      "shite",
+      "kudasai"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "剣を装備する",
+    "romaji": "Ken o soubi suru",
+    "english": "Equip a sword",
+    "broken_down": [
+      "Ken",
+      "o",
+      "soubi",
+      "suru"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "盾で守る",
+    "romaji": "Tate de mamoru",
+    "english": "Defend with a shield",
+    "broken_down": [
+      "Tate",
+      "de",
+      "mamoru"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "ポーションを飲む",
+    "romaji": "Poushon o nomu",
+    "english": "Drink a potion",
+    "broken_down": [
+      "Poushon",
+      "o",
+      "nomu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "ボスを倒す",
+    "romaji": "Bosu o taosu",
+    "english": "Defeat the boss",
+    "broken_down": [
+      "Bosu",
+      "o",
+      "taosu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "ご飯を食べる",
+    "romaji": "Gohan o taberu",
+    "english": "Eat a meal",
+    "broken_down": [
+      "Gohan",
+      "o",
+      "taberu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "水を飲む",
+    "romaji": "Mizu o nomu",
+    "english": "Drink water",
+    "broken_down": [
+      "Mizu",
+      "o",
+      "nomu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "学校へ行きます",
+    "romaji": "Gakkou e ikimasu",
+    "english": "Go to school",
+    "broken_down": [
+      "Gakkou",
+      "e",
+      "ikimasu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "本を読みます",
+    "romaji": "Hon o yomimasu",
+    "english": "Read a book",
+    "broken_down": [
+      "Hon",
+      "o",
+      "yomimasu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "テレビを見ます",
+    "romaji": "Terebi o mimasu",
+    "english": "Watch TV",
+    "broken_down": [
+      "Terebi",
+      "o",
+      "mimasu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "音楽を聴きます",
+    "romaji": "Ongaku o kikimasu",
+    "english": "Listen to music",
+    "broken_down": [
+      "Ongaku",
+      "o",
+      "kikimasu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "寝ます",
+    "romaji": "Nemasu",
+    "english": "Go to sleep",
+    "broken_down": [
+      "Nemasu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "起きます",
+    "romaji": "Okimasu",
+    "english": "Wake up",
+    "broken_down": [
+      "Okimasu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "友達と話します",
+    "romaji": "Tomodachi to hanashimasu",
+    "english": "Talk with a friend",
+    "broken_down": [
+      "Tomodachi",
+      "to",
+      "hanashimasu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "勉強します",
+    "romaji": "Benkyou shimasu",
+    "english": "Study",
+    "broken_down": [
+      "Benkyou",
+      "shimasu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "これはいくらですか",
+    "romaji": "Kore wa ikura desu ka",
+    "english": "How much is this?",
+    "broken_down": [
+      "Kore",
+      "wa",
+      "ikura",
+      "desu",
+      "ka"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "トイレはどこですか",
+    "romaji": "Toire wa doko desu ka",
+    "english": "Where is the toilet?",
+    "broken_down": [
+      "Toire",
+      "wa",
+      "doko",
+      "desu",
+      "ka"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "切符を買います",
+    "romaji": "Kippu o kaimasu",
+    "english": "Buy a ticket",
+    "broken_down": [
+      "Kippu",
+      "o",
+      "kaimasu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "電車に乗ります",
+    "romaji": "Densha ni norimasu",
+    "english": "Ride the train",
+    "broken_down": [
+      "Densha",
+      "ni",
+      "norimasu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "地図を見てください",
+    "romaji": "Chizu o mite kudasai",
+    "english": "Please look at the map",
+    "broken_down": [
+      "Chizu",
+      "o",
+      "mite",
+      "kudasai"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "ホテルに泊まります",
+    "romaji": "Hoteru ni tomarimasu",
+    "english": "Stay at a hotel",
+    "broken_down": [
+      "Hoteru",
+      "ni",
+      "tomarimasu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "写真を撮ってもいいですか",
+    "romaji": "Shashin o totte mo ii desu ka",
+    "english": "Can I take a picture?",
+    "broken_down": [
+      "Shashin",
+      "o",
+      "totte",
+      "mo",
+      "ii",
+      "desu",
+      "ka"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "英語が話せますか",
+    "romaji": "Eigo ga hanasemasu ka",
+    "english": "Can you speak English?",
+    "broken_down": [
+      "Eigo",
+      "ga",
+      "hanasemasu",
+      "ka"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "助けてください",
+    "romaji": "Tasukete kudasai",
+    "english": "Please help me",
+    "broken_down": [
+      "Tasukete",
+      "kudasai"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "はい",
+    "romaji": "Hai",
+    "english": "Yes",
+    "broken_down": [
+      "Hai"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "いいえ",
+    "romaji": "Iie",
+    "english": "No",
+    "broken_down": [
+      "Iie"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "わかりました",
+    "romaji": "Wakarimashita",
+    "english": "I understand",
+    "broken_down": [
+      "Wakarimashita"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "わかりません",
+    "romaji": "Wakarimasen",
+    "english": "I don't understand",
+    "broken_down": [
+      "Wakarimasen"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "ゆっくり話してください",
+    "romaji": "Yukkuri hanashite kudasai",
+    "english": "Please speak slowly",
+    "broken_down": [
+      "Yukkuri",
+      "hanashite",
+      "kudasai"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "もう一度お願いします",
+    "romaji": "Mou ichido onegaishimasu",
+    "english": "Once more please",
+    "broken_down": [
+      "Mou",
+      "ichido",
+      "onegaishimasu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "名前は何ですか",
+    "romaji": "Namae wa nan desu ka",
+    "english": "What is your name?",
+    "broken_down": [
+      "Namae",
+      "wa",
+      "nan",
+      "desu",
+      "ka"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "私は学生です",
+    "romaji": "Watashi wa gakusei desu",
+    "english": "I am a student",
+    "broken_down": [
+      "Watashi",
+      "wa",
+      "gakusei",
+      "desu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "これは何ですか",
+    "romaji": "Kore wa nan desu ka",
+    "english": "What is this?",
+    "broken_down": [
+      "Kore",
+      "wa",
+      "nan",
+      "desu",
+      "ka"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "美味しいです",
+    "romaji": "Oishii desu",
+    "english": "It is delicious",
+    "broken_down": [
+      "Oishii",
+      "desu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "楽しいです",
+    "romaji": "Tanoshii desu",
+    "english": "It is fun",
+    "broken_down": [
+      "Tanoshii",
+      "desu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "暑いです",
+    "romaji": "Atsui desu",
+    "english": "It is hot",
+    "broken_down": [
+      "Atsui",
+      "desu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "寒いです",
+    "romaji": "Samui desu",
+    "english": "It is cold",
+    "broken_down": [
+      "Samui",
+      "desu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "高いです",
+    "romaji": "Takai desu",
+    "english": "It is expensive/high",
+    "broken_down": [
+      "Takai",
+      "desu"
+    ],
+    "level": 5
+  },
+  {
+    "japanese": "安いです",
+    "romaji": "Yasui desu",
+    "english": "It is cheap",
+    "broken_down": [
+      "Yasui",
+      "desu"
+    ],
     "level": 5
   }
 ]

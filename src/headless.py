@@ -28,9 +28,50 @@ def get_due_vocab(vocab_list):
             due.append(card)
     return due
 
-def run_headless():
+def run_headless(args):
     vocab = load_vocab()
     profile = load_user_profile()
+
+    if args.study:
+        # Study Mode: Fetch new items
+        new_items = [v for v in vocab if v.status == 'new'][:5]
+
+        study_data = []
+        for item in new_items:
+            # Mark as learning
+            item.status = 'learning'
+            item.interval = 1
+            item.ease_factor = 2.5
+            item.due_date = datetime.now().strftime('%Y-%m-%d')
+
+            study_data.append({
+                "id": f"vocab:{item.word}",
+                "word": item.word,
+                "kana": item.kana,
+                "meaning": item.meaning,
+                "example": "",
+                "tts_text": item.kana
+            })
+
+        if new_items:
+            save_vocab(vocab)
+
+        print(json.dumps({
+            "type": "study_session",
+            "items": study_data
+        }))
+        return
+
+    if args.get_stats:
+        # Stats Mode
+        stats = {
+            "type": "stats",
+            "xp": profile.xp,
+            "level": profile.level,
+            "streak": profile.streak
+        }
+        print(json.dumps(stats))
+        return
 
     # Simple Question Selection Logic
     # 20% Chance of Sentence if sentences exist
@@ -49,7 +90,8 @@ def run_headless():
                 "type": "sentence",
                 "question": f"Translate: {s.english}",
                 "hint": s.broken_down,
-                "id": f"sentence:{s.english[:10]}"
+                "id": f"sentence:{s.english[:10]}",
+                "tts_text": s.japanese
             }
 
     # Fallback to Vocab
@@ -80,7 +122,8 @@ def run_headless():
         q_data = {
             "type": "vocab",
             "question": f"Meaning of: {display}",
-            "id": f"vocab:{item.word}"
+            "id": f"vocab:{item.word}",
+            "tts_text": item.kana
         }
 
     # 1. Output Question JSON
@@ -93,7 +136,13 @@ def run_headless():
         raw_input = sys.stdin.readline()
         if not raw_input:
             return
-        user_input = json.loads(raw_input)
+
+        # Handle empty lines or whitespace-only lines as empty answer
+        if not raw_input.strip():
+            user_input = {"answer": ""}
+        else:
+            user_input = json.loads(raw_input)
+
         answer = user_input.get("answer", "")
     except json.JSONDecodeError:
         print(json.dumps({"error": "Invalid JSON input", "correct": False}))
