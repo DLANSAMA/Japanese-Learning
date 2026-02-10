@@ -39,13 +39,14 @@ def display_dashboard(profile: UserProfile, vocab_count: int, grammar_count: int
 
 def display_menu() -> str:
     table = Table(title="Main Menu", show_header=False, box=None)
-    table.add_row("[1] 📚 Learn Vocabulary (Quiz)")
-    table.add_row("[2] 📖 Learn Grammar")
-    table.add_row("[3] 📊 View Stats")
-    table.add_row("[4] ❌ Exit")
+    table.add_row("[1] 👨‍🏫 Start Lesson (Study Mode)")
+    table.add_row("[2] 📝 Quiz (Review Due Cards)")
+    table.add_row("[3] 📖 Learn Grammar")
+    table.add_row("[4] 📊 View Stats")
+    table.add_row("[5] ❌ Exit")
 
     console.print(table)
-    return Prompt.ask("Select an option", choices=["1", "2", "3", "4"], default="1")
+    return Prompt.ask("Select an option", choices=["1", "2", "3", "4", "5"], default="2")
 
 def display_grammar_list(lessons: list[GrammarLesson]) -> str:
     clear_screen()
@@ -120,3 +121,21 @@ def display_session_summary(score: int, total: int, xp_gained: int):
         border_style="gold1"
     ))
     Prompt.ask("Press Enter to continue...")
+
+def display_study_session(items: list[Vocabulary]):
+    clear_screen()
+    console.print(Panel(f"[bold]Study Mode[/bold]\nLearning {len(items)} new words...", border_style="magenta"))
+    time.sleep(1)
+
+    for item in items:
+        clear_screen()
+        content = f"""
+        [bold cyan]{item.word}[/bold cyan] ({item.kana})
+        [italic]{item.romaji}[/italic]
+
+        [bold white]{item.meaning}[/bold white]
+
+        Tags: {', '.join(item.tags)}
+        """
+        console.print(Panel(Align.center(content), title="New Vocabulary", border_style="blue"))
+        Prompt.ask("Press Enter when you've memorized this...")

@@ -8,11 +8,7 @@ def add_xp(profile: UserProfile, amount: int):
     while profile.xp >= profile.level * XP_PER_LEVEL:
         profile.xp -= profile.level * XP_PER_LEVEL
         profile.level += 1
-        # In headless mode this print might break JSON output if not handled carefully,
-        # but typical headless runs capture stdout separately or just ignore this if mixed.
-        # For pure JSON headless, we should probably suppress this print or use logging.
-        # Since headless.py handles output manually, this print goes to stderr or is just text.
-        # Ideally, return events instead of printing.
+        # Avoid print in headless mode if possible, but for now we keep it or rely on UI layer to display events
         pass
 
 def update_streak(profile: UserProfile):

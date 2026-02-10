@@ -38,14 +38,18 @@ class AnswerResponse(BaseModel):
 def get_due_vocab():
     vocab = load_vocab()
     now = datetime.now()
+    today_str = now.strftime('%Y-%m-%d')
     due = []
-    for card in vocab:
-        if not card.last_review:
-            due.append(card)
+
+    sorted_vocab = sorted(vocab, key=lambda v: v.due_date if v.due_date else "0000-00-00")
+
+    for card in sorted_vocab:
+        if card.status == 'new':
             continue
-        last_date = datetime.strptime(card.last_review, '%Y-%m-%d')
-        days_wait = 2 ** card.level
-        if now > last_date + timedelta(days=days_wait):
+
+        if not card.due_date:
+            due.append(card)
+        elif card.due_date <= today_str:
             due.append(card)
     return due, vocab
 
@@ -62,11 +66,13 @@ def get_user_stats():
 @app.get("/quiz/vocab", response_model=QuizQuestionResponse)
 def get_vocab_question():
     due, all_vocab = get_due_vocab()
+    learned_vocab = [v for v in all_vocab if v.status != 'new']
+
     if not due:
         # Fallback to random review if nothing due
-        if not all_vocab:
-             raise HTTPException(status_code=404, detail="No vocabulary available")
-        item = random.choice(all_vocab)
+        if not learned_vocab:
+             raise HTTPException(status_code=404, detail="No learned vocabulary available. Use Study Mode first.")
+        item = random.choice(learned_vocab)
     else:
         item = random.choice(due)
 
@@ -113,6 +119,7 @@ def submit_answer(payload: AnswerRequest):
         item.last_review = datetime.now().strftime('%Y-%m-%d')
         xp_gained = 10
         add_xp(profile, xp_gained)
+        # TODO: Use SRS update here too
     else:
         item.level = max(0, item.level - 1)
         item.last_review = datetime.now().strftime('%Y-%m-%d')

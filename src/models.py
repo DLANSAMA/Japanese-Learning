@@ -13,6 +13,7 @@ class Vocabulary:
     ease_factor: float = 2.5
     interval: int = 0
     due_date: Optional[str] = None
+    status: str = "new" # 'new', 'learning', 'mastered'
 
 @dataclass
 class GrammarExample:

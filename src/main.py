@@ -10,8 +10,11 @@ from .srs_engine import update_card_srs
 from .ui import (
     display_dashboard, display_menu, display_grammar_list,
     display_lesson, display_question, get_user_answer,
-    display_feedback, display_session_summary, clear_screen
+    display_feedback, display_session_summary, clear_screen,
+    display_study_session
 )
+from .study import get_new_items, mark_as_learning
+from .migrate_data import migrate
 
 def get_due_cards(vocab_list):
     now = datetime.now()
@@ -19,17 +22,40 @@ def get_due_cards(vocab_list):
     due = []
 
     # Sort vocab by due date to prioritize overdue items
-    # If no due date (new item), treat as due now
-    # Handle None due_date safely by using a very old date string
     sorted_vocab = sorted(vocab_list, key=lambda v: v.due_date if v.due_date else "0000-00-00")
 
     for card in sorted_vocab:
+        # Exclude 'new' items
+        if card.status == 'new':
+            continue
+
         if not card.due_date:
+            # If no due date but status is learning/mastered
             due.append(card)
         elif card.due_date <= today_str:
             due.append(card)
 
     return due
+
+def run_study_mode(vocab, profile):
+    # Get 5 new items
+    new_items = [v for v in vocab if v.status == 'new'][:5]
+    if not new_items:
+        rprint("[bold green]🎉 No new items to learn! You've seen everything![/bold green]")
+        import time
+        time.sleep(2)
+        return
+
+    # Display loop
+    display_study_session(new_items)
+
+    # Mark all as learning
+    for item in new_items:
+        mark_as_learning(item)
+
+    save_vocab(vocab)
+    rprint("[bold green]Lesson Complete! Items added to your review queue.[/bold green]")
+    input("Press Enter to continue...")
 
 def run_quiz(vocab_list, all_vocab, profile):
     session = QuizSession(vocab_list, all_vocab, settings=profile.settings)
@@ -48,6 +74,8 @@ def run_quiz(vocab_list, all_vocab, profile):
             # Incorrect -> 0 (Fail)
             rating = 5 if is_correct else 0
             update_card_srs(q.context, rating)
+            if q.context.level >= 5 and q.context.interval > 21:
+                q.context.status = 'mastered'
 
     xp_gained = session.score * 10
     add_xp(profile, xp_gained)
@@ -72,6 +100,16 @@ def run_grammar_lesson(lesson, profile):
 
 def main():
     try:
+        # Auto-migrate data if needed
+        # We call the migrate function directly. It checks and runs if needed.
+        # This ensures users don't start with "new" status for learned cards.
+        # Ideally this should be silent or minimal output unless migration happens.
+        # But migrate() prints. Let's assume that's fine for CLI startup.
+        try:
+             migrate()
+        except Exception as e:
+             rprint(f"[red]Migration failed: {e}[/red]")
+
         vocab = load_vocab()
         grammar = load_grammar()
         profile = load_user_profile()
@@ -80,13 +118,17 @@ def main():
         save_user_profile(profile)
 
         while True:
-            # Mastered count based on interval > 30 days (roughly "mastered" in SRS)
-            mastered_count = sum(1 for v in vocab if v.interval > 30)
+            # Mastered count based on status
+            mastered_count = sum(1 for v in vocab if v.status == 'mastered')
             display_dashboard(profile, mastered_count, len(profile.completed_lessons))
             choice = display_menu()
 
             if choice == "1":
-                # Quiz Logic: due cards
+                # Start Lesson (Study Mode)
+                run_study_mode(vocab, profile)
+
+            elif choice == "2":
+                # Quiz Logic: due cards (Review)
                 due = get_due_cards(vocab)
                 if not due:
                     rprint("[bold green]🎉 No cards due for review! Great job![/bold green]")
@@ -100,7 +142,7 @@ def main():
                 save_user_profile(profile)
                 save_vocab(vocab)
 
-            elif choice == "2":
+            elif choice == "3":
                 lid = display_grammar_list(grammar)
                 if lid == "back": continue
                 # Find lesson
@@ -113,9 +155,12 @@ def main():
                     import time
                     time.sleep(1)
 
-            elif choice == "3":
-                pass # Already on dashboard, just refreshes
             elif choice == "4":
+                # Stats view logic could go here or separate function
+                # For now just refresh dashboard
+                pass
+
+            elif choice == "5":
                 clear_screen()
                 rprint("[bold green]See you next time! Ganbatte![/bold green]")
                 break
