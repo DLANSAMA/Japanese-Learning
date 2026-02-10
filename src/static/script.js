@@ -67,8 +67,9 @@ function showStudyCard() {
     const kanji = currentStudyItem.word;
     const reading = currentStudyItem.kana;
 
+    // Removed 'block' class to respect display: ruby
     const frontContent = `
-        <ruby class="text-6xl font-bold mb-4 block">${kanji}<rt>${reading}</rt></ruby>
+        <ruby class="text-6xl font-bold mb-4">${kanji}<rt>${reading}</rt></ruby>
     `;
 
     container.innerHTML = `

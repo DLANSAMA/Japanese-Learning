@@ -45,9 +45,17 @@
         .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 1rem; padding: 2rem; background-color: #1e293b; border: 2px solid #38bdf8; }
         .flip-card-back { transform: rotateY(180deg); background-color: #334155; border-color: #a78bfa; }
 
-        /* Ruby Text Styling */
-        ruby { font-family: 'Noto Sans JP', sans-serif; display: inline-flex; flex-direction: column-reverse; align-items: center; line-height: 1; }
-        rt { font-size: 0.5em; line-height: 1.2; text-align: center; color: #7dd3fc; margin-bottom: 2px; }
+        /* Ruby Text Styling - Fixed for visual correctness */
+        ruby {
+            font-family: 'Noto Sans JP', sans-serif;
+            ruby-position: over;
+            text-align: center;
+        }
+        rt {
+            font-size: 0.5em;
+            text-align: center;
+            color: #7dd3fc;
+        }
 
         .progress-bar { transition: width 0.3s ease-in-out; }
     </style>
