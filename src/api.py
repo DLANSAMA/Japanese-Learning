@@ -1,14 +1,17 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import List, Optional
 import random
+import os
 from datetime import datetime, timedelta
 
 from .data_manager import load_vocab, save_vocab, load_user_profile, save_user_profile
-from .models import Vocabulary, UserProfile
+from .models import Vocabulary, UserProfile, UserSettings
 from .quiz import generate_input_question, generate_mc_question
 from .gamification import add_xp, update_streak
 from .srs_engine import update_card_srs
+from .study import get_new_items, mark_as_learning
 
 app = FastAPI(title="Japanese Learning API", version="1.0")
 
@@ -36,6 +39,13 @@ class AnswerResponse(BaseModel):
     new_level: int
     new_xp: int
 
+class SettingsModel(BaseModel):
+    track: str
+    theme: str
+
+class StudyConfirmRequest(BaseModel):
+    word: str
+
 def get_due_vocab():
     vocab = load_vocab()
     now = datetime.now()
@@ -54,7 +64,7 @@ def get_due_vocab():
             due.append(card)
     return due, vocab
 
-@app.get("/user", response_model=UserStats)
+@app.get("/api/user", response_model=UserStats)
 def get_user_stats():
     profile = load_user_profile()
     return UserStats(
@@ -64,7 +74,7 @@ def get_user_stats():
         hearts=profile.hearts
     )
 
-@app.get("/quiz/vocab", response_model=QuizQuestionResponse)
+@app.get("/api/quiz/vocab", response_model=QuizQuestionResponse)
 def get_vocab_question():
     due, all_vocab = get_due_vocab()
     learned_vocab = [v for v in all_vocab if v.status != 'new']
@@ -93,7 +103,7 @@ def get_vocab_question():
         options=q.options
     )
 
-@app.post("/quiz/answer", response_model=AnswerResponse)
+@app.post("/api/quiz/answer", response_model=AnswerResponse)
 def submit_answer(payload: AnswerRequest):
     vocab = load_vocab()
     profile = load_user_profile()
@@ -119,7 +129,7 @@ def submit_answer(payload: AnswerRequest):
         item.last_review = datetime.now().strftime('%Y-%m-%d')
         xp_gained = 10
         add_xp(profile, xp_gained)
-        update_card_srs(item, 5) # Assume easy for API for now
+        update_card_srs(item, 5)
     else:
         item.level = max(0, item.level - 1)
         item.last_review = datetime.now().strftime('%Y-%m-%d')
@@ -136,3 +146,38 @@ def submit_answer(payload: AnswerRequest):
         new_level=profile.level,
         new_xp=profile.xp
     )
+
+@app.get("/api/study")
+def get_study_items():
+    profile = load_user_profile()
+    items = get_new_items(limit=5, track=profile.selected_track)
+    return items
+
+@app.post("/api/study/confirm")
+def confirm_study_item(payload: StudyConfirmRequest):
+    vocab = load_vocab()
+    item = next((v for v in vocab if v.word == payload.word), None)
+    if not item:
+        raise HTTPException(status_code=404, detail="Item not found")
+
+    mark_as_learning(item)
+    save_vocab(vocab)
+    return {"status": "success", "word": item.word}
+
+@app.get("/api/settings", response_model=SettingsModel)
+def get_settings():
+    profile = load_user_profile()
+    return SettingsModel(track=profile.selected_track, theme=profile.settings.theme)
+
+@app.post("/api/settings")
+def update_settings(payload: SettingsModel):
+    profile = load_user_profile()
+    profile.selected_track = payload.track
+    profile.settings.theme = payload.theme
+    save_user_profile(profile)
+    return {"status": "updated", "track": payload.track, "theme": payload.theme}
+
+# Mount Static Files (Catch-all must be last)
+STATIC_DIR = os.path.join(os.path.dirname(__file__), 'static')
+if os.path.exists(STATIC_DIR):
+    app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")

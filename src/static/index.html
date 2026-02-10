@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Japanese Learning Dojo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dojo: {
+                            bg: '#0f172a',
+                            card: '#1e293b',
+                            accent: '#38bdf8',
+                            text: '#e2e8f0'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0f172a; color: #e2e8f0; font-family: 'Segoe UI', sans-serif; }
+        .flip-card { perspective: 1000px; width: 300px; height: 400px; cursor: pointer; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 1rem; padding: 2rem; background-color: #1e293b; border: 2px solid #38bdf8; }
+        .flip-card-back { transform: rotateY(180deg); background-color: #334155; border-color: #a78bfa; }
+    </style>
+</head>
+<body class="h-screen flex flex-col items-center justify-center">
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="w-full max-w-4xl p-6">
+        <h1 class="text-4xl font-bold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">
+            Japanese Web Dojo 🏯
+        </h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-gray-800 p-6 rounded-xl border border-cyan-500/30 text-center">
+                <div class="text-gray-400 text-sm uppercase">Level</div>
+                <div id="stat-level" class="text-3xl font-bold text-cyan-400">1</div>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-xl border border-yellow-500/30 text-center">
+                <div class="text-gray-400 text-sm uppercase">XP</div>
+                <div id="stat-xp" class="text-3xl font-bold text-yellow-400">0</div>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-xl border border-red-500/30 text-center">
+                <div class="text-gray-400 text-sm uppercase">Streak</div>
+                <div id="stat-streak" class="text-3xl font-bold text-red-400">0</div>
+            </div>
+        </div>
+
+        <div class="flex justify-center gap-6">
+            <button onclick="startStudy()" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-lg text-xl font-bold hover:scale-105 transition shadow-lg shadow-cyan-500/50">
+                👨‍🏫 Study Mode
+            </button>
+            <button onclick="startQuiz()" class="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-500 rounded-lg text-xl font-bold hover:scale-105 transition shadow-lg shadow-purple-500/50">
+                📝 Quiz Mode
+            </button>
+        </div>
+    </div>
+
+    <!-- Study View -->
+    <div id="study-view" class="hidden flex-col items-center">
+        <div class="mb-4 text-2xl font-bold text-cyan-300">New Vocabulary</div>
+        <div id="study-card-container"></div>
+        <div class="mt-8 flex gap-4">
+            <button onclick="playAudio(currentStudyItem.word)" class="p-3 bg-gray-700 rounded-full hover:bg-gray-600">🔊</button>
+            <button onclick="confirmStudyItem()" class="px-6 py-2 bg-green-600 rounded-lg font-bold hover:bg-green-500">Got it!</button>
+        </div>
+    </div>
+
+    <!-- Quiz View -->
+    <div id="quiz-view" class="hidden flex-col items-center w-full max-w-2xl">
+        <div class="mb-4 text-xl text-gray-400">Quiz Mode</div>
+        <div id="quiz-card" class="bg-gray-800 p-8 rounded-xl border border-gray-600 w-full text-center">
+            <div id="quiz-question" class="text-2xl font-bold mb-6">Question Text</div>
+
+            <div id="quiz-options" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
+                <!-- MC Options -->
+            </div>
+
+            <div id="quiz-input-container" class="mt-4">
+                <input type="text" id="quiz-input" class="w-full p-3 bg-gray-900 border border-gray-600 rounded text-white text-center text-xl" placeholder="Type answer...">
+                <button onclick="submitQuizAnswer()" class="mt-4 px-6 py-2 bg-blue-600 rounded w-full">Submit</button>
+            </div>
+        </div>
+        <div id="quiz-feedback" class="mt-4 text-xl font-bold h-8"></div>
+        <button onclick="returnToDashboard()" class="mt-8 text-gray-500 hover:text-white">Exit</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
