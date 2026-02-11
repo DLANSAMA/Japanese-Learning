@@ -1,6 +1,7 @@
 import sqlite3
 import random
 import threading
+import string
 from typing import List, Dict, Any
 from jamdict import Jamdict
 
@@ -192,18 +193,27 @@ def get_recommendations(track: str = "General", limit: int = 5, exclude_words: L
             kanji = entry.kanji_forms[0].text if entry.kanji_forms else ""
             kana = entry.kana_forms[0].text if entry.kana_forms else ""
 
+            word = kanji if kanji else kana
+
+            # QC: Symbol Check
+            if any(char in string.punctuation for char in word):
+                continue
+            if any(char in "！？。、～・" for char in word):
+                 continue
+
             # QC: Length Check (Max 5 chars)
-            check_text = kanji if kanji else kana
-            if len(check_text) > 5:
+            if len(word) > 5:
                 continue
 
-            # QC: Kanji Check
-            has_kanji = bool(entry.kanji_forms)
-
-            if not has_kanji:
-                pass
-            else:
-                pass
+            # QC: 1-char Check
+            if len(word) == 1:
+                # Check if it looks like a Kana (Hiragana or Katakana)
+                # Hiragana: 3040-309F, Katakana: 30A0-30FF
+                is_kana = all('\u3040' <= c <= '\u309f' or '\u30a0' <= c <= '\u30ff' for c in word)
+                if is_kana:
+                    # Allow only common particles
+                    if word not in ['は', 'が', 'に', 'で', 'を', 'も', 'へ', 'と', 'や', 'の', 'ね', 'よ', 'わ']:
+                        continue
 
             if not kanji: kanji = kana
             if not kana: kana = kanji

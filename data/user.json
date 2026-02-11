@@ -10,5 +10,10 @@
     "max_jlpt_level": 5,
     "theme": "cyberpunk"
   },
-  "selected_track": "Pop Culture"
+  "selected_track": "Pop Culture",
+  "gems": 0,
+  "inventory": [],
+  "unlocked_units": [
+    "u1"
+  ]
 }
