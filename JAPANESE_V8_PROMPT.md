@@ -34,6 +34,16 @@
     - Automatically convert dictionary entries -> `Vocabulary` objects.
     - Save to `vocab.json`.
 
+## 5. Web UI Polish (Apple Quality) 🍏
+**Focus:** Abandon TUI polish. Focus on `src/static/index.html`.
+**Requirements:**
+- **Ruby Text:** Use HTML `<ruby>` tags for Furigana.
+  - Correct: `<ruby>猫<rt>ねこ</rt></ruby>`
+  - Incorrect: `猫 (ねこ)`
+- **Clean Logic:** If `word == kana` (e.g. Hiragana-only words), DO NOT show Furigana.
+- **Settings UI:** Add a "Settings" gear icon -> Modal to switch Tracks (General/RPG/etc.) and toggle Dark Mode.
+- **Audio:** Add a 🔈 button next to the word. Uses `tts_text` field.
+
 ## 6. Housekeeping 🧹
 - **GitIgnore:** Update `.gitignore` to exclude:
   - `data/user.json` (User progress should be local only).
