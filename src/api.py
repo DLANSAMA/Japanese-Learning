@@ -1,9 +1,10 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 import random
 import os
+import json
 from datetime import datetime, timedelta
 
 from .data_manager import load_vocab, save_vocab, load_user_profile, save_user_profile
@@ -82,6 +83,9 @@ class ShopItem(BaseModel):
 class BuyRequest(BaseModel):
     item_id: str
 
+# In-memory cache for pitch data
+_pitch_cache: Optional[Dict[str, Any]] = None
+
 def get_due_vocab():
     vocab = load_vocab()
     now = datetime.now()
@@ -99,6 +103,22 @@ def get_due_vocab():
         elif card.due_date <= today_str:
             due.append(card)
     return due, vocab
+
+def load_pitch_data():
+    global _pitch_cache
+    if _pitch_cache is not None:
+        return _pitch_cache
+
+    path = os.path.join("data", "pitch_accent.json")
+    if os.path.exists(path):
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                _pitch_cache = json.load(f)
+        except:
+            _pitch_cache = {}
+    else:
+        _pitch_cache = {}
+    return _pitch_cache
 
 @app.get("/api/user", response_model=UserStats)
 def get_user_stats():
@@ -296,7 +316,6 @@ def add_dictionary_item(payload: DictionaryAddRequest):
 
 @app.get("/api/curriculum")
 def get_curriculum():
-    import json
     with open("data/curriculum.json", "r", encoding="utf-8") as f:
         return json.load(f)
 
@@ -327,13 +346,40 @@ def buy_item(payload: BuyRequest):
 
     if item.type == "theme":
         profile.inventory.append(item.id)
-        # Auto-equip theme? Or just unlock? Let's just unlock.
     elif item.type == "powerup":
         # logic for powerup
         pass
 
     save_user_profile(profile)
     return {"status": "success", "gems": profile.gems, "inventory": profile.inventory}
+
+@app.get("/api/pitch/{word}")
+def get_pitch_data_endpoint(word: str, kana: Optional[str] = None):
+    # Try to look up in ingested data
+    pitch_data = load_pitch_data()
+
+    # Try exact match first
+    # If kana provided, use combined key "word:kana"
+    if kana and f"{word}:{kana}" in pitch_data:
+        return {"pattern": pitch_data[f"{word}:{kana}"]}
+
+    # If not found or no kana, try to find any entry starting with word:
+    # This is inefficient for large dicts but okay for MVP
+    # Optimization: Use a separate map or rely on frontend to pass exact key
+
+    # Fallback to heuristic pitch engine
+    pattern = get_pitch_pattern(word, kana if kana else word)
+    return {"pattern": pattern, "source": "heuristic"}
+
+@app.get("/api/kanji/{char}")
+def get_kanji_svg(char: str):
+    path = os.path.join("data", "kanji", f"{char}.svg")
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            content = f.read()
+        return Response(content=content, media_type="image/svg+xml")
+    else:
+        raise HTTPException(status_code=404, detail="Kanji SVG not found")
 
 # Mount Static Files (Catch-all must be last)
 STATIC_DIR = os.path.join(os.path.dirname(__file__), 'static')
