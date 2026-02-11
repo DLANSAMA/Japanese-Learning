@@ -1,6 +1,7 @@
 import sqlite3
 import random
 import threading
+import re
 from typing import List, Dict, Any
 from jamdict import Jamdict
 
@@ -40,6 +41,14 @@ def _extract_pos(entry) -> str:
         return 'noun'
 
     return 'unknown'
+
+def _is_japanese(text: str) -> bool:
+    """Checks if the text contains at least one Japanese character (Kanji, Hiragana, Katakana)."""
+    # Regex ranges for Japanese characters
+    # Hiragana: 3040-309F
+    # Katakana: 30A0-30FF
+    # Kanji: 4E00-9FAF
+    return bool(re.search(r'[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]', text))
 
 def search(query: str):
     # Returns list of definitions
@@ -195,6 +204,10 @@ def get_recommendations(track: str = "General", limit: int = 5, exclude_words: L
             # QC: Length Check (Max 5 chars)
             check_text = kanji if kanji else kana
             if len(check_text) > 5:
+                continue
+
+            # QC: Japanese Character Check (Prevent 'b')
+            if not _is_japanese(check_text):
                 continue
 
             # QC: Kanji Check
