@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Japanese Learning Dojo</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -38,7 +40,9 @@
         }
     </script>
     <style>
-        body { background-color: #0f172a; color: #e2e8f0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #0f172a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+        .font-jp { font-family: 'Noto Sans JP', sans-serif; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .flip-card { perspective: 1000px; width: 300px; height: 400px; cursor: pointer; }
         .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
         .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
@@ -86,14 +90,24 @@
                 <div class="text-gray-400 text-sm uppercase">Streak</div>
                 <div id="stat-streak" class="text-3xl font-bold text-red-400">0</div>
             </div>
+            <div class="bg-gray-800 p-6 rounded-xl border border-pink-500/30 text-center">
+                <div class="text-gray-400 text-sm uppercase">Gems</div>
+                <div id="stat-gems" class="text-3xl font-bold text-pink-400">0</div>
+            </div>
         </div>
 
-        <div class="flex justify-center gap-6">
+        <div class="flex justify-center gap-6 flex-wrap">
             <button onclick="startStudy()" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-lg text-xl font-bold hover:scale-105 transition shadow-lg shadow-cyan-500/50">
                 👨‍🏫 Study Mode
             </button>
             <button onclick="startQuiz()" class="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-500 rounded-lg text-xl font-bold hover:scale-105 transition shadow-lg shadow-purple-500/50">
                 📝 Quiz Mode
+            </button>
+            <button onclick="showView('map-view'); loadCurriculum();" class="px-8 py-4 bg-gradient-to-r from-green-600 to-teal-500 rounded-lg text-xl font-bold hover:scale-105 transition shadow-lg shadow-green-500/50">
+                🗺️ Map
+            </button>
+            <button onclick="showView('shop-view'); loadShop();" class="px-8 py-4 bg-gradient-to-r from-yellow-600 to-orange-500 rounded-lg text-xl font-bold hover:scale-105 transition shadow-lg shadow-yellow-500/50">
+                💎 Shop
             </button>
         </div>
 
@@ -165,11 +179,17 @@
     <!-- Quiz View -->
     <div id="quiz-view" class="hidden flex-col items-center w-full max-w-2xl">
         <div class="mb-4 text-xl text-gray-400">Quiz Mode</div>
-        <div id="quiz-card" class="bg-gray-800 p-8 rounded-xl border border-gray-600 w-full text-center shadow-2xl">
-            <div id="quiz-question" class="text-2xl font-bold mb-6 flex justify-center items-center h-24">Question Text</div>
+        <div id="quiz-card" class="bg-gray-800 p-8 rounded-xl border border-gray-600 w-full text-center shadow-2xl glass">
+            <div id="quiz-question" class="text-2xl font-bold mb-6 flex justify-center items-center h-24 font-jp">Question Text</div>
 
             <div id="quiz-options" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
                 <!-- MC Options -->
+            </div>
+
+            <div id="quiz-assemble-container" class="hidden w-full">
+                <!-- Assemble Bubbles -->
+                <div id="assemble-area" class="min-h-[60px] border-b-2 border-cyan-500 mb-6 flex flex-wrap gap-2 justify-center p-2"></div>
+                <div id="pool-area" class="flex flex-wrap gap-2 justify-center"></div>
             </div>
 
             <div id="quiz-input-container" class="mt-4">
@@ -178,6 +198,25 @@
             </div>
         </div>
         <div id="quiz-feedback" class="mt-4 text-xl font-bold h-8 transition-opacity duration-300"></div>
+        <button onclick="returnToDashboard()" class="mt-8 text-gray-500 hover:text-white">Exit</button>
+    </div>
+
+    <!-- Map View -->
+    <div id="map-view" class="hidden flex-col items-center w-full max-w-4xl">
+        <h2 class="text-3xl font-bold text-cyan-400 mb-8">Learning Path</h2>
+        <div id="map-container" class="w-full flex flex-col items-center gap-12 relative pb-20">
+            <!-- Render path nodes here -->
+            <div class="absolute w-2 bg-gray-700 h-full -z-10"></div>
+        </div>
+        <button onclick="returnToDashboard()" class="fixed bottom-6 right-6 bg-gray-800 p-4 rounded-full shadow-lg border border-gray-600 z-50">🏠</button>
+    </div>
+
+    <!-- Shop View -->
+    <div id="shop-view" class="hidden flex-col items-center w-full max-w-4xl">
+        <h2 class="text-3xl font-bold text-yellow-400 mb-8">Item Shop 💎</h2>
+        <div id="shop-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+            <!-- Shop items -->
+        </div>
         <button onclick="returnToDashboard()" class="mt-8 text-gray-500 hover:text-white">Exit</button>
     </div>
 

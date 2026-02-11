@@ -1,0 +1,100 @@
+{
+  "units": [
+    {
+      "id": "u1",
+      "title": "Unit 1: The Basics",
+      "description": "Greetings, Numbers, and Introductions",
+      "color": "cyan",
+      "lessons": [
+        {
+          "id": "l1",
+          "title": "Lesson 1: Greetings",
+          "type": "vocab",
+          "content": ["hello", "good morning", "good evening", "goodbye"]
+        },
+        {
+          "id": "l2",
+          "title": "Lesson 2: Numbers 1-10",
+          "type": "vocab",
+          "content": ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
+        },
+        {
+          "id": "l3",
+          "title": "Lesson 3: Basic Grammar",
+          "type": "grammar",
+          "content": ["wa", "desu", "ka"]
+        },
+        {
+          "id": "boss1",
+          "title": "Boss Quiz: Survival",
+          "type": "boss",
+          "content": ["intro_conversation"]
+        }
+      ]
+    },
+    {
+      "id": "u2",
+      "title": "Unit 2: Daily Life",
+      "description": "Food, Drink, and Simple Actions",
+      "color": "green",
+      "lessons": [
+        {
+          "id": "l4",
+          "title": "Lesson 1: Food",
+          "type": "vocab",
+          "content": ["sushi", "ramen", "tempura", "water", "tea"]
+        },
+        {
+          "id": "l5",
+          "title": "Lesson 2: Actions",
+          "type": "vocab",
+          "content": ["eat", "drink", "see", "buy"]
+        },
+        {
+          "id": "l6",
+          "title": "Lesson 3: Particles",
+          "type": "grammar",
+          "content": ["o", "de"]
+        },
+        {
+          "id": "boss2",
+          "title": "Boss Quiz: Restaurant",
+          "type": "boss",
+          "content": ["restaurant_order"]
+        }
+      ]
+    },
+    {
+      "id": "u3",
+      "title": "Unit 3: Travel",
+      "description": "Transport, Places, and Time",
+      "color": "purple",
+      "lessons": [
+        {
+          "id": "l7",
+          "title": "Lesson 1: Transport",
+          "type": "vocab",
+          "content": ["train", "bus", "taxi", "plane"]
+        },
+        {
+          "id": "l8",
+          "title": "Lesson 2: Places",
+          "type": "vocab",
+          "content": ["station", "hotel", "airport", "park"]
+        },
+        {
+          "id": "l9",
+          "title": "Lesson 3: Direction",
+          "type": "grammar",
+          "content": ["ni", "he", "kara", "made"]
+        },
+        {
+          "id": "boss3",
+          "title": "Boss Quiz: Navigation",
+          "type": "boss",
+          "content": ["asking_directions"]
+        }
+      ]
+    }
+  ]
+}

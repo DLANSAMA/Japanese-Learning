@@ -22,6 +22,7 @@ class UserStats(BaseModel):
     level: int
     streak: int
     hearts: int
+    gems: int
 
 class QuizQuestionResponse(BaseModel):
     question_id: str
@@ -44,6 +45,7 @@ class AnswerResponse(BaseModel):
     xp_gained: int = 0
     new_level: int
     new_xp: int
+    gems_awarded: int = 0
 
 class SettingsModel(BaseModel):
     track: str
@@ -56,6 +58,17 @@ class DictionaryAddRequest(BaseModel):
     word: str
     kana: str
     meanings: List[str]
+
+class ShopItem(BaseModel):
+    id: str
+    name: str
+    description: str
+    price: int
+    icon: str
+    type: str
+
+class BuyRequest(BaseModel):
+    item_id: str
 
 def get_due_vocab():
     vocab = load_vocab()
@@ -82,7 +95,8 @@ def get_user_stats():
         xp=profile.xp,
         level=profile.level,
         streak=profile.streak,
-        hearts=profile.hearts
+        hearts=profile.hearts,
+        gems=profile.gems
     )
 
 @app.get("/api/quiz/vocab", response_model=QuizQuestionResponse)
@@ -138,10 +152,17 @@ def submit_answer(payload: AnswerRequest):
     is_correct = user_ans in correct_answers
 
     xp_gained = 0
+    gems_awarded = 0
     if is_correct:
         item.level += 1
         item.last_review = datetime.now().strftime('%Y-%m-%d')
         xp_gained = 10
+
+        # Award Gems logic: 1 gem per correct answer (can be tweaked)
+        # Or random chance? Let's do 1 gem.
+        profile.gems += 1
+        gems_awarded = 1
+
         add_xp(profile, xp_gained)
         update_card_srs(item, 5)
     else:
@@ -158,7 +179,8 @@ def submit_answer(payload: AnswerRequest):
         explanation=f"{item.word} ({item.kana}) means '{item.meaning}'",
         xp_gained=xp_gained,
         new_level=profile.level,
-        new_xp=profile.xp
+        new_xp=profile.xp,
+        gems_awarded=gems_awarded
     )
 
 @app.get("/api/study")
@@ -239,6 +261,47 @@ def add_dictionary_item(payload: DictionaryAddRequest):
     save_vocab(vocab)
 
     return {"status": "success", "word": new_item.word}
+
+@app.get("/api/curriculum")
+def get_curriculum():
+    import json
+    with open("data/curriculum.json", "r", encoding="utf-8") as f:
+        return json.load(f)
+
+@app.get("/api/shop", response_model=List[ShopItem])
+def get_shop_items():
+    return [
+        ShopItem(id="theme_cyberpunk", name="Cyberpunk Theme", description="Neon lights and dark mode.", price=500, icon="🌆", type="theme"),
+        ShopItem(id="theme_edo", name="Edo Period Theme", description="Traditional Japanese aesthetic.", price=1000, icon="🏯", type="theme"),
+        ShopItem(id="freeze", name="Streak Freeze", description="Protect your streak for one day.", price=200, icon="🧊", type="powerup")
+    ]
+
+@app.post("/api/shop/buy")
+def buy_item(payload: BuyRequest):
+    profile = load_user_profile()
+    items = get_shop_items()
+    item = next((i for i in items if i.id == payload.item_id), None)
+
+    if not item:
+        raise HTTPException(status_code=404, detail="Item not found")
+
+    if payload.item_id in profile.inventory and item.type != "powerup":
+        raise HTTPException(status_code=400, detail="Item already owned")
+
+    if profile.gems < item.price:
+        raise HTTPException(status_code=400, detail="Not enough gems")
+
+    profile.gems -= item.price
+
+    if item.type == "theme":
+        profile.inventory.append(item.id)
+        # Auto-equip theme? Or just unlock? Let's just unlock.
+    elif item.type == "powerup":
+        # logic for powerup
+        pass
+
+    save_user_profile(profile)
+    return {"status": "success", "gems": profile.gems, "inventory": profile.inventory}
 
 # Mount Static Files (Catch-all must be last)
 STATIC_DIR = os.path.join(os.path.dirname(__file__), 'static')
