@@ -38,6 +38,13 @@
 - Generate `example` string.
 - Save to `Vocabulary` object.
 
+## 4. Quality Control (Hotfix) 🛡️
+**Problem:** Autopilot is fetching garbage (e.g., "B").
+**Requirement:** Update `dictionary.py` / `feeder.py` to filter results:
+- **No Single ASCII chars:** Word must contain Kanji/Kana.
+- **Min Length:** > 1 character (unless it's a known particle like 'e').
+- **Meaning Check:** Must have a definition length > 2 chars.
+
 ## 3. Implementation Plan 🛠️
 1.  Create `data/templates.json` with 20+ common N5 patterns.
 2.  Implement `generate_example(word, pos)` in `sentence_engine.py`.
