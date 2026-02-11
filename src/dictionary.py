@@ -16,58 +16,54 @@ def get_jam():
 def _extract_pos(entry) -> str:
     """Extracts a simplified Part of Speech from the entry."""
     # Priority: Verb > Adjective > Noun
-    # Check all senses
     all_pos = []
     for sense in entry.senses:
-        # sense.pos is a list of strings
+        # Check if 'pos' attribute exists and is iterable
         if hasattr(sense, 'pos'):
-            all_pos.extend([str(p).lower() for p in sense.pos])
+            pos_val = sense.pos
+            # jamdict might return a list of strings or objects depending on version
+            if isinstance(pos_val, list):
+                all_pos.extend([str(p).lower() for p in pos_val])
+            else:
+                all_pos.append(str(pos_val).lower())
 
-    # Check for Verbs
     if any('verb' in p for p in all_pos):
         if any('ichidan' in p for p in all_pos): return 'v1'
         if any('godan' in p for p in all_pos): return 'v5'
         if any('suru' in p for p in all_pos): return 'vs'
         return 'verb'
 
-    # Check for Adjectives
     if any('adjective' in p for p in all_pos):
         if any('keiyoushi' in p for p in all_pos): return 'adj-i'
         if any('keiyodoshi' in p for p in all_pos): return 'adj-na'
         return 'adj'
 
-    # Check for Nouns
     if any('noun' in p for p in all_pos):
         return 'noun'
 
     return 'unknown'
 
 def search(query: str):
-    # Returns list of definitions
     jam = get_jam()
-    result = jam.lookup(query)
-    entries = []
+    try:
+        result = jam.lookup(query)
+    except Exception as e:
+        print(f"Jamdict lookup error: {e}")
+        return []
 
+    entries = []
     for entry in result.entries:
-        # Get first kanji form, or fallback to first kana form
         kanji = entry.kanji_forms[0].text if entry.kanji_forms else ""
         kana = entry.kana_forms[0].text if entry.kana_forms else ""
 
-        if not kanji:
-            kanji = kana
+        if not kanji: kanji = kana
+        if not kana: kana = kanji
 
-        if not kana:
-             # Should be very rare for Japanese dict entry to have no kana
-             kana = kanji
-
-        # Collect glosses
         meanings = []
         for sense in entry.senses:
              glosses = getattr(sense, 'gloss', [])
-             if isinstance(glosses, list):
-                 meanings.extend([str(g) for g in glosses])
-             else:
-                 meanings.append(str(glosses))
+             for g in glosses:
+                 meanings.append(str(g))
 
         pos = _extract_pos(entry)
 
@@ -80,167 +76,124 @@ def search(query: str):
 
     return entries
 
-def get_recommendations(track: str = "General", limit: int = 5, exclude_words: List[str] = []) -> List[Dict[str, Any]]:
+def get_recommendations(track: str = "General", limit: int = 5, exclude_words: List[str] = [], user_level: int = 1) -> List[Dict[str, Any]]:
     jam = get_jam()
-    conn = sqlite3.connect(jam.db_file)
-    cursor = conn.cursor()
 
-    query = ""
-    params = []
-
-    # Fetch more candidates to account for exclusions and filtering
-    fetch_limit = limit * 20
-
-    base_exclusion = """
-        AND idseq NOT IN (
-            SELECT DISTINCT s.idseq
-            FROM Sense s JOIN misc m ON s.ID = m.sid
-            WHERE m.text IN ('archaic', 'obsolete', 'obscure', 'rare', 'out-dated or obsolete kana usage')
-        )
-    """
-
-    if track == "General":
-        # Prioritize 'news1' or 'ichi1'
-        query = f"""
-            SELECT idseq FROM (
-                SELECT k.idseq
-                FROM Kanji k JOIN KJP p ON k.ID = p.kid
-                WHERE p.text IN ('news1', 'ichi1')
-                UNION
-                SELECT r.idseq
-                FROM Kana r JOIN KNP p ON r.ID = p.kid
-                WHERE p.text IN ('news1', 'ichi1')
-            )
-            WHERE 1=1 {base_exclusion}
-            ORDER BY RANDOM() LIMIT ?
-        """
-        params = [fetch_limit]
-
-    elif track == "Pop Culture":
-        query = f"""
-            SELECT idseq FROM (
-                SELECT s.idseq
-                FROM Sense s JOIN misc m ON s.ID = m.sid
-                WHERE m.text IN ('slang', 'colloquialism', 'manga slang', 'anime slang', 'net slang')
-                UNION
-                SELECT s.idseq
-                FROM Sense s JOIN field f ON s.ID = f.sid
-                WHERE f.text LIKE '%manga%' OR f.text LIKE '%anime%' OR f.text LIKE '%game%'
-            )
-            WHERE 1=1 {base_exclusion}
-            ORDER BY RANDOM() LIMIT ?
-        """
-        params = [fetch_limit]
-
-    elif track == "Business":
-        query = f"""
-            SELECT DISTINCT s.idseq
-            FROM Sense s JOIN field f ON s.ID = f.sid
-            WHERE f.text IN ('business', 'finance', 'economics', 'law', 'marketing', 'accounting')
-            {base_exclusion}
-            ORDER BY RANDOM() LIMIT ?
-        """
-        params = [fetch_limit]
-
-    elif track == "Tech":
-        query = f"""
-            SELECT DISTINCT s.idseq
-            FROM Sense s JOIN field f ON s.ID = f.sid
-            WHERE f.text LIKE '%computing%' OR f.text LIKE '%IT%' OR f.text IN ('mathematics', 'physics', 'engineering', 'science')
-            {base_exclusion}
-            ORDER BY RANDOM() LIMIT ?
-        """
-        params = [fetch_limit]
-
-    elif track == "Food":
-        query = f"""
-            SELECT DISTINCT s.idseq
-            FROM Sense s JOIN field f ON s.ID = f.sid
-            WHERE f.text IN ('food', 'cooking', 'cuisine')
-            {base_exclusion}
-            ORDER BY RANDOM() LIMIT ?
-        """
-        params = [fetch_limit]
-
-    else:
-        return get_recommendations("General", limit, exclude_words)
+    # We fetch a larger pool of random IDs to filter in Python
+    fetch_limit = limit * 40 # Increased fetch limit to find enough candidates
 
     try:
-        cursor.execute(query, tuple(params))
+        conn = sqlite3.connect(jam.db_file)
+        cursor = conn.cursor()
+        # Fetch random entry IDs
+        cursor.execute("SELECT idseq FROM entry ORDER BY RANDOM() LIMIT ?", (fetch_limit,))
         rows = cursor.fetchall()
-        idseqs = [row[0] for row in rows]
-    except Exception as e:
-        print(f"Error executing query: {e}")
+        idseqs = [r[0] for r in rows]
         conn.close()
+    except Exception as e:
+        print(f"DB Error: {e}")
         return []
-
-    conn.close()
-
-    random.shuffle(idseqs)
 
     results = []
     count = 0
 
     for idseq in idseqs:
-        if count >= limit:
-            break
+        if count >= limit: break
 
         try:
+            # Lookup by ID using the correct method for this jamdict version
+            # jam.lookup(idseq=...) seems broken or deprecated in this version based on error log
+            # Use jam.jmdict.get_entry(idseq) instead
             entry = jam.jmdict.get_entry(idseq)
-            if not entry:
-                continue
+            if not entry: continue
 
-            kanji = entry.kanji_forms[0].text if entry.kanji_forms else ""
-            kana = entry.kana_forms[0].text if entry.kana_forms else ""
+            # Extract Text
+            k_forms = entry.kanji_forms
+            r_forms = entry.kana_forms
 
+            kanji = k_forms[0].text if k_forms else ""
+            kana = r_forms[0].text if r_forms else ""
+
+            # Use kanji as main word if available, else kana
             word = kanji if kanji else kana
 
-            # QC: Symbol Check
-            if any(char in string.punctuation for char in word):
-                continue
-            if any(char in "！？。、～・" for char in word):
-                 continue
+            if not word: continue
+            if word in exclude_words: continue
 
-            # QC: Length Check (Max 5 chars)
-            if len(word) > 5:
-                continue
+            # --- DIFFICULTY FILTERING ---
+            is_common = False
 
-            # QC: 1-char Check
+            # Check priority tags in Kanji forms
+            for form in k_forms:
+                # in jamdict 0.1a, pri is a list of strings like ['news1']
+                if hasattr(form, 'pri') and form.pri:
+                    if any(p in ['news1', 'ichi1', 'spec1', 'gai1'] for p in form.pri):
+                        is_common = True
+                        break
+
+            # If not found in Kanji, check Kana forms
+            if not is_common:
+                for form in r_forms:
+                    if hasattr(form, 'pri') and form.pri:
+                        if any(p in ['news1', 'ichi1', 'spec1', 'gai1'] for p in form.pri):
+                            is_common = True
+                            break
+
+            # Autopilot Logic: If user is beginner (< Level 10), enforce common words only
+            if user_level < 10 and not is_common:
+                continue
+            # -----------------------------
+
+            # --- TRACK FILTERING ---
+            # Collect all glosses to check for keywords
+            all_gloss = []
+            for s in entry.senses:
+                for g in getattr(s, 'gloss', []):
+                    all_gloss.append(str(g).lower())
+
+            # Simple keyword matching for tracks
+            if track == "Pop Culture":
+                if not any(k in g for k in ['slang', 'anime', 'manga', 'game', 'internet', 'net'] for g in all_gloss):
+                    # stricter: 95% chance to skip if not relevant
+                    if random.random() > 0.05: continue
+            elif track == "Business":
+                if not any(k in g for k in ['business', 'company', 'finance', 'economy', 'money', 'office', 'corporate'] for g in all_gloss):
+                    if random.random() > 0.05: continue
+            elif track == "Travel":
+                if not any(k in g for k in ['travel', 'trip', 'hotel', 'train', 'station', 'airport', 'ticket', 'reservation'] for g in all_gloss):
+                    if random.random() > 0.05: continue
+            # -----------------------
+
+            # QC Checks
+            # Skip very long words (compounds) for beginners
+            if len(word) > 6 and user_level < 10: continue
+
+            # Skip words with punctuation
+            if any(c in string.punctuation for c in word): continue
+            if any(c in "！？。、～・" for c in word): continue
+
+            # Skip single characters unless they are common words (like 目, 手, etc.) which are handled by is_common check above.
+            # But let's be stricter for single chars: must be hiragana/katakana common particles OR common kanji.
             if len(word) == 1:
-                # Check if it looks like a Kana (Hiragana or Katakana)
-                # Hiragana: 3040-309F, Katakana: 30A0-30FF
-                is_kana = all('\u3040' <= c <= '\u309f' or '\u30a0' <= c <= '\u30ff' for c in word)
-                if is_kana:
-                    # Allow only common particles
+                # If it's kana, only allow specific particles
+                is_kana_only = all('\u3040' <= c <= '\u309f' or '\u30a0' <= c <= '\u30ff' for c in word)
+                if is_kana_only:
                     if word not in ['は', 'が', 'に', 'で', 'を', 'も', 'へ', 'と', 'や', 'の', 'ね', 'よ', 'わ']:
                         continue
-
-            if not kanji: kanji = kana
-            if not kana: kana = kanji
-
-            if kanji in exclude_words:
-                continue
-
-            meanings = []
-            for sense in entry.senses:
-                 glosses = getattr(sense, 'gloss', [])
-                 if isinstance(glosses, list):
-                     meanings.extend([str(g) for g in glosses])
-                 else:
-                     meanings.append(str(glosses))
+                # If it's kanji, 'is_common' check handles it (most common 1-char kanji have pri tags)
 
             pos = _extract_pos(entry)
 
             results.append({
-                "word": kanji,
+                "word": word,
                 "kana": kana,
-                "meanings": meanings,
+                "meanings": all_gloss[:3], # Top 3 meanings
                 "pos": pos
             })
             count += 1
 
         except Exception as e:
-            print(f"Error fetching entry {idseq}: {e}")
+            # print(f"Error processing entry {idseq}: {e}")
             continue
 
     return results

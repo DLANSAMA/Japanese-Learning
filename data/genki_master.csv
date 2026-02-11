@@ -1,0 +1,1172 @@
+おはよう,お早う,Good morning,0
+おはようございます,お早う御座います,Good morning (polite),0
+こんにちは,,Good afternoon,0
+こんばんは,,Good evening,0
+さようなら,,Goodbye (for a long time),0
+おやすみ,,Good night,0
+おやすみなさい,,Good night (polite),0
+ありがとう,,Thank you,0
+ありがとうございます,,Thank you (polite),0
+すみません,,Excuse me; I'm sorry,0
+いいえ,,No; Not at all,0
+いってきます,,I'm leaving home and coming back,0
+いってらしゃい,,Please leave home and come back,0
+ただいま,,I'm home,0
+おかえり,,Welcome home,0
+おかえりなさい,,Welcome home (polite),0
+いただきます,,Thanks for the meal (before eating),0
+ごちそうさま,,Thanks for the meal (after eating),0
+ごちそうさまでした,,Thanks for the meal (after eating) (polite),0
+はじめまして,,How do you do?,0
+〜です,,I am...,0
+よろしくおねがいします,,Nice to meet you,0
+ゼロ;れい,,0,0
+いち,一,1,0
+に,二,2,0
+さん,三,3,0
+よん;し;よ,四,4,0
+ご,五,5,0
+ろく,六,6,0
+なな;しち,七,7,0
+はち,八,8,0
+きゅう;く,九,9,0
+じゅう,十,10,0
+ひゃく,百,100,0
+あの,,um...,1
+いま,今,now,1
+えいご,英語,English (language),1
+がくせい,学生,student,1
+〜ご,〜語,language,1
+こうこう,高校,high school,1
+ごご,午後,P.M.,1
+ごぜん,午前,A.M.,1
+〜さい,〜歳,...years old,1
+〜さん,,Mr./Ms....,1
+〜じ,〜時,o'clock,1
+〜じん,〜人,people,1
+せんせい,先生,teacher; Professor ...,1
+せんもん,専門,major,1
+そうです,,That's right.,1
+だいがく,大学,college; university,1
+でんわ,電話,telephone,1
+ともだち,友達,friend,1
+なまえ,名前,name,1
+なん／なに,何,what,1
+にほん,日本,Japan,1
+〜ねんせい,〜年生,...year student,1
+はい,,ys,1
+はん,半,half,1
+ばんごう,番号,number,1
+りゅうがくせい,留学生,international student,1
+わたし,私,I,1
+アメリカ,,U.S.A.,1
+イギリス,,Britain,1
+オーストラリア,,Australia,1
+かんこく,韓国,Korea,1
+スウェーデン,,Sweden,1
+ちゅうごく,中国,China,1
+かがく,科学,science,1
+アジアけんきゅう,アジア研究,Asian studies,1
+こくさいかんけい,国際関係,international relations,1
+コンピューター,,computer,1
+じんるいがく,人類学,anthropology,1
+せいじ,政治,politics,1
+ビジネス,,business,1
+ぶんがく,文学,literature,1
+れきし,歴史,history,1
+しごと,仕事,job; work; occupation,1
+いしゃ,医者,doctor,1
+かいしゃいん,会社員,office worker,1
+こうこうせい,高校生,high school student,1
+しゅふ,主婦,housewife,1
+だいがくいんせい,大学院生,graduate student,1
+だいがくせい,大学生,college student,1
+べんごし,弁護士,lawyer,1
+おかあさん,お母さん,mother,1
+おとうさん,お父さん,father,1
+おねえさん,お姉さん,older sister,1
+おにいさん,お兄さん,older brother,1
+いもうと,妹,younger sister,1
+おとうと,弟,younger brother,1
+これ,,this one,2
+それ,,that one,2
+あれ,,that one (over there),2
+どれ,,which one,2
+この,,this ...,2
+その,,that ...,2
+あの,,that ... (over there),2
+どの,,which ...,2
+あそこ,,over there,2
+どこ,,where,2
+だれ,,who,2
+おいしい,,delicious,2
+さかな,魚,fish,2
+とんかつ,,pork cutlet,2
+にく,肉,meat,2
+メニュー,,menu,2
+やさい,野菜,vegetable,2
+えんぴつ,鉛筆,pencil,2
+かさ,傘,umbrella,2
+かばん,,bag,2
+くつ,靴,shoes,2
+さいふ,財布,wallet,2
+ジーンズ,,jeans,2
+じしょ,辞書,dictionary,2
+じてんしゃ,自転車,bicycle,2
+しんぶん,新聞,newspaper,2
+テープ,,tape,2
+とけい,時計,watch; clock,2
+トレーナー,,sweat shirt,2
+ノート,,notebook,2
+ペン,,pen,2
+ぼうし,帽子,hat; cap,2
+ほん,本,book,2
+おてあらい,お手洗い,restroom,2
+きっさてん,喫茶店,cafe,2
+ぎんこう,銀行,bank,2
+としょかん,図書館,library,2
+ゆうびんきょく,郵便局,post office,2
+けいざい,経済,economics,2
+いくら,,how much,2
+〜えん,〜円,...yen,2
+たかい,高い,expensive,2
+いらっしゃいませ,,Welcome (to our store),2
+（〜を）おねがいします,,"..., please.",2
+（〜を）ください,,Please give me...,2
+じゃあ,,"then...; if that is the case,...",2
+（〜を）どうぞ,,Here it is.,2
+どうも,,Thank you.,2
+えいが,映画,movie,3
+おんがく,音楽,music,3
+ざっし,雑誌,magazine,3
+スポーツ,,sports,3
+デート,,"date (romantic, not calendar)",3
+テニス,,tennis,3
+テレビ,,TV,3
+ビデオ,,video tape; VCR,3
+あさごはん,朝御飯,breakfast,3
+おさけ,お酒,sake; alcohol,3
+おちゃ,お茶,green tea,3
+コーヒー,,coffee,3
+ばんごはん,晩御飯,dinner,3
+ハンバーガー,,hamburger,3
+ひるごはん,昼御飯,lunch,3
+みず,水,water,3
+いえ,家,home; house,3
+うち,家,home; house; my place,3
+LL（エルエル）,,language lab,3
+がっこう,学校,school,3
+あさ,朝,morning,3
+あした,,tomorrow,3
+いつ,,when,3
+きょう,今日,today,3
+〜ごろ,,at about,3
+こんばん,今晩,tonight,3
+しゅうまつ,週末,weekend,3
+どようび,土曜日,Saturday,3
+にちようび,日曜日,Sunday,3
+まいにち,毎日,every day,3
+まいばん,毎晩,every night,3
+いく,行く,to go,3
+かえる,帰る,to go back; to return,3
+きく,聞く,to listen; to hear,3
+のむ,飲む,to drink,3
+はなす,話す,to speak; to talk,3
+よむ,読む,to read,3
+おきる,起きる,to get up,3
+たべる,食べる,to eat,3
+ねる,寝る,to sleep; to go to sleep,3
+みる,見る,to see; to look at; to watch,3
+くる,来る,to come,3
+する,,to do,3
+べんきょうする,勉強する,to study,3
+いい,,good,3
+はやい,早い,early,3
+あまり+ negative,,not much,3
+ぜんぜん + negative,全然,not at all,3
+たいてい,大抵,usually,3
+ちょっと,,a little,3
+ときどき,時々,sometimes,3
+よく,,often; much,3
+そうですね,,That's right.; Let me see.,3
+でも,,but,3
+どうですか,,How about...?; How is...?,3
+アルバイト,,part-time job,4
+かいもの,買い物,shopping,4
+クラス,,class,4
+あなた,,you,4
+いぬ,犬,dog,4
+おみやげ,お土産,souvenir,4
+こども,子供,child,4
+ごはん,御飯,rice; meal,4
+しゃしん,写真,picture; photograph,4
+つくえ,机,desk,4
+てがみ,手紙,letter,4
+ねこ,猫,cat,4
+パン,,bread,4
+ひと,人,person,4
+おてら,お寺,temple,4
+こうえん,公園,park,4
+スーパー,,supermarket,4
+デパート,,department store,4
+バスてい,バス停,bus stop,4
+びょういん,病院,hospital,4
+ホテル,,hotel,4
+ほんや,本屋,bookstore,4
+まち,町,town; city,4
+レストラン,,restaurant,4
+きのう,昨日,yesterday,4
+さっき,,a little while ago,4
+〜じかん,〜時間,hour,4
+いちじかん,一時間,one hour,4
+せんしゅう,先週,last week,4
+とき,時,when...; at the time of...,4
+かようび,火曜日,Tuesday,4
+すいようび,水曜日,Wednesday,4
+もくようび,木曜日,Thursday,4
+きんようび,金曜日,Friday,4
+あう,会う,to meet; to see (a person),4
+ある,,there is ...,4
+かう,買う,to buy,4
+かく,書く,to write,4
+とる,撮る,to take (pictures),4
+まつ,待つ,to wait,4
+わかる,,to understand,4
+いる,,(a person) is in ...; stays at ...,4
+〜ぐらい,,about (approximate measurement),4
+ごめんなさい,,I'm sorry.,4
+だから,,so; therefore,4
+たくさん,,many; a lot,4
+〜と,,together with (a person),4
+どうして,,why,4
+ひとりで,一人で,alone,4
+もしもし,,Hello? (used on the phone),4
+みぎ,右,right,4
+ひだり,左,left,4
+まえ,前,front,4
+うしろ,後ろ,back,4
+なか,中,inside,4
+うえ,上,on,4
+した,下,under,4
+そば,,near,4
+となり,隣,next,4
+あいだ,間,between,4
+そこ,,there,4
+ここ,,here,4
+げつようび,月曜日,Monday,4
+うみ,海,sea,5
+きって,切手,postal stamps,5
+きっぷ,切符,ticket,5
+サーフィン,,surfing,5
+しゅくだい,宿題,homework,5
+たべもの,食べ物,food,5
+たんじょうび,誕生日,birthday,5
+テスト,,test,5
+てんき,天気,weather,5
+のみもの,飲み物,drink,5
+はがき,葉書,postcard,5
+バス,,bus,5
+ひこうき,飛行機,airplane,5
+へや,部屋,room,5
+ぼく,僕,I (used by men),5
+やすみ,休み,holiday; day off; absence,5
+りょこう,旅行,travel,5
+あたらしい,新しい,new,5
+あつい,暑い,hot (weather),5
+あつい,熱い,hot (objects),5
+いそがしい,忙しい,busy (people/days),5
+おおきい,大きい,large,5
+おもしろい,面白い,interesting,5
+こわい,怖い,frightening,5
+さむい,寒い,cold (weather-not used for objects),5
+たのしい,楽しい,fun,5
+ちいさい,小さい,small,5
+つまらない,,boring,5
+ふるい,古い,old (thing - not used for people),5
+むずかしい,難しい,difficult,5
+やさしい,,easy (problem); kind (person),5
+やすい,安い,inexpensive; cheap (thing),5
+きらい（な）,嫌い,disgusted with; to dislike,5
+きれい（な）,,beautiful; clean,5
+げんき（な）,元気,healthy; energetic,5
+しずか（な）,静か,quiet,5
+すき（な）,好き,fond of; to like,5
+だいきらい（な）,大嫌い,to hate,5
+だいすき（な）,大好き,very fond of; to love,5
+にぎやか（な）,,lively,5
+ハンサム（な）,,handsome,5
+ひま（な）,暇,not busy; to have a lot of free time,5
+およぐ,泳ぐ,to swim,5
+きく,聞く,to ask,5
+のる,乗る,to ride; to board,5
+やる,,to do; to perform,5
+でかける,出かける,to go out,5
+いっしょに,一緒に,together,5
+それから,,and then,5
+だいじょうぶ,大丈夫,It's okay.; Not to worry.; Everything is under control.,5
+とても,,very,5
+どんな,,what kind of...,5
+〜まい,〜枚,[counter for flat objects],5
+〜まで,,to (a place); as far as (a place); till (a time),5
+おかね,お金,money,6
+おばあさん,,grandmother; old woman,6
+おふろ,お風呂,bath,6
+かんじ,漢字,kanji; Chinese character,6
+きょうかしょ,教科書,textbook,6
+こんしゅう,今週,this week,6
+しみんびょういん,市民病院,Municipal Hospital,6
+つぎ,次,next,6
+テレビゲーム,,video game,6
+でんき,電気,electricity,6
+でんしゃ,電車,train,6
+にもつ,荷物,baggage,6
+ページ,,page,6
+まど,窓,window,6
+よる,夜,night,6
+らいしゅう,来週,next week,6
+らいねん,来年,next year,6
+たいへん（な）,大変,tough (situation),6
+あそぶ,遊ぶ,to play; to spend time pleasantly,6
+いそぐ,急ぐ,to hurry,6
+おふろにはいる,お風呂に入る,to take a bath,6
+かえす,返す,to return (things),6
+けす,消す,to turn off; to erase,6
+しぬ,死ぬ,to die,6
+すわる,座る,to sit down,6
+たつ,立つ,to stand up,6
+たばこをすう,たばこを吸う,to smoke,6
+つかう,使う,to use,6
+てつだう,手伝う,to help,6
+はいる,入る,to enter,6
+もつ,持つ,to carry; to hold,6
+やすむ,休む,to be absent (from...); to rest,6
+あける,開ける,to open (something),6
+おしえる,教える,to teach; to instruct,6
+おりる,降りる,to get off,6
+かりる,借りる,to borrow,6
+しめる,閉める,to close (something),6
+つける,,to turn on,6
+でんわをかける,電話をかける,to make a phone call,6
+わすれる,忘れる,to forget; to leave behind,6
+つれてくる,連れてくる,to bring (a person),6
+もってくる,持ってくる,to bring (a thing),6
+あとで,後で,later on,6
+おそく,遅く,(do something) late,6
+〜から,,because ...,6
+けっこうです,結構です,That would be fine.; That wouldn't be necessary.,6
+すぐ,,right away,6
+ほんとうですか,本当ですか,Really?,6
+ゆっくり,,slowly; leisurely; unhurriedly,6
+あね,姉,(my) older sister,7
+アパート,,apartment,7
+いもうと,妹,younger sister,7
+うた,歌,song,7
+おとうと,弟,younger brother,7
+おとこのひと,男の人,man,7
+おにいさん,お兄さん,older brother,7
+おねえさん,お姉さん,older sister,7
+おんなのひと,女の人,woman,7
+かいしゃ,会社,company,7
+かぞく,家族,family,7
+かみ,髪,hair,7
+きょうだい,兄弟,brothers and sisters,7
+くに,国,country; place of origin,7
+くるま,車,car,7
+コンビニ,,convenience store,7
+しょくどう,食堂,cafeteria; dining commons,7
+ちち,父,(my) father,7
+Tシャツ,,T-shirt,7
+め,目,eye,7
+めがね,眼鏡,glasses,7
+あたまがいい,頭がいい,bright; smart; clever,7
+かっこいい,,great-looking,7
+かわいい,,cute,7
+せがたかい,背が高い,tall,7
+せがひくい,背が低い,short (stature),7
+ながい,長い,long,7
+はやい,早い,fast,7
+みじかい,短い,short (length),7
+しんせつ,親切,kind,7
+べんり,便利,convenient,7
+うたう,歌う,to sing,7
+かぶる,,to put on (a hat),7
+しる,知る,to get to know,7
+しっています,知っています,I know,7
+しりません,知りません,I do not know,7
+すむ,住む,to live,7
+はく,,to put on (items below your waist),7
+ふとる,太る,to gain weight,7
+ふとっています,太っています,to be on the heavy side,7
+めがねをかける,,to put on glasses,7
+きる,着る,to put on (clothes above your waist),7
+やせる,,to lose weight,7
+やせています,,to be thin,7
+けっこんする,結婚する,to get married,7
+が,,but,7
+ひとり,一人,one person,7
+ふたり,二人,two people,7
+もちろん,,of course,7
+よかったら,,if you like,7
+ざんねんですね,残念ですね,That's too bad.,8
+あさって,,the day after tomorrow,8
+あめ,雨,rain,8
+かいしゃいん,会社員,office worker,8
+カメラ,,camera,8
+カラオケ,,karaoke,8
+くうき,空気,air,8
+けさ,今朝,this morning,8
+こんげつ,今月,this month,8
+しごと,仕事,job; work; occupation,8
+だいがくせい,大学生,college student,8
+ディスコ,,disco,8
+てんきよほう,天気予報,weather forecast,8
+ところ,所,place,8
+トマト,,tomato,8
+なつ,夏,summer,8
+なにか,何か,something,8
+パーティー,,party,8
+バーベキュー,,barbecue,8
+はし,,chopsticks,8
+ふゆ,冬,winter,8
+ホームステイ,,homestay; living with a local family,8
+まいしゅう,毎週,every week,8
+らいげつ,来月,next month,8
+じょうず,上手,skillful; good at...,8
+へた,下手,clumsy; poor at...,8
+ゆうめい,有名,famous,8
+あめがふる,雨が降る,it rains,8
+あらう,洗う,to wash,8
+いう,言う,to say,8
+いる,,to need,8
+おそくなる,遅くなる,to be late (for ...),8
+おもう,思う,to think,8
+きる,切る,to cut,8
+つくる,作る,to make,8
+もっていく,持っていく,to take (something),8
+じろじろみる,じろじろ見る,to stare (at ...),8
+はじめる,始める,to begin,8
+うんてんする,運転する,to drive,8
+せんたくする,洗濯する,to do laundry,8
+そうじする,掃除する,to clean,8
+りょうりする,料理する,to cook,8
+ううん,,uh-uh; no,8
+うん,,uh-huh; yes,8
+かんぱい,乾杯,Cheers! (a toast),8
+みんなで,,all (of the people) together,8
+いいこ,いい子,good child,9
+いろ,色,color,9
+おべんとう,お弁当,boxed lunch,9
+おんせん,温泉,spa; hot spring,9
+かぶき,,Kabuki; traditional Japanese theatrical art,9
+ギター,,guitar,9
+くすり,薬,medicine,9
+くすりをのむ,薬を飲む,to take medicine,9
+コンサート,,concert,9
+こんど,今度,near future,9
+さくぶん,作文,essay; composition,9
+しけん,試験,exam,9
+しんかんせん,新幹線,Shinkansen; ,9
+スキー,,ski,9
+せんげつ,先月,last month,9
+たんご,単語,word; vocabulary,9
+ピアノ,,piano,9
+びょうき,病気,illness; sickness,9
+あおい,青い,blue,9
+あかい,赤い,red,9
+くろい,黒い,black,9
+さびしい,寂しい,lonely,9
+しろい,白い,white,9
+わかい,若い,young,9
+いじわる,意地悪,mean-spirited,9
+おどる,踊る,to dance,9
+おわる,終わる,(something) ends,9
+にんきがある,人気がある,to be popular,9
+はじまる,始まる,(something) begins,9
+ひく,弾く,to play (a string instrument or piano),9
+もらう,,to get (from somebody),9
+おぼえる,覚える,to memorize,9
+でる,出る,(1) to appear; to attend (2) to exit,9
+うんどうする,運動する,to do physical exercises,9
+さんぽする,散歩する,to take a walk,9
+ぜひ,是非,by all means,9
+みんな,,all,9
+もう,,already,9
+ひとつ,一つ,one,9
+ふたつ,二つ,two,9
+みっつ,三つ,three,9
+よっつ,四つ,four,9
+いつつ,五つ,five,9
+むっつ,六つ,six,9
+ななつ,七つ,seven,9
+やっつ,八つ,eight,9
+ここのつ,九つ,nine,9
+とお,十,ten,9
+あき,秋,fall,10
+えき,駅,station,10
+おかねもち,お金持ち,rich person,10
+かお,顔,face,10
+きせつ,季節,season,10
+クレジットカード,,credit card,10
+ことし,今年,this year,10
+サッカー,,soccer,10
+シャツ,,shirt,10
+せいかつ,生活,life; living,10
+せかい,世界,world,10
+ちかてつ,地下鉄,subway,10
+てぶくろ,手袋,gloves,10
+とこや,床屋,barber's,10
+はる,春,spring,10
+パンツ,,pants,10
+びよういん,美容院,beauty parlor,10
+びん,便,flight,10
+ふね,船,ship; boat,10
+やきゅう,野球,baseball,10
+ゆうめいじん,有名人,celebrity,10
+よやく,予約,reservation,10
+らいがっき,来学期,next semester,10
+りんご,,apple,10
+あたたかい,暖かい,warm,10
+おそい,遅い,slow; late,10
+すずしい,涼しい,cool (weather),10
+つめたい,冷たい,cold (thing/people),10
+ねむい,眠い,sleepy,10
+かんたん,簡単,easy; simple,10
+かかる,,to take (amount of time / money),10
+とまる,泊まる,"to stay (at a hotel, etc.)",10
+なる,,to become,10
+はらう,払う,to pay,10
+きめる,決める,to decide,10
+れんしゅうする,練習する,to practice,10
+あるいて,歩いて,on foot,10
+いちばん,一番,best,10
+このごろ,,these days,10
+どうやって,,how; by what means,10
+どちら,,which,10
+どのぐらい,,how much; how long,10
+はやく,早く,(do something) early; fast,10
+おかし,お菓子,snack; sweets,11
+おしょうがつ,お正月,New Year's,11
+おとこのこ,男の子,boy,11
+おもちゃ,,toy,11
+おんなのこ,女の子,girl,11
+がいこく,外国,foreign country,11
+かしゅ,歌手,singer,11
+キャンプ,,camp,11
+こちら,,this person (polite),11
+こんがっき,今学期,this semester,11
+しゃちょう,社長,president of a company,11
+じゅぎょう,授業,class,11
+しょうらい,将来,future,11
+ドライブ,,drive,11
+ビール,,beer,11
+びじゅつかん,美術館,art museum,11
+ホストファミリー,,host family,11
+みずうみ,湖,lake,11
+やま,山,mountain,11
+ゆめ,夢,dream,11
+ルームメート,,roommate,11
+うそをつく,,to tell a lie,11
+おなかがすく,,to become hungry,11
+かう,飼う,to own (a pet),11
+サボる,,to cut classes,11
+とる,取る,to take (a class); to get (a grade),11
+ならう,習う,to learn,11
+のぼる,登る,to climb,11
+はたらく,働く,to work,11
+つかれる,疲れる,to get tired,11
+やめる,,to quit,11
+けんかする,,to have a fight; to quarrel,11
+しょうかいする,紹介する,to introduce,11
+ダイエットする,,to go on a diet,11
+ちこくする,遅刻する,to be late (for an appointment),11
+りゅうがくする,留学する,to study abroad,11
+あと,後,after (an event),11
+しゅっしん,出身,coming from,11
+すごく,,very,11
+そして,,and then,11
+ひさしぶり,久しぶり,it has been a long time,11
+まあまあ,,okay; so-so,11
+もっと,,more,11
+あし,足,leg; foot,12
+いみ,意味,meaning,12
+おなか,,stomach,12
+かぜ,風,cold,12
+かのじょ,彼女,girlfriend,12
+かれ,彼,boyfriend,12
+きおん,気温,temperature (weather),12
+くもり,曇り,cloudy weather,12
+しあい,試合,match; game,12
+ジュース,,juice,12
+せいせき,成績,"grade (on a test, etc.)",12
+せき,咳,cough,12
+のど,,throat,12
+は,歯,tooth,12
+はな,花,flower,12
+はれ,晴れ,sunny weather,12
+ふく,服,clothes,12
+ふつかよい,二日酔い,hangover,12
+プレゼント,,present,12
+ホームシック,,homesickness,12
+もの,物,thing (concrete object),12
+ゆき,雪,snow,12
+ようじ,用事,business to take care of,12
+あまい,甘い,sweet,12
+いたい,痛い,hurt; painful,12
+おおい,多い,there are many...,12
+せまい,狭い,narrow; not spacious,12
+つごうがわるい,都合が悪い,inconvenient; to have a scheduling conflict,12
+わるい,悪い,bad,12
+すてき,素敵,fantastic,12
+かぜをひく,風邪をひく,to catch a cold,12
+きょうみがある,興味がある,to be interested (in ...),12
+なくす,,to lose,12
+のどがかわく,のどが渇く,to become thirsty,12
+ねつがある,熱がある,to have a fever,12
+せきがでる,せきが出る,to cough,12
+わかれる,別れる,to break up; to separate,12
+きんちょうする,緊張する,to get nervous,12
+しんぱいする,心配する,to worry,12
+いつも,,always,12
+おだいじに,お大事に,Get well soon.,12
+げんきがない,元気がない,don't look well,12
+たぶん,多分,probably; maybe,12
+できるだけ,,as much as possible,12
+にさんにち,二三日,for two to three days,12
+はじめて,初めて,for the first time,12
+もうすぐ,,very soon; in a few moments/days,12
+ウェイター,,waiter,13
+おじいさん,,grandfather; old man,13
+おとな,大人,adult,13
+がいこくご,外国語,foreign language,13
+がっき,楽器,musical instrument,13
+からて,空手,karate,13
+カレー,,curry,13
+きもの,着物,kimono; Japanese traditional dress,13
+ケーキ,,cake,13
+こうこく,広告,advertisement,13
+こうちゃ,紅茶,tea (black tea),13
+ことば,言葉,language,13
+ゴルフ,,golf,13
+セーター,,sweater,13
+ぞう,象,elephant,13
+バイオリン,,violin,13
+バイク,,motorbike,13
+ぶっか,物価,(consumer) prices,13
+ぶんぽう,文法,grammar,13
+べんごし,弁護士,lawyer,13
+ぼしゅう,募集,recruitment,13
+みせ,店,shop; store,13
+やくざ,,yakuza; gangster,13
+やくそく,約束,promise; appointment,13
+レポート,,(term) paper,13
+わたくし,私,I (formal),13
+うれしい,,glad,13
+かなしい,悲しい,sad,13
+からい,辛い,hot and spicy; salty,13
+きびしい,厳しい,strict,13
+ちかい,近い,close; near,13
+いろいろ,,various; different kinds of,13
+しあわせ,幸せ,happy (lasting happiness),13
+だめ,,no good,13
+あむ,編む,to knit,13
+かす,貸す,to lend; to rent,13
+がんばる,頑張る,to do one's best; to try hard,13
+なく,泣く,to cry,13
+みがく,磨く,to brush (teeth); to polish,13
+やくそくをまもる,約束を守る,to keep a promise,13
+かんどうする,感動する,to be moved/touched (by ...),13
+いらっしゃいます,,(someone honorable) is present/home,13
+じつは,実は,"as a matter of fact, ...",13
+ぜんぶ,全部,all,13
+いちにち,一日,one day,13
+ふつか,二日,two days,13
+みっか,三日,three days,13
+よっか,四日,four days,13
+いつか,五日,five days,13
+むいか,六日,six days,13
+なのか,七日,seven days,13
+ようか,八日,eight days,13
+ここのか,九日,nine days,13
+とおか,十日,ten days,13
+よろしくおねがいします,よろしくお願いします,Thank you (in advance),13
+ぬいぐるみ,,"stuffed animal (e.g., teddy bear)",14
+あに,兄,(my) older brother,14
+おおやさん,大家さん,landlord,14
+おかえし,お返し,return (as a token of gratitude),14
+おくさん,奥さん,(your/his) wife,14
+おじさん,,uncle; middle-aged man,14
+おばさん,,aunt; middle-aged woman,14
+クラブ,,club; student society,14
+クリスマス,,Christmas,14
+ごしゅじん,,(your/her) husband,14
+コップ,,tumbler; glass,14
+さら,皿,plate; dish,14
+じかん,時間,time,14
+チョコレート,,chocolate,14
+でんしメール,電子メール,e-mail,14
+ネクタイ,,necktie,14
+はは,母,(my) mother,14
+バレンタインデー,,St. Valentine's Day,14
+ビデオカメラ,,camcorder,14
+ふうふ,夫婦,married couple; husband and wife,14
+ホワイトデー,,White Day,14
+マフラー,,winter scarf,14
+まんが,漫画,comic book,14
+マンション,,multistory apartment; condominium,14
+みかん,,mandarin,14
+ゆびわ,指輪,ring,14
+りょうしん,両親,parents,14
+りれきしょ,履歴書,resume,14
+ほしい,欲しい,to want,14
+けち,,stingy; cheap,14
+おくる,送る,to send,14
+にあう,似合う,to look good (on somebody),14
+あきらめる,,to give up,14
+あげる,,to give (to others),14
+くれる,,to give (me),14
+できる,,to come into existence; to be made,14
+そうだんする,相談する,to consult,14
+プロポーズする,,to propose marriage,14
+おなじ,同じ,same,14
+きょねん,去年,last year,14
+わたしたち,私たち,we,14
+ちょうど,,exactly,14
+よく,,well,14
+こ,個,[generic counter for smaller items],14
+さつ,冊,[counter for bound volumes],14
+だい,台,[counter for equipment],14
+ひき,匹,[counter for smaller animals],14
+ぽん,本,[counter for long objects],14
+え,絵,painting; picture; drawing,15
+えいがかん,映画館,movie theater,15
+がいこくじん,外国人,foreigner,15
+かぐ,家具,furniture,15
+かんこう,観光,sightseeing,15
+けっこんしき,結婚式,wedding,15
+じしん,地震,earthquake,15
+しめきり,締め切り,deadline,15
+ジャケット,,jacket,15
+しゅうかん,習慣,custom,15
+ぜいきん,税金,tax,15
+そつぎょうしき,卒業式,graduation ceremony,15
+そば,,Japanese buckwheat noodle,15
+ちず,地図,map,15
+でんち,電池,battery,15
+にわ,庭,garden,15
+はっぴょう,発表,presentation,15
+ばんぐみ,番組,broadcast program,15
+プール,,swimming pool,15
+ペット,,pet,15
+よてい,予定,schedule,15
+りょかん,旅館,inn,15
+わりびきけん,割引券,discount coupon,15
+ひろい,広い,spacious; wide,15
+うる,売る,to sell,15
+おろす,下ろす,to withdraw (money),15
+かく,,to draw; to paint,15
+さがす,探す,to look for,15
+さそう,誘う,to invite,15
+つきあう,付き合う,(1) to date (someone) (2) to keep company,15
+つく,着く,to arrive,15
+ほけんにはいる,保険に入る,to buy insurance,15
+きをつける,気をつける,to be cautious/careful,15
+しらべる,調べる,to look into (a matter),15
+すてる,捨てる,to throw away,15
+みえる,見える,to be visible,15
+する,,to decide on (an item),15
+そつぎょうする,卒業する,to graduate (from ...),15
+よやくする,予約する,to reserve,15
+いちにちじゅう,一日中,all day long,15
+さいきん,最近,recently,15
+えきいん,駅員,station attendant,16
+おや,親,parent,16
+ごみ,,garbage,16
+さとう,砂糖,sugar,16
+しょうがくきん,奨学金,scholarship,16
+しんせき,親せき,relatives,16
+すいせんじょう,推薦状,letter of recommendation,16
+だいがくいん,大学院,graduate school,16
+たいふう,台風,typhoon,16
+ひ,日,day,16
+ファイル,,file; portfolio,16
+みち,道,way; road; directions,16
+めざましどけい,目覚まし時計,alarm clock,16
+きたない,汚い,dirty,16
+おこす,起こす,to wake (someone) up,16
+おごる,,to treat (someone) to a meal,16
+おちこむ,落ち込む,to get depressed,16
+こまる,困る,to have difficulty,16
+だす,出す,to take (something) out; to hand in (something),16
+つれていく,連れていく,to take (someone) to (a place),16
+なおす,直す,to correct; to fix,16
+みちにまよう,道に迷う,to become lost; to lose one's way,16
+やくす,訳す,to translate,16
+わらう,笑う,to laugh,16
+アイロンをかける,,to iron (clothes),16
+あつめる,集める,to collect,16
+いれる,入れる,to put (something) in,16
+のりおくれる,乗り遅れる,"to miss (a train, bus, etc.)",16
+みせる,見せる,to show,16
+あさねぼうする,朝寝坊する,to oversleep,16
+あんないする,案内する,to show (someone) around,16
+せつめいする,説明する,to explain,16
+むかえにくる,迎えに来る,to come to pick up (someone),16
+ええと,,well...; let me see...,16
+きょうじゅうに,今日中に,by the end of today,16
+このあいだ,この間,the other day,16
+このぐらい,,about this much,16
+ごめん,,I'm sorry. (casual),16
+しつれいします,失礼します,Excuse me..; Sorry to interrupt you.,16
+じぶんで,自分で,(do something) oneself,16
+じゅぎょうちゅうに,授業中に,in class; during the class,16
+ほかの,,other,16
+おきゃくさん,お客さん,guest; visitor; client; customer,17
+おとこ,男,man,17
+おゆ,お湯,hot water,17
+おんな,女,woman,17
+かぎ,,key,17
+かみ,紙,paper,17
+きゅうりょう,給料,salary,17
+コンタクト,,contact lenses,17
+さいてい,最低,the lowest; the worst,17
+サラリーマン,,salaryman; company employee,17
+ざんぎょう,残業,overtime work,17
+ストーブ,,heater,17
+たからくじ,宝くじ,lottery,17
+ちがい,違い,difference,17
+ニュース,,news,17
+ひげ,,beard,17
+ひみつ,秘密,secret,17
+りょう,寮,dormitory,17
+りょこうがいしゃ,旅行会社,travel agency,17
+うらやましい,,envious,17
+すくない,少ない,a little; a few,17
+つよい,強い,strong,17
+えらぶ,選ぶ,to choose; to select,17
+かみをとかす,髪をとかす,to comb one's hair,17
+おゆをわかす,お湯を沸かす,to boil water,17
+こむ,込む,to get crowded,17
+たからくじにあたる,宝くじに当たる,to win a lottery,17
+ぬぐ,脱ぐ,to take off (clothes),17
+ひげをそる,,to shave one's beard,17
+いれる,,"to make tea, coffee, etc.",17
+かぎをかける,,to lock,17
+たりる,足りる,to be sufficient; to be enough,17
+なれる,慣れる,to get used to...,17
+けしょうする,化粧する,to put makeup on,17
+しゅうしょくする,就職する,to get a full-time job (at...),17
+する,,"to wear small items (necktie, watch, etc.)",17
+りこんする,離婚する,to get a divorce,17
+おめでとうございます,,Congratulations!,17
+じぶん,自分,oneself,17
+ずいぶん,,very,17
+そうか,,I see. (casual),17
+それに,,"moreover, ...",17
+たとえば,例えば,for example,17
+〜にくらべて,〜に比べて,compared with ...,17
+〜によると,,according to ...,17
+まえ,前,before...,17
+やっぱり,,after all,17
+あと,後,the rest,18
+エアコン,,air conditioner,18
+カーテン,,curtain,18
+ぎゅうにゅう,牛乳,milk,18
+シャンプー,,shampoo,18
+スイッチ,,switch,18
+スカート,,skirt,18
+しょうゆ,しょう油,soy sauce,18
+そと,外,outside,18
+タオル,,towel,18
+にっき,日記,diary,18
+ポップコーン,,popcorn,18
+やちん,家賃,rent,18
+ゆうがた,夕方,evening,18
+ラジカセ,,cassette player with a radio,18
+るすばんでんわ,留守番電話,answering machine,18
+れいぞうこ,冷蔵庫,refrigerator,18
+ろうそく,,candle,18
+あかるい,明るい,bright,18
+きぶんがわるい,気分が悪い,to feel sick,18
+はずかしい,恥ずかしい,embarassing; to feel embarassed,18
+あく,開く,(something) opens,18
+あやまる,謝る,to apologize,18
+おす,押す,to press; to push,18
+おとす,落とす,to drop (something),18
+おゆがわく,お湯が沸く,water boils,18
+ころぶ,転ぶ,to fall down,18
+こわす,壊す,to break (something),18
+さく,咲く,to bloom,18
+しまる,閉まる,(something) closes,18
+たすかる,助かる,to be saved; to be helped,18
+たのむ,頼む,to ask (a favor),18
+つく,,(something) turns on,18
+よごす,汚す,to make dirty,18
+おちる,落ちる,(something) drops,18
+かんがえる,考える,to think (about); to consider,18
+きえる,消える,(something) goes off,18
+こわれる,壊れる,(something) breaks,18
+よごれる,汚れる,to become dirty,18
+ちゅうもんする,注文する,to place an order,18
+いますぐ,今すぐ,right away,18
+おかげで,,thanks to ...,18
+おさきにしつれいします,お先に失礼します,"See you. (lit., I'm leaving ahead of you.)",18
+おつかれさまでした,お疲れ様でした,You must be tired after working so hard. (ritualistic expression),18
+ほんとうに,本当に,really,18
+まず,,first of all,18
+〜までに,,by (time/date),18
+どうしよう,,What should I/we do?,18
+しょうたいする,招待する,to invite someone (to an event/a place),19
+おくさま,奥様,(your/his) wife (polite),19
+おこさん,お子さん,(your/their) child (polite),19
+おれい,お礼,expression of gratitude,19
+けいご,敬語,honorific language,19
+こちら,,this way (polite),19
+しゅっちょう,出張,business trip,19
+しゅるい,種類,a kind; a sort,19
+せいかく,性格,personality,19
+ちゅうがくせい,中学生,junior high school student,19
+どちら,,where (polite),19
+なまけもの,怠け者,lazy person,19
+なやみ,悩み,worry,19
+はずかしがりや,恥ずかしがり屋,shy person,19
+はなし,話,chat; talk,19
+ぶちょう,部長,department manager,19
+ぶんか,文化,culture,19
+まちがい,間違い,mistake,19
+なかがいい,仲がいい,be on good/close terms; to get along well,19
+まじめ,,serious; sober; diligent,19
+いらっしゃる,,"honorific expression for いく, くる, and いる",19
+おくる,送る,to walk/drive (someone),19
+おこる,怒る,to get angry,19
+おっしゃる,,honorific expression for いう,19
+おやすみになる,お休みになる,honorific expression for ねる,19
+きまる,決まる,to be decided,19
+くださる,下さる,honorific expression for くれる,19
+ごらんになる,ご覧になる,honorific expression for みる,19
+しりあう,知り合う,to get aquainted with,19
+〜ていらっしゃる,,honorific expression for 〜ている,19
+なさる,,honorific expression for する,19
+ひっこす,引っ越す,to move (to another place to live),19
+めしあがる,召し上がる,honorific expression for たべる and のむ,19
+よぶ,呼ぶ,to call (one's name); to invite,19
+よる,寄る,to stop by,19
+おくれる,遅れる,to become late,19
+かける,,to sit down,19
+はれる,晴れる,to become sunny,19
+もてる,,to be popular (in terms of romantic interest),19
+えんりょする,遠慮する,to hold back for the time being; to refrain from,19
+ごちそうする,,to treat/invite (someone) to a meal,19
+ちゅういする,注意する,to watch out; to give warning,19
+はなしをする,話をする,to have a talk,19
+おととい,,the day before yesterday,19
+なぜ,,why (=どうして),19
+ほんとうは,本当は,in fact; originally,19
+まいあさ,毎朝,every morning,19
+まだ,,still,19
+〜めいさま,〜名様,party of ... people,19
+ようこそ,,Welcome.,19
+よろしくおつたえください,よろしくお伝えください,Please give my best regards (to ...),19
+あちら,,this way (polite),20
+うちゅうじん,宇宙人,space alien,20
+おと,音,sound,20
+かかりのもの,係の者,our person in charge,20
+かど,角,corner,20
+かみさま,神様,God,20
+くうこう,空港,airport,20
+じ,字,letter; character,20
+してん,支店,branch office,20
+しゅみ,趣味,hobby; pastime,20
+しょうせつ,小説,novel,20
+しんごう,信号,traffic light,20
+スニーカー,,sneakers,20
+せんす,扇子,fan,20
+つき,月,moon,20
+ハイヒール,,high heels,20
+ゆうべ,,last night,20
+おもい,重い,heavy; serious (illness),20
+あるく,歩く,to walk,20
+いたす,致す,extra-modest expression for する,20
+いただく,頂く,extra-modest expression for たべる and のむ,20
+いただく,頂く,humble expression for もらう,20
+うかがう,伺う,to humbly visit; to humbly ask,20
+おる,,extra-modest expression for いる,20
+ござる,,extra-modest expression for ある,20
+〜ておる,,extra-modest expression for 〜ている,20
+〜でござる,,extra-modest expression for です,20
+まいる,参る,extra-modest expression for いく and くる,20
+まがる,曲がる,to turn (right/left),20
+もうす,申す,extra-modest expression for いう,20
+もどる,戻る,to return; to come back,20
+きこえる,聞こえる,to be audible,20
+さしあげる,差し上げる,humble expression for あげる,20
+つたえる,伝える,to convey (message),20
+またせる,待たせる,to keep (someone) waiting,20
+こうかんする,交換する,to exchange,20
+せいかつする,生活する,to lead a life,20
+へんぴんする,返品する,to return (merchandise),20
+おや,,Oh!,20
+〜かい,〜階,...th floor,20
+かしこまりました,,Certainly.,20
+さあ,,"I am not sure, ...",20
+しつれいしました,失礼しました,I'm very sorry,20
+しょうしょう,少々,a few seconds,20
+それでは,,"if that is the case, ...",20
+できれば,,if possible,20
+まことに,誠に,really (very polite),20
+また,,again,20
+もうしわけありません,申し訳ありません,You have my apologies.,20
+よろしかったら,,if it is okay (polite),20
+あかちゃん,赤ちゃん,baby,21
+か,蚊,mosquito,21
+かいぎ,会議,business meeting; conference,21
+ガソリン,,gasoline,21
+かんきょう,環境,environment,21
+けいさつ,警察,police; police station,21
+こうじょう,工場,factory,21
+こと,事,things; matters,21
+しゅうでん,終電,last train,21
+スピーチ,,speech,21
+せいふ,政府,government,21
+ちかん,,sexual offender; lascivious man,21
+どろぼう,泥棒,burgular,21
+バイト,,abbreviation of アルバイト,21
+はんにん,犯人,criminal,21
+ポスター,,poster,21
+むかし,昔,old days; past,21
+もんく,文句,complaint,21
+もんくをいう,文句を言う,to complain,21
+るす,留守,absence; not at home,21
+とおい,遠い,far (away),21
+ひどい,,awful,21
+あんぜん,安全,safe,21
+たいせつ,大切,precious; valuable,21
+めちゃくちゃ,,messy; disorganized,21
+おく,置く,to put; to lay; to place,21
+きがつく,気が付く,to notice,21
+ける,,to kick,21
+さす,刺す,to sting; to bite (bug); to stab,21
+さわる,触る,to touch,21
+つかまる,捕まる,to be arrested; to be caught,21
+つつむ,包む,to wrap; to cover,21
+なぐる,殴る,to strike; to hit; to punch,21
+ぬすむ,盗む,to steal; to rob,21
+はる,貼る,to post,21
+ふむ,踏む,to step on,21
+ふる,,to turn down (somebody); to reject; to jilt,21
+やく,焼く,to bake,21
+やる,,"to give (to pets, plants, younger siblings, etc.)",21
+いじめる,,to bully,21
+きがえる,着替える,to change clothes,21
+ためる,,to save money,21
+つづける,,to continue,21
+ほめる,,to praise; to say nice things,21
+まちがえる,間違える,to make a mistake,21
+みつける,見つける,to find,21
+じゅんびする,準備する,to prepare,21
+ばかにする,,to insult; to make a fool of ...,21
+びっくりする,,to be surprised,21
+ひるねをする,昼寝をする,to take a nap,21
+れんらくする,連絡する,to contact,21
+〜あいだに,〜間に,while...,21
+ころ,,time of...; when...,21
+すこし,少し,a little,21
+とにかく,,anyhow; anyway,21
+どうりょう,同僚,colleague,21
+あいて,相手,partner,22
+うけつけ,受付,reception desk,22
+えいかいわ,英会話,English conversation,22
+おじょうさん,お嬢さん,(someone's) daughter (polite),22
+かじ,家事,household matters,22
+かぜ,風,wind,22
+き,木,tree,22
+きまつしけん,期末試験,final examination,22
+こうはい,後輩,junior members of a group,22
+さる,猿,monkey,22
+じゆう,自由,freedom,22
+じゅく,塾,cram school,22
+しょるい,書類,document,22
+せんぱい,先輩,senior members of a group,22
+ひとりぐらし,一人暮らし,living alone,22
+ぶか,部下,subordinate,22
+ふくしゅう,復習,review of lessons,22
+プロジェクト,,project,22
+ボール,,ball,22
+むだづかい,無駄遣い,waste (money),22
+めんきょ,免許,license,22
+よしゅう,予習,preparation of lessons,22
+うるさい,,noisy; annoying,22
+しんぱい,心配,worried about,22
+びんぼう,貧乏,poor,22
+ペラペラ,,fluent,22
+へん,変,strange; unusual,22
+らく,楽,easy; comfortable,22
+かつ,勝つ,to win,22
+コピーをとる,コピーを取る,to make a photocopy,22
+はこぶ,運ぶ,to carry from one place to another; transport,22
+はしる,走る,to run,22
+ひろう,拾う,to pick up (something),22
+ふく,吹く,to blow,22
+ほうっておく,放っておく,to leave (someone/something) alone; to neglect,22
+まにあう,間に合う,to be in time for,22
+むかえにいく,迎えに行く,to go to pick up (someone),22
+けいかくをたてる,計画を立てる,to make a plan,22
+そだてる,育てる,to raise; to bring up,22
+たすける,助ける,to help; to rescue,22
+まける,負ける,to lose (a match),22
+おねがいする,お願いする,to pray for help,22
+さんせいする,賛成する,to agree,22
+しっぱいする,失敗する,to fail; to be unsuccessful,22
+てつやする,徹夜する,to stay up all night,22
+はんたいする,反対する,to oppose; to object to,22
+ほんやくする,翻訳する,to translate,22
+こんなふう,,in this way,22
+ずっと,,for a long time; all the time,22
+ぜったいに,絶対に,definitely,22
+そんなことはない,,I don't think so.,22
+〜とか,,...for example,22
+なんども,何度も,many times,22
+のんびり,,in a leisurely way,22
+もうすこし,もう少し,a little more,22
+おもいで,思い出,memory,23
+かいがいりょこう,海外旅行,trip to a foreign country,23
+からだ,体,body,23
+くつした,靴下,socks,23
+こくさいでんわ,国際電話,international call,23
+じゅぎょうりょう,授業料,tuition,23
+しょうがっこう,小学校,elementary school,23
+せんきょ,選挙,election,23
+タイヤ,,tire,23
+ただ,,free of charge,23
+ばしょ,場所,place,23
+べっそう,別荘,villa; vacation home,23
+ボーナス,,bonus,23
+ぼんおどり,盆踊り,Bon dance (Japanese traditional dance),23
+めんせつ,面接,interview,23
+ゆうしょく,夕食,dinner,23
+りそう,理想,ideal,23
+るすばん,留守番,looking after a house during one's absence,23
+まずい,,(food is) terrible,23
+あめがやむ,雨がやむ,the rain stops,23
+いなくなる,,(someone) is gone; to disappear,23
+おせわになる,お世話になる,to be in someone's care,23
+おなかをこわす,,to have a stomachache,23
+ちがう,違う,to be different; wrong,23
+なくなる,,to be lost; to disappear,23
+わるぐちをいう,悪口を言う,to talk behind someone's back,23
+うける,受ける,"to take (an examination, interview, etc.)",23
+かえる,換える,to change,23
+はなれる,離れる,(something/someone) separates; parts from,23
+〜かおをする,〜顔をする,to look ...(facial expression),23
+がっかりする,,to be disappointed,23
+がまんする,我慢する,to be tolerant/patient,23
+せわをする,世話をする,to take care of ...,23
+どうじょうする,同情する,to sympathize,23
+パンクする,,(tire) goes flat,23
+もどってくる,戻ってくる,(something/someone) comes back,23
+ゆうしょうする,優勝する,to win a championship,23
+いや,,no,23
+げんきでね,元気でね,Take care of yourself.,23
+そうそう,,You are right.,23
+そろそろ,,it is about time to ...,23
+そんな〜,,such ...; that kind of ...,23
+ものすごく,,extremely,23
