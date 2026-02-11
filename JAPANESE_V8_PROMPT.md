@@ -41,7 +41,13 @@
   - Correct: `<ruby>猫<rt>ねこ</rt></ruby>`
   - Incorrect: `猫 (ねこ)`
 - **Clean Logic:** If `word == kana` (e.g. Hiragana-only words), DO NOT show Furigana.
-- **Settings UI:** Add a "Settings" gear icon -> Modal to switch Tracks (General/RPG/etc.) and toggle Dark Mode.
+- **Global Settings Gear:** ⚙️ (Top Right, Sticky).
+  - Opens Modal.
+  - Toggles:
+    - **Display:** [Kanji] | [Furigana] | [Kana]
+    - **Romaji:** [Show/Hide]
+    - **Audio:** [Auto-Play On/Off]
+  - Saves to `user.json` via API.
 - **Audio:** Add a 🔈 button next to the word. Uses `tts_text` field.
 
 ## 6. Housekeeping 🧹
