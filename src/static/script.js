@@ -211,3 +211,76 @@ function playAudio(text) {
     utter.lang = 'ja-JP';
     window.speechSynthesis.speak(utter);
 }
+
+// --- Dictionary Search ---
+
+async function searchDictionary() {
+    const query = document.getElementById('search-input').value.trim();
+    if (!query) return;
+
+    const res = await fetch(`/api/dictionary/search?q=${encodeURIComponent(query)}`);
+    const results = await res.json();
+
+    const resultsContainer = document.getElementById('dictionary-results');
+    resultsContainer.innerHTML = '';
+
+    if (results.length === 0) {
+        resultsContainer.innerHTML = '<div class="text-center text-gray-400">No results found.</div>';
+    } else {
+        results.forEach(item => {
+            const el = document.createElement('div');
+            el.className = "bg-gray-800 p-4 rounded-lg border border-gray-700 flex justify-between items-center";
+
+            // Format meanings
+            const meanings = item.meanings.join(', ');
+
+            // Encode item data for the button
+            // We need to be careful with quotes in JSON string when putting it in HTML attribute
+            // Using a safer way: store data in a temporary map or just pass fields
+            // Simpler: pass fields if simple, or use encoded JSON.
+            // Let's use a click handler assignment to avoid quote escaping hell in HTML string.
+
+            el.innerHTML = `
+                <div>
+                    <div class="text-xl font-bold text-cyan-300">
+                        ${item.word} <span class="text-sm text-gray-400">(${item.kana})</span>
+                    </div>
+                    <div class="text-gray-300 mt-1">${meanings}</div>
+                </div>
+            `;
+
+            const btn = document.createElement('button');
+            btn.className = "ml-4 px-4 py-2 bg-green-600 rounded hover:bg-green-500 font-bold shadow-lg shadow-green-500/30 whitespace-nowrap";
+            btn.textContent = "+ Study";
+            btn.onclick = () => addToStudy(item);
+
+            el.appendChild(btn);
+            resultsContainer.appendChild(el);
+        });
+    }
+
+    document.getElementById('dictionary-modal').classList.remove('hidden');
+}
+
+function closeDictionaryModal() {
+    document.getElementById('dictionary-modal').classList.add('hidden');
+}
+
+async function addToStudy(item) {
+    const res = await fetch('/api/dictionary/add', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            word: item.word,
+            kana: item.kana,
+            meanings: item.meanings
+        })
+    });
+
+    if (res.ok) {
+        alert(`Added ${item.word} to your study list!`);
+    } else {
+        const err = await res.json();
+        alert(`Error: ${err.detail}`);
+    }
+}

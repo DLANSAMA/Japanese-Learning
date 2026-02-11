@@ -3,3 +3,5 @@ fastapi
 uvicorn
 httpx
 aiofiles
+jamdict
+jamdict-data

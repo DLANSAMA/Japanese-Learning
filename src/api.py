@@ -12,6 +12,7 @@ from .quiz import generate_input_question, generate_mc_question
 from .gamification import add_xp, update_streak
 from .srs_engine import update_card_srs
 from .study import get_new_items, mark_as_learning
+from .dictionary import search
 
 app = FastAPI(title="Japanese Learning API", version="1.0")
 
@@ -49,6 +50,11 @@ class SettingsModel(BaseModel):
 
 class StudyConfirmRequest(BaseModel):
     word: str
+
+class DictionaryAddRequest(BaseModel):
+    word: str
+    kana: str
+    meanings: List[str]
 
 def get_due_vocab():
     vocab = load_vocab()
@@ -183,6 +189,37 @@ def update_settings(payload: SettingsModel):
     profile.settings.theme = payload.theme
     save_user_profile(profile)
     return {"status": "updated", "track": payload.track, "theme": payload.theme}
+
+@app.get("/api/dictionary/search")
+def search_dictionary(q: str):
+    return search(q)
+
+@app.post("/api/dictionary/add")
+def add_dictionary_item(payload: DictionaryAddRequest):
+    vocab = load_vocab()
+
+    # Check if word already exists
+    if any(v.word == payload.word for v in vocab):
+        raise HTTPException(status_code=400, detail="Word already in vocabulary")
+
+    # Create new Vocabulary item
+    # Joining meanings with "; " for storage as string
+    meaning_str = "; ".join(payload.meanings)
+
+    new_item = Vocabulary(
+        word=payload.word,
+        kana=payload.kana,
+        romaji="", # romaji not provided by jamdict
+        meaning=meaning_str,
+        status="new",
+        level=0,
+        tags=["dictionary-add"]
+    )
+
+    vocab.append(new_item)
+    save_vocab(vocab)
+
+    return {"status": "success", "word": new_item.word}
 
 # Mount Static Files (Catch-all must be last)
 STATIC_DIR = os.path.join(os.path.dirname(__file__), 'static')
