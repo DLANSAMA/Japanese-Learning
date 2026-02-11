@@ -23,7 +23,16 @@
 - Populate `vocab.json` grouped by Chapter.
 - **Crucial:** Assign `tags` -> `["core", "genki", "ch1"]`.
 
-## 3. Immediate Execution ⚡
+## 3. Autopilot Level Matching (Critical) ⚖️
+**Problem:** Interest tracks fetch difficult words too early.
+**Task:** Update `src/feeder.py`:
+- When fetching Interest words (e.g. Anime), **FILTER BY DIFFICULTY**.
+- **Logic:**
+  - If User Level < 10 (Beginner): Query ONLY words with `news1` or `ichi1` frequency tags (Common words).
+  - If User Level > 10 (Intermediate): Relax frequency filter.
+- **Result:** You get "Hero" (N5/N4), not "Dimensional Rift" (N1).
+
+## 4. Immediate Execution ⚡
 - **Run** the seed script immediately after implementation.
 - Ensure the user has a full deck ready to study without waiting for Autopilot.
 
