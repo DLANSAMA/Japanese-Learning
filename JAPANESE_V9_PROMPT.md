@@ -37,6 +37,17 @@
   - "Words Learned" Counter.
   - "Current League" (Bronze/Silver/Gold).
 
+## 5. UI/UX "AAA" Polish 💎
+**Goal:** Match the feel of Duolingo/Linear.
+**Requirements:**
+- **Typography:** Use `Inter` (UI) and `Noto Sans JP` (Japanese).
+- **Juice:** CSS Animations for all interactions.
+  - Buttons scale down `0.95` on click.
+  - Correct answers flash Green + Confetti.
+  - Incorrect answers shake (`animation: shake 0.5s`).
+- **Glassmorphism:** Use `backdrop-filter: blur(10px)` for Modals and Navbars.
+- **Responsiveness:** Full mobile support (Touch targets > 44px).
+
 ## Implementation Steps
 1.  Create `data/curriculum.json` (Defining the Map).
 2.  Build `src/static/map.html` (The new Home Screen).
