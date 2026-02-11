@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getCurriculum } from '../api';
 import { clsx } from 'clsx';
-import { Lock, BookOpen, Sword } from 'lucide-react';
+import { Lock, BookOpen, Sword, Loader2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const getColorClass = (color, type) => {
     const map = {
@@ -11,7 +12,6 @@ const getColorClass = (color, type) => {
         purple: { text: 'text-purple-600', bg: 'bg-purple-100', border: 'border-purple-500', softBorder: 'border-purple-200' },
         yellow: { text: 'text-yellow-600', bg: 'bg-yellow-100', border: 'border-yellow-500', softBorder: 'border-yellow-200' },
     };
-    // Fallback to red
     return map[color]?.[type] || map['red'][type];
 };
 
@@ -22,57 +22,91 @@ export const Map = ({ onStartLesson }) => {
         getCurriculum().then(setCurriculum);
     }, []);
 
-    if (!curriculum) return <div className="text-center p-10 animate-pulse text-gray-400 font-bold">Unfolding the Scroll...</div>;
+    if (!curriculum) return <div className="flex justify-center items-center h-full"><Loader2 className="animate-spin text-crimson" size={48} /></div>;
+
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.2
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0 }
+    };
 
     return (
-        <div className="relative max-w-lg mx-auto pb-20 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="relative max-w-lg mx-auto pb-20 pt-10"
+        >
             {/* Spine */}
-            <div className="absolute left-1/2 top-0 bottom-0 w-4 bg-tatami -translate-x-1/2 rounded-full" />
+            <motion.div
+                initial={{ height: 0 }}
+                animate={{ height: '100%' }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
+                className="absolute left-1/2 top-0 bottom-0 w-4 bg-tatami -translate-x-1/2 rounded-full"
+            />
 
             {curriculum.units.map((unit, uIdx) => (
-                <div key={unit.title} className="relative z-10 mb-12">
-                     <div className={clsx(
-                         "bg-white p-6 rounded-2xl border-l-8 shadow-lg mb-12 relative mx-4",
-                         getColorClass(unit.color, 'border')
-                     )}>
+                <div key={unit.title} className="relative z-10 mb-20">
+                     <motion.div
+                        variants={itemVariants}
+                        className={clsx(
+                             "bg-white p-6 rounded-2xl border-l-8 shadow-lg mb-12 relative mx-4 hover:scale-[1.02] transition-transform",
+                             getColorClass(unit.color, 'border')
+                        )}
+                     >
                         <h3 className={clsx("text-2xl font-black uppercase italic", getColorClass(unit.color, 'text'))}>{unit.title}</h3>
                         <p className="text-gray-500 font-medium">{unit.description}</p>
-                     </div>
+                     </motion.div>
 
                      <div className="space-y-16">
                         {unit.lessons.map((lesson, lIdx) => {
-                            const isLocked = uIdx > 0; // Logic for locking based on index
+                            const isLocked = uIdx > 0;
                             const isBoss = lesson.type === 'boss';
                             const color = unit.color;
 
                             return (
-                                <div key={lesson.id} className="flex flex-col items-center relative group">
-                                    <button
+                                <motion.div
+                                    variants={itemVariants}
+                                    key={lesson.id}
+                                    className="flex flex-col items-center relative group"
+                                >
+                                    <motion.button
+                                        whileHover={!isLocked ? { scale: 1.1, rotate: 0 } : {}}
+                                        whileTap={!isLocked ? { scale: 0.95 } : {}}
                                         onClick={() => !isLocked && onStartLesson(lesson.id)}
                                         className={clsx(
-                                            "w-24 h-24 rotate-45 rounded-2xl border-4 flex items-center justify-center shadow-xl transition-all transform hover:rotate-0 hover:scale-110",
-                                            isLocked ? "bg-gray-200 border-gray-300 text-gray-400 cursor-not-allowed" :
-                                            `${getColorClass(color, 'bg')} ${getColorClass(color, 'border')} ${getColorClass(color, 'text')} cursor-pointer`
+                                            "w-24 h-24 rotate-45 rounded-3xl border-[6px] flex items-center justify-center shadow-xl transition-colors z-20",
+                                            isLocked ? "bg-gray-100 border-gray-200 text-gray-300 cursor-not-allowed" :
+                                            `${getColorClass(color, 'bg')} ${getColorClass(color, 'border')} ${getColorClass(color, 'text')} cursor-pointer hover:shadow-${color}-500/50`
                                         )}
                                     >
-                                        <div className="-rotate-45 group-hover:rotate-0 transition-transform">
+                                        <div className="-rotate-45">
                                             {isLocked ? <Lock size={32} /> :
-                                             isBoss ? <Sword size={32} strokeWidth={2.5} /> : <BookOpen size={32} strokeWidth={2.5} />}
+                                             isBoss ? <Sword size={36} strokeWidth={2.5} /> : <BookOpen size={32} strokeWidth={2.5} />}
                                         </div>
-                                    </button>
+                                    </motion.button>
 
                                     <div className={clsx(
-                                        "mt-8 bg-white px-6 py-2 rounded-full border-2 shadow-sm font-bold text-sm tracking-wide uppercase",
-                                        isLocked ? "text-gray-400 border-gray-200" : `${getColorClass(color, 'text')} ${getColorClass(color, 'softBorder')}`
+                                        "mt-8 bg-white px-6 py-2 rounded-full border-2 shadow-sm font-bold text-sm tracking-wide uppercase transition-all group-hover:-translate-y-1",
+                                        isLocked ? "text-gray-300 border-gray-100" : `${getColorClass(color, 'text')} ${getColorClass(color, 'softBorder')}`
                                     )}>
                                         {lesson.title}
                                     </div>
-                                </div>
+                                </motion.div>
                             );
                         })}
                      </div>
                 </div>
             ))}
-        </div>
+        </motion.div>
     );
 };
