@@ -69,8 +69,8 @@ class TestAutopilot(unittest.TestCase):
         self.assertEqual(len(saved_list), 5)
 
     @patch('src.dictionary.sqlite3')
-    @patch('src.dictionary.jam') # Mock jamdict instance
-    def test_get_recommendations_logic(self, mock_jam, mock_sqlite):
+    @patch('src.dictionary.get_jam') # Mock jamdict getter
+    def test_get_recommendations_logic(self, mock_get_jam, mock_sqlite):
         from src.dictionary import get_recommendations
 
         mock_conn = MagicMock()
@@ -80,6 +80,11 @@ class TestAutopilot(unittest.TestCase):
 
         # Mock fetchall to return some idseqs
         mock_cursor.fetchall.return_value = [(100,), (101,)]
+
+        # Mock jam
+        mock_jam = MagicMock()
+        mock_get_jam.return_value = mock_jam
+        mock_jam.db_file = ":memory:" # dummy path
 
         # Mock jam.jmdict.get_entry
         mock_entry = MagicMock()

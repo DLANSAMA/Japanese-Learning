@@ -14,6 +14,8 @@ class Vocabulary:
     interval: int = 0
     due_date: Optional[str] = None
     status: str = "new" # 'new', 'learning', 'mastered'
+    pos: str = ""
+    example_sentence: str = ""
 
 @dataclass
 class GrammarExample:

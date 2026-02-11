@@ -8,8 +8,12 @@ client = TestClient(app)
 
 class TestDictionary(unittest.TestCase):
 
-    @patch('src.dictionary.jam.lookup')
-    def test_dictionary_search_logic(self, mock_lookup):
+    @patch('src.dictionary.get_jam')
+    def test_dictionary_search_logic(self, mock_get_jam):
+        mock_jam = MagicMock()
+        mock_get_jam.return_value = mock_jam
+        mock_lookup = mock_jam.lookup
+
         # Mock Jamdict response structure
         mock_result = MagicMock()
         mock_entry = MagicMock()

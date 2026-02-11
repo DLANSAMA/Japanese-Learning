@@ -83,6 +83,7 @@ function showStudyCard() {
                     <div class="text-3xl font-bold mb-2">${currentStudyItem.kana}</div>
                     <div class="text-xl italic mb-4">${currentStudyItem.romaji}</div>
                     <div class="text-2xl text-yellow-300 font-bold">${currentStudyItem.meaning}</div>
+                    ${currentStudyItem.example_sentence ? `<div class="mt-4 p-2 bg-gray-700 rounded text-cyan-200 text-lg italic">"${currentStudyItem.example_sentence}"</div>` : ''}
                     <div class="mt-4 text-sm text-gray-400">Tags: ${currentStudyItem.tags.join(', ')}</div>
                 </div>
             </div>

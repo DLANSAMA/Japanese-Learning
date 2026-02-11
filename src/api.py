@@ -13,6 +13,7 @@ from .gamification import add_xp, update_streak
 from .srs_engine import update_card_srs
 from .study import get_new_items, mark_as_learning
 from .dictionary import search
+from .sentence_mining import mine_sentence
 
 app = FastAPI(title="Japanese Learning API", version="1.0")
 
@@ -206,6 +207,22 @@ def add_dictionary_item(payload: DictionaryAddRequest):
     # Joining meanings with "; " for storage as string
     meaning_str = "; ".join(payload.meanings)
 
+    # Lookup POS to generate sentence
+    # We re-search because payload doesn't have POS yet
+    # Assuming exact match search is reasonably fast
+    results = search(payload.word)
+    pos = ""
+    if results:
+        # Try to find matching entry (kana match too)
+        for r in results:
+             if r['word'] == payload.word and r['kana'] == payload.kana:
+                 pos = r.get('pos', '')
+                 break
+        if not pos and results:
+             pos = results[0].get('pos', '')
+
+    sentence = mine_sentence(payload.word, pos, meaning_str)
+
     new_item = Vocabulary(
         word=payload.word,
         kana=payload.kana,
@@ -213,7 +230,9 @@ def add_dictionary_item(payload: DictionaryAddRequest):
         meaning=meaning_str,
         status="new",
         level=0,
-        tags=["dictionary-add"]
+        tags=["dictionary-add"],
+        pos=pos,
+        example_sentence=sentence
     )
 
     vocab.append(new_item)

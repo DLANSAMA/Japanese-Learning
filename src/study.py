@@ -5,6 +5,7 @@ from datetime import datetime
 from .models import Vocabulary
 from .data_manager import load_vocab, save_vocab
 from .dictionary import get_recommendations
+from .sentence_mining import mine_sentence
 
 def get_new_items(limit: int = 5, track: str = "General") -> List[Vocabulary]:
     vocab = load_vocab()
@@ -38,6 +39,9 @@ def get_new_items(limit: int = 5, track: str = "General") -> List[Vocabulary]:
                 # Convert list of meanings to string
                 meaning_str = "; ".join(rec['meanings'][:3]) # Limit to top 3 meanings
 
+                pos = rec.get('pos', '')
+                sentence = mine_sentence(rec['word'], pos, meaning_str)
+
                 new_v = Vocabulary(
                     word=rec['word'],
                     kana=rec['kana'],
@@ -45,7 +49,9 @@ def get_new_items(limit: int = 5, track: str = "General") -> List[Vocabulary]:
                     meaning=meaning_str,
                     status='new',
                     level=0,
-                    tags=[track.lower(), 'autopilot']
+                    tags=[track.lower(), 'autopilot'],
+                    pos=pos,
+                    example_sentence=sentence
                 )
                 vocab.append(new_v)
                 filtered.append(new_v)
