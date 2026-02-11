@@ -5,3 +5,4 @@ httpx
 aiofiles
 jamdict
 jamdict-data
+fsrs

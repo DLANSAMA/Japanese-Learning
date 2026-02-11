@@ -1,32 +1,39 @@
-# Japanese Learning V10: The Scholar (Deep Learning) 🎓
+# Japanese Learning V10: FSRS & Pitch Accent 🧠🎵
 
-**Objective:** Implement advanced pedagogical features (FSRS, Pitch Accent) to rival top-tier apps like Bunpro/Migaku.
+**Objective:** Upgrade the memory algorithm to state-of-the-art FSRS and add Pitch Accent visualization to improve pronunciation.
 
-## 1. FSRS Algorithm (Memory Engine) 🧠
-**Problem:** SM-2 is outdated. FSRS (Free Spaced Repetition Scheduler) is the new gold standard.
-**Task:** Replace `src/srs_engine.py` with FSRS logic.
-- **Inputs:** Difficulty, Stability, Retrievability.
+## 1. Implement FSRS (Free Spaced Repetition Scheduler) 🧠
+**Problem:** SM-2 (Anki's old algo) is inefficient. FSRS is the new standard.
+**Task:** Replace `src/srs_engine.py` logic with the `fsrs` Python library.
+- **Library:** Add `fsrs` to `requirements.txt`.
+- **Model Update:** Update `Vocabulary` in `src/models.py` to store FSRS fields:
+  - `fsrs_stability` (float)
+  - `fsrs_difficulty` (float)
+  - `fsrs_retrievability` (float, optional)
+  - `fsrs_last_review` (datetime)
 - **Logic:**
-  - `Stability_new = Stability_old * (1 + Factor * Difficulty_Modifier)`
-- **Library:** Use `fsrs-optimizer` or implement the math directly.
+  - On review, calculate next interval using FSRS scheduler.
+  - Map user ratings: 'Again' (1), 'Hard' (2), 'Good' (3), 'Easy' (4).
 
-## 2. Pitch Accent Visualizer 🎵
-**Problem:** Users learn words with "flat" intonation (Foreigner Accent).
-**Solution:**
-- **Data:** Integrate a Pitch Accent Dictionary (e.g., `NHK Accent DB` or `Mecab`).
-- **UI:** Render a "Pitch Curve" SVG above the word.
-  - Low-High-Low (Nakadaka) vs Low-High-High (Heiban).
-- **Display:** Toggleable in Settings (Default: On).
+## 2. Pitch Accent Visualization 🎵
+**Problem:** Japanese is a pitch-accent language. Learners need to see the "music" of the word.
+**Task:**
+- **Backend:** Create `src/pitch.py`.
+  - For now, use a **Mock/Heuristic** provider or a small local dictionary (since full dictionaries are huge).
+  - Return accent pattern: `Heiban` (0), `Atamadaka` (1), `Nakadaka` (2+), `Odaka` (-1).
+  - Or better, return the binary high/low pattern: `LHHHH` (Heiban for 5 mora).
+- **Frontend:**
+  - Update `src/static/script.js` and `index.html`.
+  - Visualizing the pitch:
+    - Draw a line over High-pitch moras.
+    - Drop the line for the accent downfall.
+    - Example: `Taberu` (Atamadaka: HLL) -> Line over `Ta`, drop before `be`.
+    - CSS: `.pitch-high { border-top: 2px solid #38bdf8; }`, `.pitch-drop { border-right: 2px solid #38bdf8; height: 10px; }` (Just an idea).
 
-## 3. Kana Bootcamp (Unit 0) 🖌️
-**Problem:** App assumes Kana knowledge.
-**Solution:**
-- **New Mode:** "Kana Trace".
-- **Interaction:** SVG Stroke Order Animation (using KanjiVG logic).
-- **Quiz:** "Which character is 'Ka'?" (Grid Selection).
+## 3. Integration 🔗
+- **API:** Update `/api/quiz/vocab` to include `pitch_pattern`.
+- **UI:** Show pitch accent visualization on the **Back** of the card in Study/Quiz mode.
 
-## 4. Implementation Plan 🛠️
-1.  **Refactor SRS:** Update `src/srs_engine.py`.
-2.  **Ingest Pitch Data:** Download `pitch_accents.json`.
-3.  **Update UI:** Modify `index.html` to render SVGs for pitch.
-4.  **Create Bootcamp:** Add `src/bootcamp.py`.
+## 4. Tests 🧪
+- Test FSRS scheduling (ensure intervals increase/decrease correctly).
+- Test Pitch pattern generation (mocked).

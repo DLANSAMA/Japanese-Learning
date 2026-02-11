@@ -16,6 +16,11 @@ class Vocabulary:
     status: str = "new" # 'new', 'learning', 'mastered'
     pos: str = ""
     example_sentence: str = ""
+    # FSRS Fields
+    fsrs_stability: float = 0.0
+    fsrs_difficulty: float = 0.0
+    fsrs_retrievability: Optional[float] = None
+    fsrs_last_review: Optional[str] = None # ISO format datetime
 
 @dataclass
 class GrammarExample:
