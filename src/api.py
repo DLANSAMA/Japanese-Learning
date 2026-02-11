@@ -10,10 +10,11 @@ from .data_manager import load_vocab, save_vocab, load_user_profile, save_user_p
 from .models import Vocabulary, UserProfile, UserSettings
 from .quiz import generate_input_question, generate_mc_question
 from .gamification import add_xp, update_streak
-from .srs_engine import update_card_srs
+from .srs_engine import update_card_srs, update_card_fsrs
 from .study import get_new_items, mark_as_learning
 from .dictionary import search
 from .sentence_mining import mine_sentence
+from .pitch import get_pitch_pattern
 
 app = FastAPI(title="Japanese Learning API", version="1.0")
 
@@ -33,6 +34,7 @@ class QuizQuestionResponse(BaseModel):
     word: Optional[str] = None
     kana: Optional[str] = None
     romaji: Optional[str] = None
+    pitch_pattern: Optional[str] = None
 
 class AnswerRequest(BaseModel):
     question_id: str
@@ -58,6 +60,16 @@ class DictionaryAddRequest(BaseModel):
     word: str
     kana: str
     meanings: List[str]
+
+class StudyItemResponse(BaseModel):
+    word: str
+    kana: str
+    romaji: str
+    meaning: str
+    tags: List[str]
+    status: str
+    example_sentence: str
+    pitch_pattern: str
 
 class ShopItem(BaseModel):
     id: str
@@ -121,6 +133,9 @@ def get_vocab_question():
     else:
         q = generate_input_question(item)
 
+    # Get pitch accent
+    pitch = get_pitch_pattern(item.word, item.kana)
+
     return QuizQuestionResponse(
         question_id=qid,
         type=q.type,
@@ -128,7 +143,8 @@ def get_vocab_question():
         options=q.options,
         word=item.word,
         kana=item.kana,
-        romaji=item.romaji
+        romaji=item.romaji,
+        pitch_pattern=pitch
     )
 
 @app.post("/api/quiz/answer", response_model=AnswerResponse)
@@ -164,11 +180,14 @@ def submit_answer(payload: AnswerRequest):
         gems_awarded = 1
 
         add_xp(profile, xp_gained)
-        update_card_srs(item, 5)
+        # 5 = Easy/Perfect. FSRS will map this to 4 (Easy).
+        # Since we don't have finer grain buttons yet, we use max score for Correct.
+        update_card_fsrs(item, 5)
     else:
         item.level = max(0, item.level - 1)
         item.last_review = datetime.now().strftime('%Y-%m-%d')
-        update_card_srs(item, 0)
+        # 0 = Fail. FSRS maps to 1 (Again).
+        update_card_fsrs(item, 0)
 
     save_vocab(vocab)
     save_user_profile(profile)
@@ -183,11 +202,24 @@ def submit_answer(payload: AnswerRequest):
         gems_awarded=gems_awarded
     )
 
-@app.get("/api/study")
+@app.get("/api/study", response_model=List[StudyItemResponse])
 def get_study_items():
     profile = load_user_profile()
     items = get_new_items(limit=5, track=profile.selected_track)
-    return items
+    response_items = []
+    for item in items:
+        pitch = get_pitch_pattern(item.word, item.kana)
+        response_items.append(StudyItemResponse(
+            word=item.word,
+            kana=item.kana,
+            romaji=item.romaji,
+            meaning=item.meaning,
+            tags=item.tags,
+            status=item.status,
+            example_sentence=item.example_sentence,
+            pitch_pattern=pitch
+        ))
+    return response_items
 
 @app.post("/api/study/confirm")
 def confirm_study_item(payload: StudyConfirmRequest):

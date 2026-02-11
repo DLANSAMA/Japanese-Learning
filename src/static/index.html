@@ -61,6 +61,25 @@
             color: #7dd3fc;
         }
 
+        /* Pitch Accent */
+        .pitch-high {
+            border-top: 2px solid #38bdf8;
+            display: inline-block;
+            line-height: 1.5;
+        }
+        .pitch-drop {
+            position: relative;
+        }
+        .pitch-drop::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 2px;
+            height: 60%;
+            background-color: #38bdf8;
+        }
+
         .progress-bar { transition: width 0.3s ease-in-out; }
     </style>
 </head>

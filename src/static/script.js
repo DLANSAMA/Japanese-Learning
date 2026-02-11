@@ -116,8 +116,13 @@ function showStudyCard() {
     const kanji = currentStudyItem.word;
     const reading = currentStudyItem.kana;
 
+    // Render pitch accent if available
+    const readingHtml = currentStudyItem.pitch_pattern
+        ? renderPitch(reading, currentStudyItem.pitch_pattern)
+        : reading;
+
     const frontContent = `
-        <ruby class="text-6xl font-bold mb-4">${kanji}<rt>${reading}</rt></ruby>
+        <ruby class="text-6xl font-bold mb-4">${kanji}<rt>${readingHtml}</rt></ruby>
     `;
 
     // Example sentence check
@@ -475,4 +480,30 @@ async function buyItem(itemId, price) {
         const err = await res.json();
         alert("Error: " + err.detail);
     }
+}
+
+// --- Pitch Accent Rendering ---
+
+function renderPitch(kana, pattern) {
+    if (!pattern || pattern.length !== kana.length) {
+        return kana;
+    }
+
+    let html = '';
+    for (let i = 0; i < kana.length; i++) {
+        const char = kana[i];
+        const p = pattern[i];
+        const nextP = pattern[i+1];
+
+        let classes = '';
+        if (p === 'H') classes += 'pitch-high ';
+        if (p === 'H' && nextP === 'L') classes += 'pitch-drop ';
+
+        if (classes) {
+            html += `<span class="${classes.trim()}">${char}</span>`;
+        } else {
+            html += char;
+        }
+    }
+    return html;
 }
