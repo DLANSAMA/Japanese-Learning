@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ToastProvider } from './components/ui/Toast';
 import { Layout } from './components/Layout';
 import { Dashboard } from './components/Dashboard';
 import { StudySession } from './components/StudyCard';
@@ -71,10 +72,12 @@ function App() {
   };
 
   return (
-    <Layout currentView={currentView} onViewChange={handleViewChange}>
-      {renderContent()}
-      {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
-    </Layout>
+    <ToastProvider>
+        <Layout currentView={currentView} onViewChange={handleViewChange}>
+            {renderContent()}
+            {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
+        </Layout>
+    </ToastProvider>
   );
 }
 

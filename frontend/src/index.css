@@ -6,20 +6,39 @@
 
 @layer base {
   body {
-    @apply bg-paper text-charcoal font-sans antialiased;
+    @apply bg-paper text-charcoal font-sans antialiased overflow-hidden;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-header font-bold text-crimson uppercase italic;
+    @apply font-header font-bold text-crimson uppercase italic tracking-tight;
   }
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
+/* Custom Scrollbar - "Kizuna" style */
+.custom-scrollbar::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
-::-webkit-scrollbar-track {
-  @apply bg-tatami;
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-tatami/30 rounded-full;
 }
-::-webkit-scrollbar-thumb {
-  @apply bg-crimson rounded-full;
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-crimson/80 rounded-full hover:bg-crimson transition-colors;
+}
+
+/* Utilities */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
 }
