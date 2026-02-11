@@ -3,27 +3,42 @@ import random
 from datetime import datetime
 
 from .models import Vocabulary
-from .data_manager import load_vocab, save_vocab
+from .data_manager import load_vocab, save_vocab, load_user_profile
 from .dictionary import get_recommendations
 from .sentence_mining import mine_sentence
 
 def get_new_items(limit: int = 5, track: str = "General") -> List[Vocabulary]:
     vocab = load_vocab()
+    profile = load_user_profile()
     new_items = [v for v in vocab if v.status == 'new']
 
     # Filter by Track
     filtered = []
     if track == "General":
-        # Prioritize 'core' tags, or fallback to any
-        filtered = [v for v in new_items if 'core' in v.tags]
-        # If no core items, fallback to any 'new' items for General track
+        # Prioritize 'core' tags (Genki), or fallback to any
+        # Sort by Genki chapter if possible? Tags: "ch1", "ch2"
+        # We can try to sort by chapter number in tags.
+        core_items = [v for v in new_items if 'core' in v.tags]
+
+        # Helper to extract chapter number
+        def get_chapter(v):
+            for t in v.tags:
+                if t.startswith('ch') and t[2:].isdigit():
+                    return int(t[2:])
+            return 999 # Late if no chapter
+
+        filtered = sorted(core_items, key=get_chapter)
+
+        # If no core items, fallback to any 'new' items
         if not filtered:
              filtered = new_items
+
     elif track == "Pop Culture":
-        filtered = [v for v in new_items if any(t in v.tags for t in ['anime', 'manga', 'game', 'rpg'])]
+        filtered = [v for v in new_items if any(t in v.tags for t in ['anime', 'manga', 'game', 'rpg', 'slang'])]
     elif track == "Business":
-        filtered = [v for v in new_items if any(t in v.tags for t in ['finance', 'business', 'office'])]
+        filtered = [v for v in new_items if any(t in v.tags for t in ['finance', 'business', 'office', 'corporate'])]
     else:
+        # Fallback to general/all
         filtered = new_items
 
     # If not enough items, autopilot from dictionary
@@ -33,7 +48,13 @@ def get_new_items(limit: int = 5, track: str = "General") -> List[Vocabulary]:
         exclude_words = [v.word for v in vocab]
 
         try:
-            recommendations = get_recommendations(track, limit=needed, exclude_words=exclude_words)
+            # Pass user level to autopilot for difficulty scaling
+            recommendations = get_recommendations(
+                track=track,
+                limit=needed,
+                exclude_words=exclude_words,
+                user_level=profile.level
+            )
 
             for rec in recommendations:
                 # Convert list of meanings to string
