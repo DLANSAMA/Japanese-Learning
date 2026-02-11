@@ -41,6 +41,102 @@ def generate_mc_question(item: Vocabulary, all_vocab: List[Vocabulary], show_fur
         context=item
     )
 
+def generate_assemble_question(item: Vocabulary, example_sentence: str) -> Question:
+    # Basic Sentence Assembly: Break the example sentence into parts
+    # Naive split by spaces usually works for "Watashi wa tabemasu" style simple sentences.
+    # But Japanese is continuous.
+    # If the example_sentence is Japanese "私は食べます。", we need a tokenizer or simple heuristic.
+    # The current `mine_sentence` output is Japanese.
+    # Let's assume we want to assemble the Japanese sentence from tokens.
+
+    # Simple Tokenizer for our templates (Space not reliable, but our generator outputs standard forms)
+    # Actually, `mine_sentence` outputs "私は食べます。" (No spaces).
+    # Hard to tokenize without MeCab.
+    # Plan B: Use the English meaning -> User assembles Japanese words?
+    # Or: Assemble the Meaning from English words?
+    # Prompt: "Bubble Sentence Builder... Translate: I eat sushi. Pool: [Sushi] [o] [Tabemasu]..."
+    # This implies assembling Japanese.
+
+    # Since we don't have a tokenizer, let's create a "Constructed" sentence for this purpose
+    # OR rely on `sentence_builder.py` logic which has broken_down parts.
+    # But this function takes a `Vocabulary` item.
+
+    # Workaround: For now, if we can't easily break down the sentence, fall back to "Input".
+    # BUT, we can make a pseudo-assemble for the Word itself if it's a phrase? No.
+
+    # Better approach:
+    # 1. Use `mine_sentence` logic to generate the PARTS first, then the sentence.
+    # But `mine_sentence` returns a string.
+    # Let's parse the simple templates we made.
+    # They are predictable: "Watashi", "wa", "[stem]masu".
+    # We can fake it by knowing the structure.
+
+    parts = []
+    target_sentence = example_sentence
+
+    # Reverse engineer the templates from `sentence_mining.py`
+    if "私は" in example_sentence and "ます。" in example_sentence:
+        # Verb sentence: "私は" + stem + "ます。"
+        # Parts: "私は", stem+"ます" (or split stem and masu?)
+        # Let's just split by particles roughly if possible, or character based? No.
+        # Let's just provide the full sentence as one block? No point.
+
+        # Let's fallback to `generate_input_question` if we can't generate parts properly without a tokenizer.
+        # UNLESS we update `mine_sentence` to return parts?
+        # That would be cleaner but requires touching that file again.
+
+        # Let's just create a dummy assemble for the WORD itself + particles?
+        # e.g. "Taberu" -> "Tabemasu"
+        # Question: "Conjugate to Polite Form"
+        # Options: "Tabemasu", "Taberumasu", "Tabe"
+        pass
+
+    # Alternative: The prompt says "Assemble... replaces some Input questions".
+    # Let's implement it for sentences from `sentence_builder` if available, or just generic Japanese construction?
+    # If we are quizzing a VOCAB word "Taberu", asking to translate "I eat" is good.
+    # We know the answer is "Watashi wa Tabemasu".
+    # Parts: ["Watashi", "wa", "Tabemasu", "Taberu", "ga", "desu"] (distractors).
+
+    # Logic:
+    # 1. Generate target sentence (Polite form usually).
+    # 2. Split into plausible chunks.
+    # 3. Add distractors.
+
+    # Simplified splitting for our templates:
+    parts = []
+    if "私は" in example_sentence:
+        parts.append("私は")
+        remainder = example_sentence.replace("私は", "").replace("。", "")
+        parts.append(remainder)
+        parts.append("。")
+    elif "これは" in example_sentence:
+        parts.append("これは")
+        remainder = example_sentence.replace("これは", "").replace("。", "")
+        parts.append(remainder)
+        parts.append("。")
+    else:
+        # Adjective/Default: "X desu"
+        parts.append(item.word)
+        parts.append("です")
+        parts.append("。")
+
+    correct_order = "".join(parts) # Should match example_sentence roughly (ignoring spaces)
+
+    # Distractors
+    pool = list(parts)
+    distractors = ["が", "を", "ではありません", "か", "の"]
+    pool.extend(random.sample(distractors, 3))
+    random.shuffle(pool)
+
+    return Question(
+        type="assemble",
+        question_text=f"Assemble: '{item.meaning}'\n(Hint: {example_sentence})", # Giving hint because tokenization is weak
+        correct_answers=[example_sentence],
+        options=pool,
+        explanation=f"Answer: {example_sentence}",
+        context=item
+    )
+
 def generate_sentence_question(level: int = 5) -> Optional[Question]:
     sentence = get_random_sentence(level)
     if not sentence:
@@ -86,8 +182,12 @@ class QuizSession:
 
         show_furigana = self.settings.show_furigana
 
-        # 50% chance of Multiple Choice if enough items exist
-        if len(self.all_vocab) >= 4 and random.random() > 0.5:
+        rand_val = random.random()
+        # 33% chance of Assemble if sentence exists
+        if item.example_sentence and rand_val > 0.66:
+            return generate_assemble_question(item, item.example_sentence)
+        # 33% chance of Multiple Choice if enough items exist
+        elif len(self.all_vocab) >= 4 and rand_val > 0.33:
             return generate_mc_question(item, self.all_vocab, show_furigana)
         else:
             return generate_input_question(item, show_furigana)
@@ -96,7 +196,19 @@ class QuizSession:
         if question.type == "sentence":
             return check_sentence_answer(question.context, user_answer)
 
-        is_correct = user_answer.strip().lower() in [a.lower() for a in question.correct_answers]
+        # For assemble, remove spaces from user answer to match target if target has no spaces (Japanese)
+        # But if we constructed target with no spaces, and user joined with spaces?
+        # script.js does `join(' ')`.
+        # So user_answer for assemble has spaces: "私は 食べます 。"
+        # But correct_answer is "私は食べます。"
+
+        if question.type == "assemble":
+            user_clean = user_answer.replace(" ", "")
+            correct_clean = [a.replace(" ", "") for a in question.correct_answers]
+            is_correct = user_clean in correct_clean
+        else:
+            is_correct = user_answer.strip().lower() in [a.lower() for a in question.correct_answers]
+
         if is_correct:
             self.score += 1
         self.total += 1

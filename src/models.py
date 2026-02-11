@@ -55,6 +55,9 @@ class UserProfile:
     completed_lessons: List[str] = field(default_factory=list)
     settings: UserSettings = field(default_factory=UserSettings)
     selected_track: str = "General"
+    gems: int = 0
+    inventory: List[str] = field(default_factory=list)
+    unlocked_units: List[str] = field(default_factory=lambda: ["u1"])
 
     def __post_init__(self):
         if isinstance(self.settings, dict):
