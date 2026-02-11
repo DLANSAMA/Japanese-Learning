@@ -284,3 +284,49 @@ async function addToStudy(item) {
         alert(`Error: ${err.detail}`);
     }
 }
+
+// --- Settings ---
+
+async function loadSettings() {
+    const res = await fetch('/api/settings');
+    const data = await res.json();
+    // Ensure the value exists in dropdown options
+    const trackSelect = document.getElementById('setting-track');
+    if ([...trackSelect.options].some(o => o.value === data.track)) {
+        trackSelect.value = data.track;
+    } else {
+        // Fallback or add dynamically?
+        // Usually it should match one of the hardcoded options
+        // If not, maybe set to General
+        if (data.track) trackSelect.value = "General"; // Default fallback
+    }
+
+    document.getElementById('setting-theme').value = data.theme || "default";
+}
+
+function openSettings() {
+    loadSettings();
+    document.getElementById('settings-modal').classList.remove('hidden');
+}
+
+function closeSettings() {
+    document.getElementById('settings-modal').classList.add('hidden');
+}
+
+async function saveSettings() {
+    const track = document.getElementById('setting-track').value;
+    const theme = document.getElementById('setting-theme').value;
+
+    const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({track: track, theme: theme})
+    });
+
+    if (res.ok) {
+        alert("Settings Saved! New study sessions will use the " + track + " track.");
+        closeSettings();
+    } else {
+        alert("Error saving settings");
+    }
+}

@@ -4,7 +4,9 @@ from src.study import get_new_items, mark_as_learning
 from src.models import Vocabulary
 
 class TestStudy(unittest.TestCase):
-    def test_get_new_items_general(self):
+    @patch('src.study.get_recommendations')
+    def test_get_new_items_general(self, mock_get_recs):
+        mock_get_recs.return_value = []
         # Mock load_vocab
         with patch('src.study.load_vocab') as mock_load:
             v1 = Vocabulary(word="A", kana="a", romaji="a", meaning="a", status="new", tags=["core"])
@@ -15,7 +17,9 @@ class TestStudy(unittest.TestCase):
             self.assertEqual(len(items), 1)
             self.assertEqual(items[0].word, "A")
 
-    def test_get_new_items_pop_culture(self):
+    @patch('src.study.get_recommendations')
+    def test_get_new_items_pop_culture(self, mock_get_recs):
+        mock_get_recs.return_value = []
         with patch('src.study.load_vocab') as mock_load:
             v1 = Vocabulary(word="A", kana="a", romaji="a", meaning="a", status="new", tags=["core"])
             v2 = Vocabulary(word="B", kana="b", romaji="b", meaning="b", status="new", tags=["rpg"])

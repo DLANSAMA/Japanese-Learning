@@ -1,13 +1,14 @@
-INFO:     Will watch for changes in these directories: ['/app']
-INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [37707] using StatReload
-Starting Japanese Learning API Server...
-INFO:     Started server process [37830]
+INFO:     Started server process [23401]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     127.0.0.1:48246 - "HEAD /index.html HTTP/1.1" 200 OK
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:46528 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46528 - "GET /script.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46528 - "GET /api/user HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46528 - "GET /api/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46528 - "POST /api/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46528 - "GET /api/settings HTTP/1.1" 200 OK
 INFO:     Shutting down
 INFO:     Waiting for application shutdown.
 INFO:     Application shutdown complete.
-INFO:     Finished server process [37830]
-INFO:     Stopping reloader process [37707]
+INFO:     Finished server process [23401]
