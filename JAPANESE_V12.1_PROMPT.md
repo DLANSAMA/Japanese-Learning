@@ -19,6 +19,13 @@
   );
   ```
 
+## 6. Study Card Layout 🃏
+- **Back of Card:** MUST show the Japanese Word again (top), then Meaning, then Sentence.
+- **Settings Toggle:**
+  - `Display Mode`: [Kanji] | [Furigana] | [Kana]
+  - `Romaji`: [Show] | [Hide]
+  - **Implementation:** React state in `App.jsx` passed down to `StudyCard.jsx`.
+
 ## 2. Map & Curriculum Structure 🗺️
 **File:** `data/curriculum.json` & `frontend/src/components/Map.jsx`
 - **Issue:** Map nodes act as generic "Study" buttons.
