@@ -1,7 +1,7 @@
 import json
 import os
 from dataclasses import asdict
-from typing import List
+from typing import List, Optional
 from .models import Vocabulary, GrammarLesson, UserProfile, GrammarExample, GrammarExercise
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), '../data')
@@ -9,14 +9,25 @@ VOCAB_FILE = os.path.join(DATA_DIR, 'vocab.json')
 GRAMMAR_FILE = os.path.join(DATA_DIR, 'grammar.json')
 USER_FILE = os.path.join(DATA_DIR, 'user.json')
 
+_VOCAB_CACHE: Optional[List[Vocabulary]] = None
+
 def load_vocab() -> List[Vocabulary]:
+    global _VOCAB_CACHE
+    if _VOCAB_CACHE is not None:
+        return _VOCAB_CACHE
+
     if not os.path.exists(VOCAB_FILE):
-        return []
+        _VOCAB_CACHE = []
+        return _VOCAB_CACHE
+
     with open(VOCAB_FILE, 'r', encoding='utf-8') as f:
         data = json.load(f)
-        return [Vocabulary(**item) for item in data]
+        _VOCAB_CACHE = [Vocabulary(**item) for item in data]
+        return _VOCAB_CACHE
 
 def save_vocab(vocab_list: List[Vocabulary]):
+    global _VOCAB_CACHE
+    _VOCAB_CACHE = vocab_list
     with open(VOCAB_FILE, 'w', encoding='utf-8') as f:
         data = [asdict(v) for v in vocab_list]
         json.dump(data, f, indent=2, ensure_ascii=False)
