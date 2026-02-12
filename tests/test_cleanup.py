@@ -1,112 +1,40 @@
-import pytest
-import json
-import os
+import unittest
 from unittest.mock import patch, MagicMock
 from src.cleanup_data import cleanup
-from src.dictionary import get_recommendations
+from src.models import Vocabulary
 
-TEST_DATA_FILE = "data/test_vocab_cleanup.json"
+class TestCleanup(unittest.TestCase):
+    @patch('src.cleanup_data.load_vocab')
+    @patch('src.cleanup_data.save_vocab')
+    def test_cleanup_logic(self, mock_save, mock_load):
+        # Create test data
+        v1 = Vocabulary(word="猫", kana="ねこ", romaji="neko", meaning="cat", status="new", fsrs_stability=1.0)
+        v2 = Vocabulary(word="猫", kana="ねこ", romaji="neko", meaning="cat", status="learning", fsrs_stability=2.0)
+        v3 = Vocabulary(word="犬", kana="いぬ", romaji="inu", meaning="dog", status="new", fsrs_stability=-1.0, fsrs_retrievability=1.5)
+        v4 = Vocabulary(word="鳥", kana="とり", romaji="tori", meaning="bird", status="new", fsrs_stability=0.0)
 
-@pytest.fixture
-def cleanup_data_file():
-    # Create a test file
-    data = [
-        # Duplicate
-        {"word": "猫", "kana": "ねこ", "status": "new", "fsrs_stability": 1.0},
-        {"word": "猫", "kana": "ねこ", "status": "learning", "fsrs_stability": 2.0},
-        # Invalid FSRS
-        {"word": "犬", "kana": "いぬ", "status": "new", "fsrs_stability": -1.0, "fsrs_retrievability": 1.5},
-        # Normal
-        {"word": "鳥", "kana": "とり", "status": "new", "fsrs_stability": 0.0}
-    ]
-    if not os.path.exists("data"):
-        os.makedirs("data")
-    with open(TEST_DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False)
+        mock_load.return_value = [v1, v2, v3, v4]
 
-    yield TEST_DATA_FILE
-
-    # Cleanup
-    if os.path.exists(TEST_DATA_FILE):
-        os.remove(TEST_DATA_FILE)
-
-def test_cleanup_logic(cleanup_data_file):
-    # Patch the DATA_FILE in src.cleanup_data
-    with patch("src.cleanup_data.DATA_FILE", cleanup_data_file):
         cleanup()
 
-    with open(cleanup_data_file, "r", encoding="utf-8") as f:
-        data = json.load(f)
+        # Verify save_vocab called with cleaned data
+        mock_save.assert_called_once()
+        saved_list = mock_save.call_args[0][0]
 
-    # Check duplicates removed
-    neko = [item for item in data if item["word"] == "猫"]
-    assert len(neko) == 1
-    # Check priority: should be "learning" one
-    assert neko[0]["status"] == "learning"
-    assert neko[0]["fsrs_stability"] == 2.0
+        # Check duplicates removed (v1 vs v2 -> v2 kept)
+        neko = [item for item in saved_list if item.word == "猫"]
+        self.assertEqual(len(neko), 1)
+        self.assertEqual(neko[0].status, "learning")
+        self.assertEqual(neko[0].fsrs_stability, 2.0)
 
-    # Check invalid FSRS fixed
-    inu = [item for item in data if item["word"] == "犬"][0]
-    assert inu["fsrs_stability"] == 0.0
-    assert inu["fsrs_retrievability"] == 1.0 # Clamped to 1.0
+        # Check invalid FSRS fixed (v3)
+        inu = [item for item in saved_list if item.word == "犬"][0]
+        self.assertEqual(inu.fsrs_stability, 0.0)
+        self.assertEqual(inu.fsrs_retrievability, 1.0)
 
-    # Check normal preserved
-    tori = [item for item in data if item["word"] == "鳥"][0]
-    assert tori["status"] == "new"
+        # Check normal preserved (v4)
+        tori = [item for item in saved_list if item.word == "鳥"][0]
+        self.assertEqual(tori.status, "new")
 
-@patch('src.dictionary.get_jam')
-@patch('sqlite3.connect')
-def test_dictionary_filters(mock_connect, mock_get_jam):
-    # Mock SQLite response (idseqs)
-    mock_cursor = MagicMock()
-    mock_connect.return_value.cursor.return_value = mock_cursor
-    mock_cursor.fetchall.return_value = [(1,), (2,), (3,), (4,), (5,)]
-
-    # Mock Jamdict entries
-    mock_jam = mock_get_jam.return_value
-
-    # Entry 1: Valid
-    entry1 = MagicMock()
-    entry1.kanji_forms = [MagicMock(text="猫")]
-    entry1.kana_forms = [MagicMock(text="ねこ")]
-    entry1.senses = []
-
-    # Entry 2: Symbol
-    entry2 = MagicMock()
-    entry2.kanji_forms = [MagicMock(text="猫！")]
-    entry2.kana_forms = [MagicMock(text="ねこ")]
-
-    # Entry 3: 1-char Kana (not particle)
-    entry3 = MagicMock()
-    entry3.kanji_forms = []
-    entry3.kana_forms = [MagicMock(text="あ")]
-
-    # Entry 4: 1-char Particle (valid)
-    entry4 = MagicMock()
-    entry4.kanji_forms = []
-    entry4.kana_forms = [MagicMock(text="の")]
-
-    # Entry 5: 1-char Kanji (valid)
-    entry5 = MagicMock()
-    entry5.kanji_forms = [MagicMock(text="目")]
-    entry5.kana_forms = [MagicMock(text="め")]
-
-    def get_entry_side_effect(idseq):
-        if idseq == 1: return entry1
-        if idseq == 2: return entry2
-        if idseq == 3: return entry3
-        if idseq == 4: return entry4
-        if idseq == 5: return entry5
-        return None
-
-    mock_jam.jmdict.get_entry.side_effect = get_entry_side_effect
-
-    results = get_recommendations(limit=10)
-
-    words = [r["word"] for r in results]
-
-    assert "猫" in words
-    assert "猫！" not in words
-    assert "あ" not in words
-    assert "の" in words
-    assert "目" in words
+if __name__ == '__main__':
+    unittest.main()

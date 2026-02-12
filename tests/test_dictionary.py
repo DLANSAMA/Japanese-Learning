@@ -55,11 +55,11 @@ class TestDictionary(unittest.TestCase):
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]["word"], "食べる")
 
-    @patch('src.api.load_vocab')
-    @patch('src.api.save_vocab')
-    def test_add_dictionary_item(self, mock_save, mock_load):
-        # Mock load_vocab to return empty list
-        mock_load.return_value = []
+    @patch('src.api.get_vocab_item')
+    @patch('src.api.add_vocab_item')
+    def test_add_dictionary_item(self, mock_add, mock_get):
+        # Mock get_vocab_item to return None (not found)
+        mock_get.return_value = None
 
         payload = {
             "word": "飲む",
@@ -73,20 +73,19 @@ class TestDictionary(unittest.TestCase):
         self.assertEqual(data["status"], "success")
         self.assertEqual(data["word"], "飲む")
 
-        # Verify save_vocab was called
-        mock_save.assert_called_once()
-        saved_list = mock_save.call_args[0][0]
-        self.assertEqual(len(saved_list), 1)
-        self.assertEqual(saved_list[0].word, "飲む")
-        self.assertEqual(saved_list[0].meaning, "to drink")
-        self.assertEqual(saved_list[0].status, "new")
+        # Verify add_vocab_item was called
+        mock_add.assert_called_once()
+        saved_item = mock_add.call_args[0][0]
+        self.assertEqual(saved_item.word, "飲む")
+        self.assertEqual(saved_item.meaning, "to drink")
+        self.assertEqual(saved_item.status, "new")
 
-    @patch('src.api.load_vocab')
-    def test_add_dictionary_item_duplicate(self, mock_load):
-        # Mock load_vocab to return list with existing word
+    @patch('src.api.get_vocab_item')
+    def test_add_dictionary_item_duplicate(self, mock_get):
+        # Mock get_vocab_item to return existing item
         existing_item = MagicMock()
         existing_item.word = "飲む"
-        mock_load.return_value = [existing_item]
+        mock_get.return_value = existing_item
 
         payload = {
             "word": "飲む",

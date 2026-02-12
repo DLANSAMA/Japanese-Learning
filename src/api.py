@@ -6,7 +6,10 @@ import random
 import os
 from datetime import datetime, timedelta
 
-from .data_manager import load_vocab, save_vocab, load_user_profile, save_user_profile
+from .data_manager import (
+    load_vocab, save_vocab, load_user_profile, save_user_profile,
+    get_vocab_item, update_vocab_item, add_vocab_item
+)
 from .models import Vocabulary, UserProfile, UserSettings
 from .quiz import generate_input_question, generate_mc_question
 from .gamification import add_xp, update_streak
@@ -149,7 +152,6 @@ def get_vocab_question():
 
 @app.post("/api/quiz/answer", response_model=AnswerResponse)
 def submit_answer(payload: AnswerRequest):
-    vocab = load_vocab()
     profile = load_user_profile()
 
     # Parse ID
@@ -157,7 +159,7 @@ def submit_answer(payload: AnswerRequest):
         raise HTTPException(status_code=400, detail="Invalid question ID format")
 
     word = payload.question_id.split("vocab:", 1)[1]
-    item = next((v for v in vocab if v.word == word), None)
+    item = get_vocab_item(word)
 
     if not item:
         raise HTTPException(status_code=404, detail="Word not found")
@@ -189,7 +191,7 @@ def submit_answer(payload: AnswerRequest):
         # 0 = Fail. FSRS maps to 1 (Again).
         update_card_fsrs(item, 0)
 
-    save_vocab(vocab)
+    update_vocab_item(item)
     save_user_profile(profile)
 
     return AnswerResponse(
@@ -223,13 +225,12 @@ def get_study_items():
 
 @app.post("/api/study/confirm")
 def confirm_study_item(payload: StudyConfirmRequest):
-    vocab = load_vocab()
-    item = next((v for v in vocab if v.word == payload.word), None)
+    item = get_vocab_item(payload.word)
     if not item:
         raise HTTPException(status_code=404, detail="Item not found")
 
     mark_as_learning(item)
-    save_vocab(vocab)
+    update_vocab_item(item)
     return {"status": "success", "word": item.word}
 
 @app.get("/api/settings", response_model=SettingsModel)
@@ -251,10 +252,8 @@ def search_dictionary(q: str):
 
 @app.post("/api/dictionary/add")
 def add_dictionary_item(payload: DictionaryAddRequest):
-    vocab = load_vocab()
-
     # Check if word already exists
-    if any(v.word == payload.word for v in vocab):
+    if get_vocab_item(payload.word):
         raise HTTPException(status_code=400, detail="Word already in vocabulary")
 
     # Create new Vocabulary item
@@ -289,8 +288,7 @@ def add_dictionary_item(payload: DictionaryAddRequest):
         example_sentence=sentence
     )
 
-    vocab.append(new_item)
-    save_vocab(vocab)
+    add_vocab_item(new_item)
 
     return {"status": "success", "word": new_item.word}
 
