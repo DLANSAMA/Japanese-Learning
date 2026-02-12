@@ -6,7 +6,7 @@ import random
 import os
 from datetime import datetime, timedelta
 
-from .data_manager import load_vocab, save_vocab, load_user_profile, save_user_profile
+from .data_manager import load_vocab, save_vocab, load_user_profile, save_user_profile, get_vocab_by_word
 from .models import Vocabulary, UserProfile, UserSettings
 from .quiz import generate_input_question, generate_mc_question
 from .gamification import add_xp, update_streak
@@ -157,7 +157,7 @@ def submit_answer(payload: AnswerRequest):
         raise HTTPException(status_code=400, detail="Invalid question ID format")
 
     word = payload.question_id.split("vocab:", 1)[1]
-    item = next((v for v in vocab if v.word == word), None)
+    item = get_vocab_by_word(word)
 
     if not item:
         raise HTTPException(status_code=404, detail="Word not found")
@@ -224,7 +224,7 @@ def get_study_items():
 @app.post("/api/study/confirm")
 def confirm_study_item(payload: StudyConfirmRequest):
     vocab = load_vocab()
-    item = next((v for v in vocab if v.word == payload.word), None)
+    item = get_vocab_by_word(payload.word)
     if not item:
         raise HTTPException(status_code=404, detail="Item not found")
 
@@ -254,7 +254,7 @@ def add_dictionary_item(payload: DictionaryAddRequest):
     vocab = load_vocab()
 
     # Check if word already exists
-    if any(v.word == payload.word for v in vocab):
+    if get_vocab_by_word(payload.word):
         raise HTTPException(status_code=400, detail="Word already in vocabulary")
 
     # Create new Vocabulary item
