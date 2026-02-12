@@ -23,4 +23,6 @@ export const updateSettings = (track, theme, displayMode, showRomaji) => api.pos
     show_romaji: showRomaji
 });
 
+export const getWordOfTheDay = () => api.get('/word_of_the_day').then(res => res.data);
+
 export default api;

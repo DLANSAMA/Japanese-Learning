@@ -55,6 +55,7 @@ function App() {
                     userStats={userStats}
                     onStartStudy={() => setCurrentView('study')}
                     onStartQuiz={() => setCurrentView('quiz')}
+                    onViewLearned={() => setCurrentView('dictionary')}
                 />;
       case 'map':
         return <Map onStartLesson={() => setCurrentView('study')} />;

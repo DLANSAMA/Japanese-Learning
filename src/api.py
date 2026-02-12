@@ -27,6 +27,8 @@ class UserStats(BaseModel):
     streak: int
     hearts: int
     gems: int
+    total_learned: int
+    next_level_progress: int
 
 class QuizQuestionResponse(BaseModel):
     question_id: str
@@ -108,12 +110,24 @@ def get_due_vocab():
 @app.get("/api/user", response_model=UserStats)
 def get_user_stats():
     profile = load_user_profile()
+    vocab = load_vocab()
+
+    # Calculate learned (non-new)
+    learned_count = len([v for v in vocab if v.status != 'new'])
+
+    # Calculate progress (Level N requires N * 100 XP)
+    xp_required = profile.level * 100
+    progress = int((profile.xp / xp_required) * 100) if xp_required > 0 else 0
+    progress = min(100, progress)
+
     return UserStats(
         xp=profile.xp,
         level=profile.level,
         streak=profile.streak,
         hearts=profile.hearts,
-        gems=profile.gems
+        gems=profile.gems,
+        total_learned=learned_count,
+        next_level_progress=progress
     )
 
 @app.get("/api/quiz/vocab", response_model=QuizQuestionResponse)
@@ -314,6 +328,39 @@ def get_shop_items():
         ShopItem(id="theme_edo", name="Edo Period Theme", description="Traditional Japanese aesthetic.", price=1000, icon="🏯", type="theme"),
         ShopItem(id="freeze", name="Streak Freeze", description="Protect your streak for one day.", price=200, icon="🧊", type="powerup")
     ]
+
+@app.get("/api/word_of_the_day", response_model=StudyItemResponse)
+def get_word_of_the_day():
+    vocab = load_vocab()
+    # Filter for N5 (Level 1-5 or similar). Let's just pick any non-new if available, or any.
+    # Logic: Prioritize words that are simple.
+    # Assuming 'level' field maps to difficulty or jlpt? In models.py level is mastery level.
+    # We don't have explicit JLPT field in Vocabulary yet, but tags might have it.
+
+    candidates = [v for v in vocab]
+    if not candidates:
+        raise HTTPException(status_code=404, detail="No vocabulary available")
+
+    # Use today's date as seed
+    seed = datetime.now().strftime('%Y%m%d')
+    random.seed(seed)
+
+    item = random.choice(candidates)
+
+    # Reset seed
+    random.seed()
+
+    pitch = get_pitch_pattern(item.word, item.kana)
+    return StudyItemResponse(
+        word=item.word,
+        kana=item.kana,
+        romaji=item.romaji,
+        meaning=item.meaning,
+        tags=item.tags,
+        status=item.status,
+        example_sentence=item.example_sentence,
+        pitch_pattern=pitch
+    )
 
 @app.post("/api/shop/buy")
 def buy_item(payload: BuyRequest):
