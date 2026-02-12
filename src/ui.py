@@ -1,14 +1,14 @@
+import time
+
+from rich.align import Align
 from rich.console import Console
+from rich.layout import Layout
+from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.prompt import Prompt
 from rich.table import Table
-from rich.markdown import Markdown
-from rich.layout import Layout
-from rich.align import Align
-from rich import print as rprint
-import time
 
-from .models import UserProfile, Vocabulary, GrammarLesson
+from .models import GrammarLesson, UserProfile, Vocabulary
 
 console = Console()
 
@@ -76,32 +76,32 @@ def display_settings_menu(profile: UserProfile):
     clear_screen()
     console.print(Panel("[bold]Settings[/bold]", border_style="blue"))
 
-    rprint(f"Current Track: [green]{profile.selected_track}[/green]")
-    rprint(f"Current Theme: [cyan]{profile.settings.theme}[/cyan]")
-    rprint("\n[1] Change Track")
-    rprint("[2] Change Theme")
-    rprint("[3] Back")
+    console.print(f"Current Track: [green]{profile.selected_track}[/green]")
+    console.print(f"Current Theme: [cyan]{profile.settings.theme}[/cyan]")
+    console.print("\n[1] Change Track")
+    console.print("[2] Change Theme")
+    console.print("[3] Back")
 
     choice = Prompt.ask("Select option", choices=["1", "2", "3"])
 
     if choice == "1":
-        rprint("\nAvailable Tracks:")
+        console.print("\nAvailable Tracks:")
         tracks = ["General", "Pop Culture", "Business", "Travel"]
         for i, t in enumerate(tracks):
-            rprint(f"[{i+1}] {t}")
+            console.print(f"[{i+1}] {t}")
         sel = Prompt.ask("Select Track", choices=[str(i+1) for i in range(len(tracks))])
         profile.selected_track = tracks[int(sel)-1]
-        rprint(f"Track updated to {profile.selected_track}!")
+        console.print(f"Track updated to {profile.selected_track}!")
         time.sleep(1)
 
     elif choice == "2":
-        rprint("\nAvailable Themes:")
+        console.print("\nAvailable Themes:")
         themes = list(THEMES.keys())
         for i, t in enumerate(themes):
-            rprint(f"[{i+1}] {t}")
+            console.print(f"[{i+1}] {t}")
         sel = Prompt.ask("Select Theme", choices=[str(i+1) for i in range(len(themes))])
         profile.settings.theme = themes[int(sel)-1]
-        rprint(f"Theme updated to {profile.settings.theme}!")
+        console.print(f"Theme updated to {profile.settings.theme}!")
         time.sleep(1)
 
 def display_grammar_list(lessons: list[GrammarLesson]) -> str:
