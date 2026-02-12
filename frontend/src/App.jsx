@@ -9,14 +9,6 @@ import { Shop } from './components/Shop';
 import { Dictionary } from './components/Dictionary';
 import { SettingsModal } from './components/SettingsModal';
 
-// Placeholder components to be implemented later
-const Placeholder = ({ title }) => (
-    <div className="flex flex-col items-center justify-center h-full text-gray-400 animate-pulse">
-        <h2 className="text-4xl font-black mb-4 text-tatami">{title}</h2>
-        <p>Under Construction 🚧</p>
-    </div>
-);
-
 function App() {
   const [currentView, setCurrentView] = useState('dashboard');
   const [userStats, setUserStats] = useState(null);
