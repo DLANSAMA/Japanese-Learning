@@ -83,7 +83,7 @@ const Card = ({ item, onNext, isActive }) => {
                     </motion.h2>
 
                     <div className="absolute bottom-10 left-0 w-full flex justify-center">
-                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 bg-white/50 px-4 py-1 rounded-full backdrop-blur-sm border border-tatami animate-pulse">
+                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-charcoal/50 bg-tatami/50 px-4 py-1 rounded-full backdrop-blur-sm border border-tatami animate-pulse">
                             Tap or Space to Flip
                         </span>
                     </div>
@@ -91,7 +91,7 @@ const Card = ({ item, onNext, isActive }) => {
 
                 {/* Back */}
                 <div
-                    className="absolute inset-0 backface-hidden flex flex-col items-center justify-center p-8 text-center bg-white rounded-[2rem] border-[3px] border-crimson select-none overflow-hidden"
+                    className="absolute inset-0 backface-hidden flex flex-col items-center justify-center p-8 text-center bg-paper rounded-[2rem] border-[3px] border-crimson select-none overflow-hidden"
                     style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
                 >
                     <div className="absolute top-0 left-0 w-full h-2 bg-crimson" />
@@ -101,7 +101,7 @@ const Card = ({ item, onNext, isActive }) => {
                     </div>
 
                     {settings.showRomaji && (
-                        <p className="text-lg italic text-gray-500 mb-8 font-serif border-b border-tatami pb-2 px-8">{item.romaji}</p>
+                        <p className="text-lg italic text-charcoal/60 mb-8 font-serif border-b border-tatami pb-2 px-8">{item.romaji}</p>
                     )}
 
                     <div className="flex-1 flex flex-col items-center justify-center w-full">
@@ -109,7 +109,7 @@ const Card = ({ item, onNext, isActive }) => {
                     </div>
 
                     {item.example_sentence && (
-                        <div className="bg-gray-50 p-5 rounded-xl text-sm italic text-gray-600 w-full mt-auto border border-gray-100 shadow-inner relative">
+                        <div className="bg-tatami/20 p-5 rounded-xl text-sm italic text-charcoal/80 w-full mt-auto border border-tatami/50 shadow-inner relative">
                             <span className="absolute top-2 left-2 text-2xl opacity-10 text-crimson font-serif">"</span>
                             {item.example_sentence}
                             <span className="absolute bottom-2 right-2 text-2xl opacity-10 text-crimson font-serif">"</span>
