@@ -3,6 +3,7 @@ import { searchDictionary, addToDictionary } from '../api';
 import { Search, Loader2, Plus, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from './ui/Toast';
+import { clsx } from 'clsx';
 
 export const Dictionary = () => {
     const [query, setQuery] = useState('');
@@ -64,7 +65,7 @@ export const Dictionary = () => {
                 onSubmit={handleSearch}
                 className="relative mb-12"
             >
-                <div className="absolute inset-0 bg-crimson/5 rounded-2xl transform rotate-1 scale-105 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-crimson/5 rounded-2xl transform rotate-1 scale-105 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                 <input
                     type="text"
                     value={query}
