@@ -2,12 +2,18 @@ import unittest
 from unittest.mock import patch, MagicMock
 from fastapi.testclient import TestClient
 from src.api import app
+from src.auth import verify_api_key
 from src.models import Vocabulary
 from src.quiz import generate_assemble_question, QuizSession
 
 client = TestClient(app)
 
 class TestGamification(unittest.TestCase):
+    def setUp(self):
+        app.dependency_overrides[verify_api_key] = lambda: True
+
+    def tearDown(self):
+        app.dependency_overrides = {}
 
     @patch('src.api.load_user_profile')
     @patch('src.api.save_user_profile')

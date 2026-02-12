@@ -41,9 +41,16 @@ class TestV10(unittest.TestCase):
 
         from fastapi.testclient import TestClient
         from src.api import app
+        from src.auth import verify_api_key
+
+        app.dependency_overrides[verify_api_key] = lambda: True
         client = TestClient(app)
 
-        response = client.get("/api/quiz/vocab")
+        try:
+            response = client.get("/api/quiz/vocab")
+        finally:
+            app.dependency_overrides = {}
+
         self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertIn("pitch_pattern", data)

@@ -2,9 +2,15 @@ import unittest
 from fastapi.testclient import TestClient
 from src.api import app, UserStats
 
+from src.auth import verify_api_key
+
 class TestDashboardV12(unittest.TestCase):
     def setUp(self):
+        app.dependency_overrides[verify_api_key] = lambda: True
         self.client = TestClient(app)
+
+    def tearDown(self):
+        app.dependency_overrides = {}
 
     def test_word_of_the_day(self):
         response = self.client.get("/api/word_of_the_day")

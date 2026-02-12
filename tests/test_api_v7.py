@@ -1,11 +1,18 @@
 from fastapi.testclient import TestClient
 from src.api import app
+from src.auth import verify_api_key
 import unittest
 from unittest.mock import patch, MagicMock
 
 client = TestClient(app)
 
 class TestAPIV7(unittest.TestCase):
+    def setUp(self):
+        app.dependency_overrides[verify_api_key] = lambda: True
+
+    def tearDown(self):
+        app.dependency_overrides = {}
+
     def test_get_settings(self):
         response = client.get("/api/settings")
         self.assertEqual(response.status_code, 200)

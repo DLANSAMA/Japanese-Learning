@@ -2,11 +2,17 @@ import unittest
 from unittest.mock import patch, MagicMock
 from fastapi.testclient import TestClient
 from src.api import app
+from src.auth import verify_api_key
 from src.dictionary import search
 
 client = TestClient(app)
 
 class TestDictionary(unittest.TestCase):
+    def setUp(self):
+        app.dependency_overrides[verify_api_key] = lambda: True
+
+    def tearDown(self):
+        app.dependency_overrides = {}
 
     @patch('src.dictionary.get_jam')
     def test_dictionary_search_logic(self, mock_get_jam):
