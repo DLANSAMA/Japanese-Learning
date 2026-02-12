@@ -9,6 +9,7 @@ from .db import get_db, init_db, DB_FILE
 DATA_DIR = os.path.join(os.path.dirname(__file__), '../data')
 VOCAB_FILE = os.path.join(DATA_DIR, 'vocab.json')
 GRAMMAR_FILE = os.path.join(DATA_DIR, 'grammar.json')
+CURRICULUM_FILE = os.path.join(DATA_DIR, 'curriculum.json')
 USER_FILE = os.path.join(DATA_DIR, 'user.json')
 
 # Ensure DB is initialized
@@ -124,6 +125,12 @@ def load_grammar() -> List[GrammarLesson]:
             exercises = [GrammarExercise(**ex) for ex in exercises_data]
             lessons.append(GrammarLesson(examples=examples, exercises=exercises, **item))
         return lessons
+
+def load_curriculum():
+    if not os.path.exists(CURRICULUM_FILE):
+        return {"units": []}
+    with open(CURRICULUM_FILE, 'r', encoding='utf-8') as f:
+        return json.load(f)
 
 def load_user_profile() -> UserProfile:
     if not os.path.exists(USER_FILE):
