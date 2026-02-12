@@ -3,7 +3,6 @@ from rich.panel import Panel
 from rich.prompt import Prompt
 from rich.table import Table
 from rich.markdown import Markdown
-from rich.layout import Layout
 from rich.align import Align
 from rich import print as rprint
 import time
