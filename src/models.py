@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields
 from typing import List, Dict, Optional, Any
 
 @dataclass
@@ -68,4 +68,7 @@ class UserProfile:
 
     def __post_init__(self):
         if isinstance(self.settings, dict):
-            self.settings = UserSettings(**self.settings)
+            # Filter keys to ensure compatibility if UserSettings fields change or JSON has extra data
+            valid_keys = {f.name for f in fields(UserSettings)}
+            filtered_settings = {k: v for k, v in self.settings.items() if k in valid_keys}
+            self.settings = UserSettings(**filtered_settings)
