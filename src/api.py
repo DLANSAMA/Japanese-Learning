@@ -19,7 +19,17 @@ from .dictionary import search
 from .sentence_mining import mine_sentence
 from .pitch import get_pitch_pattern
 
-app = FastAPI(title="Japanese Learning API", version="1.0")
+# Configure FastAPI based on environment
+environment = os.getenv("ENVIRONMENT", "development")
+is_production = environment.lower() == "production"
+
+app = FastAPI(
+    title="Japanese Learning API",
+    version="1.0",
+    docs_url=None if is_production else "/docs",
+    redoc_url=None if is_production else "/redoc",
+    openapi_url=None if is_production else "/openapi.json"
+)
 
 class UserStats(BaseModel):
     xp: int
