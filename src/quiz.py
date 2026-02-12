@@ -14,8 +14,16 @@ class Question:
     explanation: Optional[str] = None # Shown after answer
     context: Optional[Any] = None # The Vocabulary, GrammarExercise, or Sentence object
 
-def generate_input_question(item: Vocabulary, show_furigana: bool = True) -> Question:
-    display = f"{item.word} ({item.kana})" if show_furigana else item.word
+def get_display_text(item: Vocabulary, display_mode: str) -> str:
+    if display_mode == "kana":
+        return item.kana
+    elif display_mode == "kanji":
+        return item.word
+    else: # furigana or default
+        return f"{item.word} ({item.kana})"
+
+def generate_input_question(item: Vocabulary, display_mode: str = "kanji") -> Question:
+    display = get_display_text(item, display_mode)
     return Question(
         type="input",
         question_text=f"What is the meaning of: {display}?",
@@ -24,13 +32,13 @@ def generate_input_question(item: Vocabulary, show_furigana: bool = True) -> Que
         context=item
     )
 
-def generate_mc_question(item: Vocabulary, all_vocab: List[Vocabulary], show_furigana: bool = True) -> Question:
+def generate_mc_question(item: Vocabulary, all_vocab: List[Vocabulary], display_mode: str = "kanji") -> Question:
     distractors = random.sample([v for v in all_vocab if v.word != item.word], 3)
     options = [d.meaning for d in distractors]
     options.append(item.meaning)
     random.shuffle(options)
 
-    display = f"{item.word} ({item.kana})" if show_furigana else item.word
+    display = get_display_text(item, display_mode)
 
     return Question(
         type="multiple_choice",
@@ -180,7 +188,10 @@ class QuizSession:
         item = self.items[self.current_index]
         self.current_index += 1
 
-        show_furigana = self.settings.show_furigana
+        display_mode = getattr(self.settings, "display_mode", "kanji")
+        # Fallback to show_furigana logic if display_mode not present (for backward compat during migration)
+        if not hasattr(self.settings, "display_mode"):
+             display_mode = "furigana" if self.settings.show_furigana else "kanji"
 
         rand_val = random.random()
         # 33% chance of Assemble if sentence exists
@@ -188,9 +199,9 @@ class QuizSession:
             return generate_assemble_question(item, item.example_sentence)
         # 33% chance of Multiple Choice if enough items exist
         elif len(self.all_vocab) >= 4 and rand_val > 0.33:
-            return generate_mc_question(item, self.all_vocab, show_furigana)
+            return generate_mc_question(item, self.all_vocab, display_mode)
         else:
-            return generate_input_question(item, show_furigana)
+            return generate_input_question(item, display_mode)
 
     def check_answer(self, question: Question, user_answer: str) -> bool:
         if question.type == "sentence":

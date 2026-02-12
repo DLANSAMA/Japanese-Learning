@@ -5,10 +5,12 @@ import { confirmStudyItem, getStudyItems } from '../api';
 import confetti from 'canvas-confetti';
 import { useToast } from './ui/Toast';
 import { ArrowLeft, Loader2, RefreshCcw } from 'lucide-react';
+import { useSettings } from '../context/SettingsContext';
 
 const Card = ({ item, onNext, isActive }) => {
     const [isFlipped, setIsFlipped] = useState(false);
     const { addToast } = useToast();
+    const { settings } = useSettings();
 
     // Reset flip state when item changes
     useEffect(() => {
@@ -66,9 +68,18 @@ const Card = ({ item, onNext, isActive }) => {
 
                     <motion.h2
                         layoutId={`word-${item.word}`}
-                        className="text-7xl font-black mb-6 text-charcoal tracking-tight drop-shadow-sm"
+                        className="text-7xl font-black mb-6 text-charcoal tracking-tight drop-shadow-sm flex flex-col items-center justify-center"
                     >
-                        {item.word}
+                        {settings.displayMode === 'kana' ? (
+                            item.kana
+                        ) : settings.displayMode === 'furigana' ? (
+                            <>
+                                <span className="text-3xl text-gray-500 mb-2 font-medium opacity-80">{item.kana}</span>
+                                <span>{item.word}</span>
+                            </>
+                        ) : (
+                            item.word
+                        )}
                     </motion.h2>
 
                     <div className="absolute bottom-10 left-0 w-full flex justify-center">
@@ -89,7 +100,9 @@ const Card = ({ item, onNext, isActive }) => {
                         <PitchAccent kana={item.kana} pattern={item.pitch_pattern} />
                     </div>
 
-                    <p className="text-lg italic text-gray-500 mb-8 font-serif border-b border-tatami pb-2 px-8">{item.romaji}</p>
+                    {settings.showRomaji && (
+                        <p className="text-lg italic text-gray-500 mb-8 font-serif border-b border-tatami pb-2 px-8">{item.romaji}</p>
+                    )}
 
                     <div className="flex-1 flex flex-col items-center justify-center w-full">
                          <p className="text-3xl font-black text-crimson mb-4 leading-tight drop-shadow-sm">{item.meaning}</p>

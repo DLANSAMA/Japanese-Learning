@@ -7,11 +7,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        paper: '#FAF7F2',
-        crimson: '#BC002D',
-        charcoal: '#2D2A26',
-        tatami: '#E8E1D5',
-        gold: '#D4AF37',
+        paper: 'rgb(var(--color-paper) / <alpha-value>)',
+        crimson: 'rgb(var(--color-crimson) / <alpha-value>)',
+        charcoal: 'rgb(var(--color-charcoal) / <alpha-value>)',
+        tatami: 'rgb(var(--color-tatami) / <alpha-value>)',
+        gold: 'rgb(var(--color-gold) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['"Noto Sans JP"', 'sans-serif'],

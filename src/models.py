@@ -49,6 +49,8 @@ class UserSettings:
     show_furigana: bool = True
     max_jlpt_level: int = 5
     theme: str = "default"
+    display_mode: str = "kanji"
+    show_romaji: bool = True
 
 @dataclass
 class UserProfile:
