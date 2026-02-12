@@ -1,6 +1,6 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional
 import random
 import os
@@ -64,8 +64,8 @@ class StudyConfirmRequest(BaseModel):
     word: str
 
 class DictionaryAddRequest(BaseModel):
-    word: str
-    kana: str
+    word: str = Field(..., min_length=1, max_length=50)
+    kana: str = Field(..., min_length=1, max_length=100)
     meanings: List[str]
 
 class StudyItemResponse(BaseModel):
@@ -270,7 +270,7 @@ def update_settings(payload: SettingsModel):
     return {"status": "updated", "track": payload.track, "theme": payload.theme}
 
 @app.get("/api/dictionary/search")
-def search_dictionary(q: str):
+def search_dictionary(q: str = Query(..., min_length=1, max_length=50)):
     return search(q)
 
 @app.post("/api/dictionary/add")
