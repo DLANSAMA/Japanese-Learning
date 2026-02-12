@@ -23,11 +23,27 @@ export const PitchAccent = ({ kana, pattern }) => {
   });
 
   return (
-    <div className="relative inline-flex flex-col items-center select-none p-2 rounded-lg bg-white/50 backdrop-blur-sm border border-tatami">
-      <svg width={totalWidth} height={height} className="absolute top-0 left-0 pointer-events-none">
-        <path d={pathD} stroke="#BC002D" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+    // p-2 padding matches the top-2 left-2 offset of the SVG for alignment
+    // bg-paper/50 provides subtle background contrast
+    <div className="relative inline-flex flex-col items-center select-none p-2 rounded-lg bg-paper/50 backdrop-blur-sm border border-tatami">
+      {/*
+        SVG positioning:
+        - absolute top-2 left-2: offsets the SVG by the parent's padding (p-2 = 0.5rem = 8px)
+        - This ensures the SVG coordinates (based on padding logic) align with the text content
+      */}
+      <svg width={totalWidth} height={height} className="absolute top-2 left-2 pointer-events-none">
+        {/* Pitch contour line: stroke-crimson for visibility */}
+        <path d={pathD} className="stroke-crimson" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
         {points.map((pt, i) => (
-            <circle key={i} cx={pt.x} cy={pt.y} r="5" fill={pt.p === 'H' ? "#BC002D" : "#2D2A26"} stroke="white" strokeWidth="2" />
+            <circle
+                key={i}
+                cx={pt.x}
+                cy={pt.y}
+                r="5"
+                // High pitch = Crimson, Low pitch = Charcoal (theme-aware)
+                className={pt.p === 'H' ? "fill-crimson stroke-paper" : "fill-charcoal stroke-paper"}
+                strokeWidth="2"
+            />
         ))}
         {/* Draw drop indicator */}
         {points.map((pt, i) => {
@@ -36,17 +52,23 @@ export const PitchAccent = ({ kana, pattern }) => {
                  const dropX = pt.x + charWidth / 2;
                  return (
                     <g key={`drop-${i}`}>
-                        <line x1={dropX} y1={10} x2={dropX} y2={35} stroke="#BC002D" strokeWidth="2" strokeDasharray="4 2" />
-                        <text x={dropX} y={45} fontSize="10" textAnchor="middle" fill="#BC002D">↘</text>
+                        <line x1={dropX} y1={10} x2={dropX} y2={35} className="stroke-crimson" strokeWidth="2" strokeDasharray="4 2" />
+                        <text x={dropX} y={45} fontSize="10" textAnchor="middle" className="fill-crimson">↘</text>
                     </g>
                  );
             }
             return null;
         })}
       </svg>
+      {/*
+        Text container:
+        - pt-10 pushes the text below the pitch diagram
+        - width matches SVG calculation
+        - font-bold + text-charcoal ensures high contrast
+      */}
       <div className="flex pt-10" style={{ width: totalWidth, paddingLeft: padding, paddingRight: padding }}>
         {kana.split('').map((char, i) => (
-             <span key={i} className="text-2xl font-bold w-[40px] text-center inline-block">{char}</span>
+             <span key={i} className="text-2xl font-bold w-[40px] text-center inline-block text-charcoal">{char}</span>
         ))}
       </div>
     </div>

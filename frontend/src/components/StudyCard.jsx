@@ -74,7 +74,12 @@ const Card = ({ item, onNext, isActive }) => {
                             item.kana
                         ) : settings.displayMode === 'furigana' ? (
                             <>
-                                <span className="text-3xl text-gray-500 mb-2 font-medium opacity-80">{item.kana}</span>
+                                {/*
+                                    Furigana styling:
+                                    - text-charcoal/60: high enough contrast to be readable but subtle enough to be secondary
+                                    - font-medium: ensures legibility of small kana characters
+                                */}
+                                <span className="text-3xl text-charcoal/60 mb-2 font-medium opacity-80">{item.kana}</span>
                                 <span>{item.word}</span>
                             </>
                         ) : (
@@ -83,6 +88,11 @@ const Card = ({ item, onNext, isActive }) => {
                     </motion.h2>
 
                     <div className="absolute bottom-10 left-0 w-full flex justify-center">
+                        {/*
+                            Flip instruction badge:
+                            - text-charcoal/50: subtle instruction text
+                            - bg-tatami/50: translucent background to blend with paper texture
+                        */}
                         <span className="text-xs font-bold uppercase tracking-[0.2em] text-charcoal/50 bg-tatami/50 px-4 py-1 rounded-full backdrop-blur-sm border border-tatami animate-pulse">
                             Tap or Space to Flip
                         </span>
@@ -101,6 +111,11 @@ const Card = ({ item, onNext, isActive }) => {
                     </div>
 
                     {settings.showRomaji && (
+                        /*
+                            Romaji styling:
+                            - text-charcoal/60: secondary information, reduced opacity
+                            - border-tatami: consistent separator color
+                        */
                         <p className="text-lg italic text-charcoal/60 mb-8 font-serif border-b border-tatami pb-2 px-8">{item.romaji}</p>
                     )}
 
@@ -109,6 +124,12 @@ const Card = ({ item, onNext, isActive }) => {
                     </div>
 
                     {item.example_sentence && (
+                        /*
+                            Example sentence container:
+                            - bg-tatami/20: very subtle background to distinguish from card body
+                            - text-charcoal/80: high readability for sentence content
+                            - border-tatami/50: defines the box without being harsh
+                        */
                         <div className="bg-tatami/20 p-5 rounded-xl text-sm italic text-charcoal/80 w-full mt-auto border border-tatami/50 shadow-inner relative">
                             <span className="absolute top-2 left-2 text-2xl opacity-10 text-crimson font-serif">"</span>
                             {item.example_sentence}
