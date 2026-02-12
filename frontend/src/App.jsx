@@ -8,6 +8,7 @@ import { Map } from './components/Map';
 import { Shop } from './components/Shop';
 import { Dictionary } from './components/Dictionary';
 import { SettingsModal } from './components/SettingsModal';
+import { getUserStats } from './api';
 
 // Placeholder components to be implemented later
 const Placeholder = ({ title }) => (
@@ -24,11 +25,8 @@ function App() {
 
   const fetchStats = async () => {
       try {
-        const res = await fetch('/api/user');
-        if (res.ok) {
-            const data = await res.json();
-            setUserStats(data);
-        }
+        const data = await getUserStats();
+        setUserStats(data);
       } catch (err) {
         console.error("Failed to fetch stats", err);
         // Fallback for development/offline
