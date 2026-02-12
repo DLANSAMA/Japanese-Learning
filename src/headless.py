@@ -96,8 +96,17 @@ def run_headless_quiz():
                  return
 
         context = item
-        show_furi = profile.settings.show_furigana
-        display = f"{item.word} ({item.kana})" if show_furi else item.word
+        display_mode = getattr(profile.settings, "display_mode", "kanji")
+        # Fallback
+        if not hasattr(profile.settings, "display_mode"):
+             display_mode = "furigana" if getattr(profile.settings, "show_furigana", True) else "kanji"
+
+        if display_mode == "kana":
+            display = item.kana
+        elif display_mode == "kanji":
+            display = item.word
+        else: # furigana or default
+            display = f"{item.word} ({item.kana})"
 
         q_data = {
             "type": "vocab",

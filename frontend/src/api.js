@@ -16,6 +16,11 @@ export const addToDictionary = (word, kana, meanings) => api.post('/dictionary/a
 export const getShopItems = () => api.get('/shop').then(res => res.data);
 export const buyShopItem = (itemId) => api.post('/shop/buy', { item_id: itemId });
 export const getSettings = () => api.get('/settings').then(res => res.data);
-export const updateSettings = (track, theme) => api.post('/settings', { track, theme });
+export const updateSettings = (track, theme, displayMode, showRomaji) => api.post('/settings', {
+    track,
+    theme,
+    display_mode: displayMode,
+    show_romaji: showRomaji
+});
 
 export default api;

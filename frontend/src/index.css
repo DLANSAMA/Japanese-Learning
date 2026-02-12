@@ -5,6 +5,38 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --color-paper: 250 247 242;
+    --color-crimson: 188 0 45;
+    --color-charcoal: 45 42 38;
+    --color-tatami: 232 225 213;
+    --color-gold: 212 175 55;
+  }
+
+  .dark {
+    --color-paper: 26 26 26;
+    --color-crimson: 225 29 72;
+    --color-charcoal: 250 247 242;
+    --color-tatami: 51 51 51;
+    --color-gold: 255 215 0;
+  }
+
+  .cyberpunk {
+    --color-paper: 13 2 33;
+    --color-crimson: 255 0 85;
+    --color-charcoal: 0 255 159;
+    --color-tatami: 42 27 61;
+    --color-gold: 252 238 10;
+  }
+
+  .edo {
+    --color-paper: 214 198 175;
+    --color-crimson: 166 55 55;
+    --color-charcoal: 74 59 42;
+    --color-tatami: 194 176 145;
+    --color-gold: 176 141 85;
+  }
+
   body {
     @apply bg-paper text-charcoal font-sans antialiased overflow-hidden;
   }

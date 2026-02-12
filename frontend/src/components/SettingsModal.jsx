@@ -1,29 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { getSettings, updateSettings } from '../api';
+import { useSettings } from '../context/SettingsContext';
 import { X, Save, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from './ui/Toast';
 
 export const SettingsModal = ({ onClose }) => {
-    const [settings, setSettings] = useState({ track: 'General', theme: 'default' });
-    const [loading, setLoading] = useState(true);
+    const { settings, updateSettings, loading } = useSettings();
+    const [localSettings, setLocalSettings] = useState(settings);
     const [saving, setSaving] = useState(false);
     const { addToast } = useToast();
 
     useEffect(() => {
-        getSettings().then(data => {
-            setSettings(data);
-            setLoading(false);
-        }).catch(err => {
-            console.error("Failed to load settings", err);
-            setLoading(false);
-        });
-    }, []);
+        setLocalSettings(settings);
+    }, [settings]);
 
     const handleSave = async () => {
         setSaving(true);
         try {
-            await updateSettings(settings.track, settings.theme);
+            await updateSettings(localSettings);
             addToast("Settings Saved!", 'success');
             onClose();
         } catch (err) {
@@ -47,7 +41,7 @@ export const SettingsModal = ({ onClose }) => {
                     initial={{ scale: 0.9, y: 20 }}
                     animate={{ scale: 1, y: 0 }}
                     exit={{ scale: 0.9, y: 20 }}
-                    className="bg-white w-full max-w-lg rounded-[2rem] p-10 shadow-2xl relative border-4 border-tatami"
+                    className="bg-white w-full max-w-lg rounded-[2rem] p-10 shadow-2xl relative border-4 border-tatami max-h-[90vh] overflow-y-auto custom-scrollbar"
                 >
                     <button
                         onClick={onClose}
@@ -63,9 +57,9 @@ export const SettingsModal = ({ onClose }) => {
                             <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Learning Track</label>
                             <div className="relative group">
                                 <select
-                                    value={settings.track}
-                                    onChange={(e) => setSettings({...settings, track: e.target.value})}
-                                    className="w-full p-5 rounded-2xl border-2 border-tatami bg-paper font-bold text-xl focus:border-crimson outline-none appearance-none cursor-pointer hover:border-crimson/50 transition-colors shadow-inner"
+                                    value={localSettings.track || 'General'}
+                                    onChange={(e) => setLocalSettings({...localSettings, track: e.target.value})}
+                                    className="w-full p-5 rounded-2xl border-2 border-tatami bg-paper font-bold text-xl focus:border-crimson outline-none appearance-none cursor-pointer hover:border-crimson/50 transition-colors shadow-inner text-charcoal"
                                 >
                                     <option value="General">General (Standard)</option>
                                     <option value="Anime">Anime (Pop Culture)</option>
@@ -80,9 +74,9 @@ export const SettingsModal = ({ onClose }) => {
                             <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Theme</label>
                             <div className="relative group">
                                 <select
-                                    value={settings.theme}
-                                    onChange={(e) => setSettings({...settings, theme: e.target.value})}
-                                    className="w-full p-5 rounded-2xl border-2 border-tatami bg-paper font-bold text-xl focus:border-crimson outline-none appearance-none cursor-pointer hover:border-crimson/50 transition-colors shadow-inner"
+                                    value={localSettings.theme || 'default'}
+                                    onChange={(e) => setLocalSettings({...localSettings, theme: e.target.value})}
+                                    className="w-full p-5 rounded-2xl border-2 border-tatami bg-paper font-bold text-xl focus:border-crimson outline-none appearance-none cursor-pointer hover:border-crimson/50 transition-colors shadow-inner text-charcoal"
                                 >
                                     <option value="default">Kizuna (Default)</option>
                                     <option value="dark">Dark Mode</option>
@@ -91,6 +85,35 @@ export const SettingsModal = ({ onClose }) => {
                                 </select>
                                 <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 group-hover:text-crimson transition-colors text-xs font-bold">▼</div>
                             </div>
+                        </div>
+
+                         <div>
+                            <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Display Mode</label>
+                            <div className="grid grid-cols-3 gap-2">
+                                {['kanji', 'furigana', 'kana'].map(mode => (
+                                    <button
+                                        key={mode}
+                                        onClick={() => setLocalSettings({...localSettings, displayMode: mode})}
+                                        className={`p-3 rounded-xl font-bold border-2 transition-all capitalize ${
+                                            localSettings.displayMode === mode
+                                            ? 'bg-crimson text-white border-crimson shadow-md'
+                                            : 'bg-paper text-charcoal border-tatami hover:border-crimson/50 hover:bg-gray-50'
+                                        }`}
+                                    >
+                                        {mode}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between p-4 bg-paper rounded-2xl border-2 border-tatami shadow-inner">
+                            <label className="text-lg font-bold text-charcoal">Show Romaji</label>
+                            <button
+                                onClick={() => setLocalSettings({...localSettings, showRomaji: !localSettings.showRomaji})}
+                                className={`w-14 h-8 rounded-full p-1 transition-colors flex items-center ${localSettings.showRomaji ? 'bg-crimson' : 'bg-gray-300'}`}
+                            >
+                                <div className={`w-6 h-6 bg-white rounded-full shadow-sm transition-transform transform ${localSettings.showRomaji ? 'translate-x-6' : 'translate-x-0'}`} />
+                            </button>
                         </div>
 
                         <motion.button

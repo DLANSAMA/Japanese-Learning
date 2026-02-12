@@ -52,6 +52,8 @@ class AnswerResponse(BaseModel):
 class SettingsModel(BaseModel):
     track: str
     theme: str
+    display_mode: str = "kanji"
+    show_romaji: bool = True
 
 class StudyConfirmRequest(BaseModel):
     word: str
@@ -235,13 +237,20 @@ def confirm_study_item(payload: StudyConfirmRequest):
 @app.get("/api/settings", response_model=SettingsModel)
 def get_settings():
     profile = load_user_profile()
-    return SettingsModel(track=profile.selected_track, theme=profile.settings.theme)
+    return SettingsModel(
+        track=profile.selected_track,
+        theme=profile.settings.theme,
+        display_mode=getattr(profile.settings, "display_mode", "kanji"),
+        show_romaji=getattr(profile.settings, "show_romaji", True)
+    )
 
 @app.post("/api/settings")
 def update_settings(payload: SettingsModel):
     profile = load_user_profile()
     profile.selected_track = payload.track
     profile.settings.theme = payload.theme
+    profile.settings.display_mode = payload.display_mode
+    profile.settings.show_romaji = payload.show_romaji
     save_user_profile(profile)
     return {"status": "updated", "track": payload.track, "theme": payload.theme}
 

@@ -26954,5 +26954,71 @@
     "fsrs_difficulty": 0.0,
     "fsrs_retrievability": null,
     "fsrs_last_review": null
+  },
+  {
+    "word": "１万",
+    "kana": "いちまん",
+    "romaji": "",
+    "meaning": "10,000; ten thousand",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "pop culture",
+      "autopilot"
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null,
+    "status": "new",
+    "pos": "unknown",
+    "example_sentence": "１万です。",
+    "fsrs_stability": 0.0,
+    "fsrs_difficulty": 0.0,
+    "fsrs_retrievability": null,
+    "fsrs_last_review": null
+  },
+  {
+    "word": "空転",
+    "kana": "くうてん",
+    "romaji": "",
+    "meaning": "racing (an engine); idling (an engine); going in circles (esp. argument, discussion, etc.)",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "pop culture",
+      "autopilot"
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null,
+    "status": "new",
+    "pos": "vs",
+    "example_sentence": "私は空転します。",
+    "fsrs_stability": 0.0,
+    "fsrs_difficulty": 0.0,
+    "fsrs_retrievability": null,
+    "fsrs_last_review": null
+  },
+  {
+    "word": "内閣府",
+    "kana": "ないかくふ",
+    "romaji": "",
+    "meaning": "cabinet office",
+    "level": 0,
+    "last_review": null,
+    "tags": [
+      "pop culture",
+      "autopilot"
+    ],
+    "ease_factor": 2.5,
+    "interval": 0,
+    "due_date": null,
+    "status": "new",
+    "pos": "noun",
+    "example_sentence": "これは内閣府です。",
+    "fsrs_stability": 0.0,
+    "fsrs_difficulty": 0.0,
+    "fsrs_retrievability": null,
+    "fsrs_last_review": null
   }
 ]

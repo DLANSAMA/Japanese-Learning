@@ -8,7 +8,9 @@
   "settings": {
     "show_furigana": true,
     "max_jlpt_level": 5,
-    "theme": "cyberpunk"
+    "theme": "cyberpunk",
+    "display_mode": "kana",
+    "show_romaji": true
   },
   "selected_track": "Pop Culture",
   "gems": 0,
