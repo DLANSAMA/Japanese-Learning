@@ -7,6 +7,7 @@ from rich.layout import Layout
 from rich.align import Align
 from rich import print as rprint
 import time
+from typing import List
 
 from .models import UserProfile, Vocabulary, GrammarLesson
 
@@ -104,7 +105,7 @@ def display_settings_menu(profile: UserProfile):
         rprint(f"Theme updated to {profile.settings.theme}!")
         time.sleep(1)
 
-def display_grammar_list(lessons: list[GrammarLesson]) -> str:
+def display_grammar_list(lessons: List[GrammarLesson]) -> str:
     clear_screen()
     table = Table(title="Grammar Lessons")
     table.add_column("ID", style="dim")
@@ -178,7 +179,7 @@ def display_session_summary(score: int, total: int, xp_gained: int):
     ))
     Prompt.ask("Press Enter to continue...")
 
-def display_study_session(items: list[Vocabulary]):
+def display_study_session(items: List[Vocabulary]):
     clear_screen()
     console.print(Panel(f"[bold]Study Mode[/bold]\nLearning {len(items)} new words...", border_style="magenta"))
     time.sleep(1)
