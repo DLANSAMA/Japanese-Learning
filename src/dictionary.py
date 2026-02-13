@@ -13,6 +13,11 @@ def get_jam():
         _local.jam = Jamdict()
     return _local.jam
 
+def get_db_conn(db_file):
+    if not hasattr(_local, "conn"):
+        _local.conn = sqlite3.connect(db_file)
+    return _local.conn
+
 def _extract_pos(entry) -> str:
     """Extracts a simplified Part of Speech from the entry."""
     # Priority: Verb > Adjective > Noun
@@ -83,13 +88,13 @@ def get_recommendations(track: str = "General", limit: int = 5, exclude_words: L
     fetch_limit = limit * 40 # Increased fetch limit to find enough candidates
 
     try:
-        conn = sqlite3.connect(jam.db_file)
+        conn = get_db_conn(jam.db_file)
         cursor = conn.cursor()
         # Fetch random entry IDs
         cursor.execute("SELECT idseq FROM entry ORDER BY RANDOM() LIMIT ?", (fetch_limit,))
         rows = cursor.fetchall()
         idseqs = [r[0] for r in rows]
-        conn.close()
+        # Connection is persistent, do not close
     except Exception as e:
         print(f"DB Error: {e}")
         return []
