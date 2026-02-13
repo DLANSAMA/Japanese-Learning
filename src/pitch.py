@@ -33,7 +33,8 @@ def get_pitch_pattern(word: str, reading: str) -> str:
 
     moras = len(reading) # Approximation
     # Small char adjustment
-    small_chars = "ぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮ"
+    # Note: 'っ' (sokuon) counts as a full mora in pitch accent, so it is NOT included here.
+    small_chars = "ぁぃぅぇぉゃゅょゎァィゥェォャュョヮ"
     for char in reading:
         if char in small_chars:
             moras -= 1
