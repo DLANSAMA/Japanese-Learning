@@ -1,5 +1,4 @@
-from typing import List, Optional
-import random
+from typing import List
 from datetime import datetime
 
 from .models import Vocabulary
