@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 from .auth import verify_api_key
 from .data_manager import (
     load_vocab, save_vocab, load_user_profile, save_user_profile,
-    get_vocab_item, update_vocab_item, add_vocab_item
+    get_vocab_item, update_vocab_item, add_vocab_item, load_curriculum
 )
 from .models import Vocabulary, UserProfile, UserSettings
 from .quiz import generate_input_question, generate_mc_question
@@ -368,9 +368,7 @@ def add_dictionary_item(payload: DictionaryAddRequest):
 
 @app.get("/api/curriculum")
 def get_curriculum():
-    import json
-    with open("data/curriculum.json", "r", encoding="utf-8") as f:
-        return json.load(f)
+    return load_curriculum()
 
 @app.get("/api/shop", response_model=List[ShopItem])
 def get_shop_items():
