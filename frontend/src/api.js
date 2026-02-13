@@ -5,6 +5,29 @@ const api = axios.create({
   timeout: 10000,
 });
 
+// Request Interceptor: Add API Key
+api.interceptors.request.use(config => {
+  const apiKey = localStorage.getItem('api_key');
+  if (apiKey) {
+    config.headers['X-API-Key'] = apiKey;
+  }
+  return config;
+});
+
+// Response Interceptor: Handle 401
+api.interceptors.response.use(response => response, async error => {
+  if (error.response && error.response.status === 401) {
+    const apiKey = window.prompt("Authentication Required. Please enter the API Key (found in server logs or data/secrets.json):");
+    if (apiKey) {
+      localStorage.setItem('api_key', apiKey);
+      // Retry the original request with the new key
+      error.config.headers['X-API-Key'] = apiKey;
+      return api(error.config);
+    }
+  }
+  return Promise.reject(error);
+});
+
 export const getUserStats = () => api.get('/user').then(res => res.data);
 export const getCurriculum = () => api.get('/curriculum').then(res => res.data);
 export const getStudyItems = () => api.get('/study').then(res => res.data);

@@ -6,3 +6,4 @@ venv/
 *.log
 playwright-report/
 test-results/
+data/secrets.json

@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import List, Optional
@@ -6,6 +7,7 @@ import random
 import os
 from datetime import datetime, timedelta
 
+from .auth import verify_api_key
 from .data_manager import (
     load_vocab, save_vocab, load_user_profile, save_user_profile,
     get_vocab_item, update_vocab_item, add_vocab_item
@@ -19,7 +21,16 @@ from .dictionary import search
 from .sentence_mining import mine_sentence
 from .pitch import get_pitch_pattern
 
-app = FastAPI(title="Japanese Learning API", version="1.0")
+app = FastAPI(title="Japanese Learning API", version="1.0", dependencies=[Depends(verify_api_key)])
+
+# Add CORS Middleware to allow frontend development requests
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins for local development flexibility
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class UserStats(BaseModel):
     xp: int
