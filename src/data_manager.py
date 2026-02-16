@@ -15,6 +15,43 @@ USER_FILE = os.path.join(DATA_DIR, 'user.json')
 # Ensure DB is initialized
 init_db()
 
+# Constants for vocabulary insertion
+VOCAB_KEYS = [
+    'word', 'kana', 'romaji', 'meaning', 'level', 'last_review', 'tags',
+    'ease_factor', 'interval', 'due_date', 'status', 'pos',
+    'example_sentence', 'fsrs_stability', 'fsrs_difficulty',
+    'fsrs_retrievability', 'fsrs_last_review'
+]
+
+VOCAB_COLUMNS = ', '.join(VOCAB_KEYS)
+VOCAB_PLACEHOLDERS = ', '.join(['?'] * len(VOCAB_KEYS))
+VOCAB_INSERT_QUERY = f'INSERT OR REPLACE INTO vocabulary ({VOCAB_COLUMNS}) VALUES ({VOCAB_PLACEHOLDERS})'
+
+def _vocab_to_row(v: Vocabulary) -> tuple:
+    """
+    Optimized converter from Vocabulary object to DB row tuple.
+    Avoids asdict() overhead and pre-computes JSON serialization for tags.
+    """
+    return (
+        v.word,
+        v.kana,
+        v.romaji,
+        v.meaning,
+        v.level,
+        v.last_review,
+        json.dumps(v.tags),
+        v.ease_factor,
+        v.interval,
+        v.due_date,
+        v.status,
+        v.pos,
+        v.example_sentence,
+        v.fsrs_stability,
+        v.fsrs_difficulty,
+        v.fsrs_retrievability,
+        v.fsrs_last_review
+    )
+
 def _migrate_json_to_db():
     """Migrate data from vocab.json to SQLite if DB is empty."""
     if not os.path.exists(VOCAB_FILE):
@@ -32,32 +69,12 @@ def _migrate_json_to_db():
                 vocab_list = [Vocabulary(**item) for item in data]
 
             # Bulk insert
-            for v in vocab_list:
-                _insert_vocab_item(cursor, v)
+            cursor.executemany(VOCAB_INSERT_QUERY, [_vocab_to_row(v) for v in vocab_list])
             conn.commit()
             print("Migration complete.")
 
 def _insert_vocab_item(cursor, v: Vocabulary):
-    data = asdict(v)
-    data['tags'] = json.dumps(data['tags'])
-
-    # Generate the placeholders and keys dynamically based on the dataclass fields
-    # But hardcoding is safer/faster for now to match schema
-    keys = [
-        'word', 'kana', 'romaji', 'meaning', 'level', 'last_review', 'tags',
-        'ease_factor', 'interval', 'due_date', 'status', 'pos',
-        'example_sentence', 'fsrs_stability', 'fsrs_difficulty',
-        'fsrs_retrievability', 'fsrs_last_review'
-    ]
-
-    placeholders = ', '.join(['?'] * len(keys))
-    columns = ', '.join(keys)
-    values = [data.get(k) for k in keys]
-
-    cursor.execute(f'''
-        INSERT OR REPLACE INTO vocabulary ({columns})
-        VALUES ({placeholders})
-    ''', values)
+    cursor.execute(VOCAB_INSERT_QUERY, _vocab_to_row(v))
 
 def _row_to_vocab(row) -> Vocabulary:
     data = dict(row)
@@ -89,8 +106,8 @@ def save_vocab(vocab_list: List[Vocabulary]):
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute("DELETE FROM vocabulary")
-        for v in vocab_list:
-            _insert_vocab_item(cursor, v)
+        # Optimized bulk insert using executemany and helper
+        cursor.executemany(VOCAB_INSERT_QUERY, [_vocab_to_row(v) for v in vocab_list])
         conn.commit()
 
 def add_vocab_item(item: Vocabulary):
