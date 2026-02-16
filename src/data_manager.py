@@ -112,6 +112,56 @@ def get_vocab_item(word: str) -> Optional[Vocabulary]:
             return _row_to_vocab(row)
     return None
 
+def get_due_vocab_items(date_str: str) -> List[Vocabulary]:
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT * FROM vocabulary
+            WHERE status != 'new'
+            AND (due_date IS NULL OR due_date <= ?)
+            ORDER BY due_date ASC
+        """, (date_str,))
+        rows = cursor.fetchall()
+        return [_row_to_vocab(row) for row in rows]
+
+def get_random_distractors(exclude_word: str, limit: int = 3) -> List[Vocabulary]:
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT * FROM vocabulary
+            WHERE word != ?
+            ORDER BY RANDOM()
+            LIMIT ?
+        """, (exclude_word, limit))
+        rows = cursor.fetchall()
+        return [_row_to_vocab(row) for row in rows]
+
+def get_vocab_count() -> int:
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT count(*) FROM vocabulary")
+        return cursor.fetchone()[0]
+
+def get_learned_vocab_count() -> int:
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT count(*) FROM vocabulary WHERE status != 'new'")
+        return cursor.fetchone()[0]
+
+def get_random_learned_vocab_item() -> Optional[Vocabulary]:
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT * FROM vocabulary
+            WHERE status != 'new'
+            ORDER BY RANDOM()
+            LIMIT 1
+        """)
+        row = cursor.fetchone()
+        if row:
+            return _row_to_vocab(row)
+    return None
+
 def load_grammar() -> List[GrammarLesson]:
     if not os.path.exists(GRAMMAR_FILE):
         return []
