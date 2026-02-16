@@ -25,16 +25,11 @@ class TestPitchPattern(unittest.TestCase):
         self.assertEqual(get_pitch_pattern("猫", "ねこ"), "HL")
 
     def test_mecab_integration_inu(self):
-        """Test 'inu' (Dog) -> LHH (Heiban)."""
+        """Test 'inu' (Dog) -> LH (Heiban)."""
         # Inu is Heiban [0].
         # Mora 1 (I): L
         # Mora 2 (Nu): H
-        # Particle would be H. But reading only has 2 moras.
-        # Wait, Heiban 2 moras: L H.
-        # But wait, my Heiban logic: i=1 -> L, i=2 -> H.
-        # So LH.
-        # The previous test for Sushi expected "LH".
-        # Let's check get_pitch_from_kernel(0, 2) -> "LH".
+        # Pattern: LH.
         self.assertEqual(get_pitch_pattern("犬", "いぬ"), "LH")
 
     def test_mecab_integration_taberu(self):
@@ -71,6 +66,34 @@ class TestPitchPattern(unittest.TestCase):
 
     def test_empty_input(self):
         self.assertEqual(get_pitch_pattern("", ""), "")
+
+    @patch('src.pitch.get_tagger')
+    def test_robustness_alternate_index(self, mock_get_tagger):
+        """Test adaptive index search (e.g., if accent is at index 17)."""
+        # Mock tagger behavior
+        mock_tagger = MagicMock()
+        mock_node = MagicMock()
+
+        # Simulate a feature string where index 23 is NOT accent (e.g. empty or non-digit),
+        # but index 17 IS accent (e.g., '1' for Atamadaka).
+        # Schema length usually > 24.
+        # Let's make index 23 '*' and index 17 '1'.
+        features = ["*"] * 30
+        features[17] = "1" # Accent Kernel
+        features[23] = "*" # Invalid/Missing
+
+        mock_node.surface = "MockWord"
+        mock_node.feature = ",".join(features)
+        mock_node.next = None
+
+        mock_tagger.parseToNode.return_value = mock_node
+        mock_get_tagger.return_value = mock_tagger
+
+        # Word: "Test" -> "tesu" (2 moras)
+        # Kernel 1 (Atamadaka) -> HL.
+        # Check if it correctly finds '1' at index 17.
+        result = get_pitch_pattern("MockWord", "てす")
+        self.assertEqual(result, "HL")
 
     @patch('src.pitch.get_tagger')
     def test_fallback_logic(self, mock_get_tagger):

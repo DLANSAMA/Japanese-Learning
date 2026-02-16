@@ -1,6 +1,6 @@
 import threading
 import logging
-from typing import List
+from typing import List, Optional
 import MeCab
 import unidic_lite
 
@@ -68,6 +68,27 @@ def get_pitch_from_kernel(kernel: int, num_moras: int) -> str:
 
     return "".join(pattern)
 
+def _find_accent_kernel(features: List[str]) -> Optional[int]:
+    """
+    Attempts to find the accent kernel (aType) in the MeCab features list.
+    Prioritizes index 23 (standard for unidic-lite v1.0.8), but adaptively checks other
+    indices (17, 21, 22, 24) if 23 is not a valid integer.
+    """
+    # Priority order: 23 (unidic-lite default), 24 (often pronunciation), 22 (sometimes), 17 (standard UniDic), 21
+    # We validate by ensuring the value is a digit and within reasonable bounds (0-20).
+    search_indices = [23, 24, 22, 17, 21]
+
+    for idx in search_indices:
+        if idx < len(features):
+            val = features[idx]
+            # Must be a digit.
+            if val.isdigit():
+                kernel = int(val)
+                # Sanity check: accent kernel shouldn't be excessively large (e.g. > 20 is suspicious unless it's a code).
+                if 0 <= kernel <= 20:
+                    return kernel
+    return None
+
 def get_pitch_pattern(word: str, reading: str) -> str:
     """
     Returns a binary pitch pattern string (H=High, L=Low) for the word.
@@ -92,24 +113,25 @@ def get_pitch_pattern(word: str, reading: str) -> str:
 
             while node:
                 features = node.feature.split(',')
-                # Skip BOS/EOS
+                # Skip BOS/EOS or empty features
                 if len(features) < 1 or features[0] == "BOS/EOS":
                     node = node.next
                     continue
 
-                # In UniDic-lite, accent kernel is typically at index 23.
-                if len(features) > 23:
-                    try:
-                        val = features[23]
-                        # Some entries might have '*' or non-digit
-                        if val.isdigit():
-                            kernel = int(val)
-                            found = True
-                    except (ValueError, IndexError):
-                        pass
+                # Check POS to skip irrelevant tokens (e.g. '接頭辞' prefix might not carry accent?)
+                # Actually, usually the main word is the first significant token.
 
-                # Break after the first significant word token
-                if found or node.surface:
+                found_kernel = _find_accent_kernel(features)
+                if found_kernel is not None:
+                    kernel = found_kernel
+                    found = True
+                    break # Stop after finding the first valid accent
+
+                # If valid word surface but no accent found, check next token?
+                # Usually compound words have their own rules, but simple lookup should match head.
+                if node.surface:
+                    # If we found a surface but failed to find accent, maybe it's just missing.
+                    # We continue only if surface is empty (which shouldn't happen here).
                     break
 
                 node = node.next
@@ -121,7 +143,7 @@ def get_pitch_pattern(word: str, reading: str) -> str:
     # Generate mora-based pattern
     mora_pattern = get_pitch_from_kernel(kernel, num_moras)
 
-    # Expand to character-based pattern (e.g. "kyou" -> mora "LH" -> chars "LHHH" if "kyo" is L and "u" is H? No)
+    # Expand to character-based pattern
     # Mapping: Mora 1 -> Chars of Mora 1 get Mora 1's pitch.
     full_pattern = ""
     for i, mora_str in enumerate(moras):
