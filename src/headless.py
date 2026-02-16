@@ -6,7 +6,6 @@ from datetime import datetime
 
 from src.data_manager import load_vocab, save_vocab, load_user_profile, save_user_profile
 from src.srs_engine import update_card_srs
-from src.quiz import generate_input_question, generate_sentence_question
 from src.models import Vocabulary
 from src.sentence_builder import check_sentence_answer, Sentence, load_sentences, get_random_sentence
 from src.study import get_new_items, mark_as_learning
