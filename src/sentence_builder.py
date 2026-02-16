@@ -35,7 +35,17 @@ def check_sentence_answer(sentence: Sentence, user_input: str) -> bool:
         return True
 
     # Check against Japanese (if user inputs kana/kanji)
-    if user_input.strip() == sentence.japanese:
+    def strip_punctuation(text: str) -> str:
+        # standard punctuation to ignore
+        chars = "。、？！.,?!"
+        for c in chars:
+            text = text.replace(c, "")
+        return text
+
+    normalized_input_jp = strip_punctuation(user_input.strip())
+    normalized_target_jp = strip_punctuation(sentence.japanese.strip())
+
+    if normalized_input_jp == normalized_target_jp:
         return True
 
     return False
