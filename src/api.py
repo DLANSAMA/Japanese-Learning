@@ -14,7 +14,9 @@ from datetime import datetime, timedelta
 from .auth import verify_api_key
 from .data_manager import (
     load_vocab, save_vocab, load_user_profile, save_user_profile,
-    get_vocab_item, update_vocab_item, add_vocab_item, load_curriculum
+    get_vocab_item, update_vocab_item, add_vocab_item, load_curriculum,
+    get_due_vocab_items, get_random_distractors, get_vocab_count,
+    get_random_learned_vocab_item, get_learned_vocab_count
 )
 from .models import Vocabulary, UserProfile, UserSettings
 from .quiz import generate_input_question, generate_mc_question
@@ -141,30 +143,18 @@ class BuyRequest(BaseModel):
     item_id: str
 
 def get_due_vocab():
-    vocab = load_vocab()
     now = datetime.now()
     today_str = now.strftime('%Y-%m-%d')
-    due = []
-
-    sorted_vocab = sorted(vocab, key=lambda v: v.due_date if v.due_date else "0000-00-00")
-
-    for card in sorted_vocab:
-        if card.status == 'new':
-            continue
-
-        if not card.due_date:
-            due.append(card)
-        elif card.due_date <= today_str:
-            due.append(card)
-    return due, vocab
+    # Optimization: Use SQL to fetch only due items instead of loading and sorting all vocab
+    due = get_due_vocab_items(today_str)
+    return due
 
 @app.get("/api/user", response_model=UserStats)
 def get_user_stats():
     profile = load_user_profile()
-    vocab = load_vocab()
 
-    # Calculate learned (non-new)
-    learned_count = len([v for v in vocab if v.status != 'new'])
+    # Optimization: Count via SQL
+    learned_count = get_learned_vocab_count()
 
     # Calculate progress (Level N requires N * 100 XP)
     xp_required = profile.level * 100
@@ -183,14 +173,13 @@ def get_user_stats():
 
 @app.get("/api/quiz/vocab", response_model=QuizQuestionResponse)
 def get_vocab_question():
-    due, all_vocab = get_due_vocab()
-    learned_vocab = [v for v in all_vocab if v.status != 'new']
+    due = get_due_vocab()
 
     if not due:
         # Fallback to random review if nothing due
-        if not learned_vocab:
+        item = get_random_learned_vocab_item()
+        if not item:
              raise HTTPException(status_code=404, detail="No learned vocabulary available. Use Study Mode first.")
-        item = random.choice(learned_vocab)
     else:
         item = random.choice(due)
 
@@ -198,8 +187,13 @@ def get_vocab_question():
     qid = f"vocab:{item.word}"
 
     # Generate Question
-    if len(all_vocab) >= 4 and random.random() > 0.5:
-        q = generate_mc_question(item, all_vocab)
+    vocab_count = get_vocab_count()
+    if vocab_count >= 4 and random.random() > 0.5:
+        # Optimization: Fetch distractors via SQL instead of loading all vocab
+        distractors = get_random_distractors(item.word, limit=3)
+        # We pass distractors as 'all_vocab' because generate_mc_question expects a list to sample from.
+        # Since we already selected 3 random distinct items, random.sample(distractors, 3) will return them.
+        q = generate_mc_question(item, distractors)
     else:
         q = generate_input_question(item)
 

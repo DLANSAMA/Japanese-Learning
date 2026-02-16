@@ -37,7 +37,7 @@ class TestV10(unittest.TestCase):
     @patch('src.api.load_vocab')
     def test_api_includes_pitch(self, mock_load, mock_due):
         v = Vocabulary(word="食べる", kana="たべる", romaji="taberu", meaning="eat", status="learning")
-        mock_due.return_value = ([v], [v])
+        mock_due.return_value = [v]
 
         from fastapi.testclient import TestClient
         from src.api import app
