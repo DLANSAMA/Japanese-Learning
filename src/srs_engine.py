@@ -57,7 +57,7 @@ def update_card_fsrs(vocab_item: Vocabulary, performance_rating: int):
         if vocab_item.interval > 0:
             card.state = 2 # Review
         else:
-            card.state = 0 # New
+            card.state = 1 # Learning/Relearning
 
     # Perform Review
     card, review_log = scheduler.review_card(card, rating, review_datetime=now)
@@ -74,8 +74,14 @@ def update_card_fsrs(vocab_item: Vocabulary, performance_rating: int):
 
     if rating != Rating.Again:
         vocab_item.level += 1
+        vocab_item.failure_count = 0
     else:
         vocab_item.level = max(0, vocab_item.level - 1)
+        vocab_item.failure_count += 1
+        if vocab_item.failure_count >= 5:
+            vocab_item.is_leech = True
+            vocab_item.status = 'suspended'
+            vocab_item.interval = 0
 
 # Backward compatibility alias
 update_card_srs = update_card_fsrs

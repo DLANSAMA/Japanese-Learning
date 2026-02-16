@@ -1,6 +1,8 @@
 import json
 import os
 import sqlite3
+import threading
+import tempfile
 from dataclasses import asdict, fields
 from typing import List, Optional, Dict
 from .models import Vocabulary, GrammarLesson, UserProfile, GrammarExample, GrammarExercise
@@ -20,7 +22,7 @@ VOCAB_KEYS = [
     'word', 'kana', 'romaji', 'meaning', 'level', 'last_review', 'tags',
     'ease_factor', 'interval', 'due_date', 'status', 'pos',
     'example_sentence', 'fsrs_stability', 'fsrs_difficulty',
-    'fsrs_retrievability', 'fsrs_last_review'
+    'fsrs_retrievability', 'fsrs_last_review', 'failure_count', 'is_leech'
 ]
 
 VOCAB_COLUMNS = ', '.join(VOCAB_KEYS)
@@ -49,8 +51,24 @@ def _vocab_to_row(v: Vocabulary) -> tuple:
         v.fsrs_stability,
         v.fsrs_difficulty,
         v.fsrs_retrievability,
-        v.fsrs_last_review
+        v.fsrs_last_review,
+        v.failure_count,
+        v.is_leech
     )
+
+def _migrate_schema():
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA table_info(vocabulary)")
+        columns = [row['name'] for row in cursor.fetchall()]
+
+        if 'failure_count' not in columns:
+            cursor.execute("ALTER TABLE vocabulary ADD COLUMN failure_count INTEGER DEFAULT 0")
+
+        if 'is_leech' not in columns:
+            cursor.execute("ALTER TABLE vocabulary ADD COLUMN is_leech BOOLEAN DEFAULT 0")
+
+        conn.commit()
 
 def _migrate_json_to_db():
     """Migrate data from vocab.json to SQLite if DB is empty."""
@@ -88,6 +106,7 @@ def _row_to_vocab(row) -> Vocabulary:
     return Vocabulary(**data)
 
 # Perform migration check on module load
+_migrate_schema()
 _migrate_json_to_db()
 
 # In-memory cache
@@ -240,13 +259,25 @@ def load_curriculum():
     with open(CURRICULUM_FILE, 'r', encoding='utf-8') as f:
         return json.load(f)
 
+_user_lock = threading.RLock()
+
+def get_user_lock():
+    return _user_lock
+
 def load_user_profile() -> UserProfile:
     if not os.path.exists(USER_FILE):
         return UserProfile()
-    with open(USER_FILE, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-        return UserProfile(**data)
+    with _user_lock:
+        with open(USER_FILE, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            return UserProfile(**data)
 
 def save_user_profile(profile: UserProfile):
-    with open(USER_FILE, 'w', encoding='utf-8') as f:
-        json.dump(asdict(profile), f, indent=2, ensure_ascii=False)
+    with _user_lock:
+        # Atomic write: write to temp file then rename
+        with tempfile.NamedTemporaryFile(mode='w', delete=False, dir=DATA_DIR, encoding='utf-8') as f:
+            json.dump(asdict(profile), f, indent=2, ensure_ascii=False)
+            f.flush()
+            os.fsync(f.fileno())
+            temp_name = f.name
+        os.replace(temp_name, USER_FILE)

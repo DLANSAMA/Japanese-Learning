@@ -16,11 +16,11 @@ from .data_manager import (
     load_vocab, save_vocab, load_user_profile, save_user_profile,
     get_vocab_item, update_vocab_item, add_vocab_item, load_curriculum,
     get_due_vocab_items, get_random_distractors, get_vocab_count,
-    get_random_learned_vocab_item, get_learned_vocab_count
+    get_random_learned_vocab_item, get_learned_vocab_count, get_user_lock
 )
 from .models import Vocabulary, UserProfile, UserSettings
-from .quiz import generate_input_question, generate_mc_question
-from .gamification import add_xp, update_streak
+from .quiz import generate_input_question, generate_mc_question, normalize_answer
+from .gamification import add_xp, update_streak, calculate_rewards
 from .srs_engine import update_card_srs, update_card_fsrs
 from .study import get_new_items, mark_as_learning
 from .dictionary import search
@@ -98,6 +98,7 @@ class AnswerResponse(BaseModel):
     new_level: int
     new_xp: int
     gems_awarded: int = 0
+    is_leech: bool = False
 
 class SettingsModel(BaseModel):
     track: str
@@ -180,9 +181,17 @@ def get_vocab_question():
 
     # Generate Question
     vocab_count = get_vocab_count()
-    if vocab_count >= 4 and random.random() > 0.5:
+
+    can_do_mc = False
+    distractors = []
+
+    if vocab_count >= 4:
+         distractors = get_random_distractors(item.word, limit=3)
+         if len(distractors) >= 3:
+             can_do_mc = True
+
+    if can_do_mc and random.random() > 0.5:
         # Optimization: Fetch distractors via SQL instead of loading all vocab
-        distractors = get_random_distractors(item.word, limit=3)
         # We pass distractors as 'all_vocab' because generate_mc_question expects a list to sample from.
         # Since we already selected 3 random distinct items, random.sample(distractors, 3) will return them.
         q = generate_mc_question(item, distractors)
@@ -205,57 +214,56 @@ def get_vocab_question():
 
 @app.post("/api/quiz/answer", response_model=AnswerResponse)
 def submit_answer(payload: AnswerRequest):
-    profile = load_user_profile()
-
     # Parse ID
     if not payload.question_id.startswith("vocab:"):
         raise HTTPException(status_code=400, detail="Invalid question ID format")
 
     word = payload.question_id.split("vocab:", 1)[1]
-    item = get_vocab_item(word)
 
-    if not item:
-        raise HTTPException(status_code=404, detail="Word not found")
+    with get_user_lock():
+        profile = load_user_profile()
+        item = get_vocab_item(word)
 
-    # Check Answer
-    correct_answers = [item.meaning.lower()]
-    user_ans = payload.answer.strip().lower()
-    is_correct = user_ans in correct_answers
+        if not item:
+            raise HTTPException(status_code=404, detail="Word not found")
 
-    xp_gained = 0
-    gems_awarded = 0
-    if is_correct:
-        item.level += 1
-        item.last_review = datetime.now().strftime('%Y-%m-%d')
-        xp_gained = 10
+        # Check Answer
+        correct_answers = [normalize_answer(item.meaning)]
+        user_ans = normalize_answer(payload.answer)
+        is_correct = user_ans in correct_answers
 
-        # Award Gems logic: 1 gem per correct answer (can be tweaked)
-        # Or random chance? Let's do 1 gem.
-        profile.gems += 1
-        gems_awarded = 1
+        xp_gained = 0
+        gems_awarded = 0
 
-        add_xp(profile, xp_gained)
-        # 5 = Easy/Perfect. FSRS will map this to 4 (Easy).
-        # Since we don't have finer grain buttons yet, we use max score for Correct.
-        update_card_fsrs(item, 5)
-    else:
-        item.level = max(0, item.level - 1)
-        item.last_review = datetime.now().strftime('%Y-%m-%d')
-        # 0 = Fail. FSRS maps to 1 (Again).
-        update_card_fsrs(item, 0)
+        # Calculate rewards using centralized logic
+        xp_gained, gems_awarded = calculate_rewards(is_correct, profile.streak)
 
-    update_vocab_item(item)
-    save_user_profile(profile)
+        if is_correct:
+            item.last_review = datetime.now().strftime('%Y-%m-%d')
 
-    return AnswerResponse(
-        correct=is_correct,
-        correct_answers=[item.meaning],
-        explanation=f"{item.word} ({item.kana}) means '{item.meaning}'",
-        xp_gained=xp_gained,
-        new_level=profile.level,
-        new_xp=profile.xp,
-        gems_awarded=gems_awarded
-    )
+            profile.gems += gems_awarded
+            add_xp(profile, xp_gained)
+
+            # 5 = Easy/Perfect. FSRS will map this to 4 (Easy).
+            update_card_fsrs(item, 5)
+        else:
+            item.last_review = datetime.now().strftime('%Y-%m-%d')
+            # 0 = Fail. FSRS maps to 1 (Again).
+            update_card_fsrs(item, 0)
+
+        update_vocab_item(item)
+        save_user_profile(profile)
+
+        return AnswerResponse(
+            correct=is_correct,
+            correct_answers=[item.meaning],
+            explanation=f"{item.word} ({item.kana}) means '{item.meaning}'",
+            xp_gained=xp_gained,
+            new_level=profile.level,
+            new_xp=profile.xp,
+            gems_awarded=gems_awarded,
+            is_leech=item.is_leech
+        )
 
 @app.get("/api/study", response_model=List[StudyItemResponse])
 def get_study_items():
@@ -298,13 +306,14 @@ def get_settings():
 
 @app.post("/api/settings")
 def update_settings(payload: SettingsModel):
-    profile = load_user_profile()
-    profile.selected_track = payload.track
-    profile.settings.theme = payload.theme
-    profile.settings.display_mode = payload.display_mode
-    profile.settings.show_romaji = payload.show_romaji
-    save_user_profile(profile)
-    return {"status": "updated", "track": payload.track, "theme": payload.theme}
+    with get_user_lock():
+        profile = load_user_profile()
+        profile.selected_track = payload.track
+        profile.settings.theme = payload.theme
+        profile.settings.display_mode = payload.display_mode
+        profile.settings.show_romaji = payload.show_romaji
+        save_user_profile(profile)
+        return {"status": "updated", "track": payload.track, "theme": payload.theme}
 
 @app.get("/api/dictionary/search")
 def search_dictionary(q: str):
@@ -374,7 +383,7 @@ def get_word_of_the_day():
 
     candidates = [v for v in vocab]
     if not candidates:
-        raise HTTPException(status_code=404, detail="No vocabulary available")
+        raise HTTPException(status_code=404, detail="No vocabulary available. Please add words or run migration.")
 
     # Use today's date as seed
     seed = datetime.now().strftime('%Y%m%d')
@@ -399,30 +408,31 @@ def get_word_of_the_day():
 
 @app.post("/api/shop/buy")
 def buy_item(payload: BuyRequest):
-    profile = load_user_profile()
-    items = get_shop_items()
-    item = next((i for i in items if i.id == payload.item_id), None)
+    with get_user_lock():
+        profile = load_user_profile()
+        items = get_shop_items()
+        item = next((i for i in items if i.id == payload.item_id), None)
 
-    if not item:
-        raise HTTPException(status_code=404, detail="Item not found")
+        if not item:
+            raise HTTPException(status_code=404, detail="Item not found")
 
-    if payload.item_id in profile.inventory and item.type != "powerup":
-        raise HTTPException(status_code=400, detail="Item already owned")
+        if payload.item_id in profile.inventory and item.type != "powerup":
+            raise HTTPException(status_code=400, detail="Item already owned")
 
-    if profile.gems < item.price:
-        raise HTTPException(status_code=400, detail="Not enough gems")
+        if profile.gems < item.price:
+            raise HTTPException(status_code=400, detail="Not enough gems")
 
-    profile.gems -= item.price
+        profile.gems -= item.price
 
-    if item.type == "theme":
-        profile.inventory.append(item.id)
-        # Auto-equip theme? Or just unlock? Let's just unlock.
-    elif item.type == "powerup":
-        # logic for powerup
-        pass
+        if item.type == "theme":
+            profile.inventory.append(item.id)
+            # Auto-equip theme? Or just unlock? Let's just unlock.
+        elif item.type == "powerup":
+            # logic for powerup
+            pass
 
-    save_user_profile(profile)
-    return {"status": "success", "gems": profile.gems, "inventory": profile.inventory}
+        save_user_profile(profile)
+        return {"status": "success", "gems": profile.gems, "inventory": profile.inventory}
 
 # Mount Static Files (Catch-all must be last)
 STATIC_DIR = os.path.join(os.path.dirname(__file__), 'static')
