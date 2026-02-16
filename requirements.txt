@@ -6,3 +6,5 @@ aiofiles
 jamdict
 jamdict-data
 fsrs
+mecab-python3
+unidic-lite
