@@ -1,8 +1,7 @@
-import json
 import csv
 import os
 from src.models import Vocabulary
-from src.data_manager import load_vocab, save_vocab, load_user_profile
+from src.data_manager import load_vocab, save_vocab
 
 def seed_genki():
     genki_file = "data/genki_master.csv"
