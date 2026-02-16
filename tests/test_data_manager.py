@@ -36,14 +36,19 @@ class TestDataManager(unittest.TestCase):
         # Initialize DB in test location
         src.db.init_db()
 
-        # Reload modules? No, just use patched variables.
-        # But we need to clear any existing connection or state if any.
+        # Clear cache to ensure test isolation
+        src.data_manager._VOCAB_CACHE = None
+        src.data_manager._VOCAB_MAP = None
 
     def tearDown(self):
         import src.db
         import src.data_manager
         src.db.DB_FILE = self.original_db_file
         src.data_manager.VOCAB_FILE = self.original_vocab_file
+
+        # Clear cache
+        src.data_manager._VOCAB_CACHE = None
+        src.data_manager._VOCAB_MAP = None
 
         if os.path.exists(self.test_dir):
             shutil.rmtree(self.test_dir)

@@ -1,8 +1,8 @@
 import json
 import os
 import sqlite3
-from dataclasses import asdict
-from typing import List, Optional
+from dataclasses import asdict, fields
+from typing import List, Optional, Dict
 from .models import Vocabulary, GrammarLesson, UserProfile, GrammarExample, GrammarExercise
 from .db import get_db, init_db, DB_FILE
 
@@ -73,12 +73,25 @@ def _row_to_vocab(row) -> Vocabulary:
 # Perform migration check on module load
 _migrate_json_to_db()
 
+# In-memory cache
+_VOCAB_CACHE: Optional[List[Vocabulary]] = None
+_VOCAB_MAP: Optional[Dict[str, Vocabulary]] = None
+
 def load_vocab() -> List[Vocabulary]:
+    global _VOCAB_CACHE, _VOCAB_MAP
+    if _VOCAB_CACHE is not None:
+        return list(_VOCAB_CACHE)
+
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM vocabulary")
         rows = cursor.fetchall()
-        return [_row_to_vocab(row) for row in rows]
+        vocab_list = [_row_to_vocab(row) for row in rows]
+
+        _VOCAB_CACHE = vocab_list
+        _VOCAB_MAP = {v.word: v for v in vocab_list}
+
+        return list(_VOCAB_CACHE)
 
 def save_vocab(vocab_list: List[Vocabulary]):
     """
@@ -86,6 +99,12 @@ def save_vocab(vocab_list: List[Vocabulary]):
     Optimized to use transaction for speed, but still O(N).
     Prefer using add_vocab_item or update_vocab_item for single items.
     """
+    global _VOCAB_CACHE, _VOCAB_MAP
+
+    # Update cache to match new list
+    _VOCAB_CACHE = list(vocab_list)
+    _VOCAB_MAP = {v.word: v for v in _VOCAB_CACHE}
+
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute("DELETE FROM vocabulary")
@@ -94,16 +113,38 @@ def save_vocab(vocab_list: List[Vocabulary]):
         conn.commit()
 
 def add_vocab_item(item: Vocabulary):
+    global _VOCAB_CACHE, _VOCAB_MAP
+
     with get_db() as conn:
         cursor = conn.cursor()
         _insert_vocab_item(cursor, item)
         conn.commit()
+
+    # Update cache if it exists
+    if _VOCAB_MAP is not None:
+        if item.word in _VOCAB_MAP:
+            cached = _VOCAB_MAP[item.word]
+            # If it's the same object, changes are already reflected (if modified in place)
+            # If not, we update the cached object in place to maintain references in _VOCAB_CACHE
+            if cached is not item:
+                for field in fields(Vocabulary):
+                    setattr(cached, field.name, getattr(item, field.name))
+        else:
+            # New item
+            _VOCAB_MAP[item.word] = item
+            if _VOCAB_CACHE is not None:
+                _VOCAB_CACHE.append(item)
 
 def update_vocab_item(item: Vocabulary):
     # Same as add since we use INSERT OR REPLACE
     add_vocab_item(item)
 
 def get_vocab_item(word: str) -> Optional[Vocabulary]:
+    global _VOCAB_MAP
+
+    if _VOCAB_MAP is not None:
+        return _VOCAB_MAP.get(word)
+
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM vocabulary WHERE word = ?", (word,))
