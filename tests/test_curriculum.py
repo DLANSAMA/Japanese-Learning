@@ -9,7 +9,15 @@ from unittest.mock import patch
 
 client = TestClient(app)
 
+from src.auth import verify_api_key
+
 class TestCurriculum(unittest.TestCase):
+    def setUp(self):
+        app.dependency_overrides[verify_api_key] = lambda: "test-key"
+
+    def tearDown(self):
+        app.dependency_overrides = {}
+
     def test_get_curriculum_endpoint(self):
         """Test the /api/curriculum endpoint returns valid JSON structure."""
         response = client.get("/api/curriculum")
