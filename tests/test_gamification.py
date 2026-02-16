@@ -83,17 +83,11 @@ class TestGamification(unittest.TestCase):
         q = generate_assemble_question(item, item.example_sentence)
 
         self.assertEqual(q.type, "assemble")
-        self.assertIn("これは", q.options)
-        # Note: Split logic in quiz.py is "猫" + "です" -> "猫です" if fallback?
-        # Re-reading quiz.py:
-        # if "これは" in ...: parts.append("これは"), remainder = ...
-        # "猫です。" -> parts: "猫", "です", "。" ?
-        # Actually quiz.py logic for "これは" branch:
-        # remainder = "猫です。" -> parts.append("猫です"), parts.append("。")?
-        # Let's fix the test expectation to match the simplified logic or fix the logic.
-        # "これは" + "猫です" + "。"
-        # Ideally we want "猫" separate.
-
+        # MeCab splits "これは" into "これ" + "は"
+        self.assertIn("これ", q.options)
+        self.assertIn("は", q.options)
+        self.assertIn("猫", q.options)
+        self.assertIn("です", q.options)
         self.assertIn("。", q.options)
         self.assertEqual(q.correct_answers[0], "これは猫です。")
 

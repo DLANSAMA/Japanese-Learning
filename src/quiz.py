@@ -2,7 +2,13 @@ import random
 from typing import List, Optional, Any
 from dataclasses import dataclass
 
+import MeCab
+import unidic_lite
+
 from .models import Vocabulary, GrammarLesson, UserSettings, UserProfile
+
+# Initialize MeCab tagger once
+tagger = MeCab.Tagger(f"-d {unidic_lite.DICDIR} -Owakati")
 
 @dataclass
 class Question:
@@ -48,96 +54,44 @@ def generate_mc_question(item: Vocabulary, all_vocab: List[Vocabulary], display_
         context=item
     )
 
-def generate_assemble_question(item: Vocabulary, example_sentence: str) -> Question:
-    # Basic Sentence Assembly: Break the example sentence into parts
-    # Naive split by spaces usually works for "Watashi wa tabemasu" style simple sentences.
-    # But Japanese is continuous.
-    # If the example_sentence is Japanese "私は食べます。", we need a tokenizer or simple heuristic.
-    # The current `mine_sentence` output is Japanese.
-    # Let's assume we want to assemble the Japanese sentence from tokens.
+def decompose_sentence(sentence: str) -> Optional[List[str]]:
+    """
+    Decomposes a sentence into tokens using MeCab.
+    Returns None if the sentence is empty.
+    """
+    if not sentence:
+        return None
 
-    # Simple Tokenizer for our templates (Space not reliable, but our generator outputs standard forms)
-    # Actually, `mine_sentence` outputs "私は食べます。" (No spaces).
-    # Hard to tokenize without MeCab.
-    # Plan B: Use the English meaning -> User assembles Japanese words?
-    # Or: Assemble the Meaning from English words?
-    # Prompt: "Bubble Sentence Builder... Translate: I eat sushi. Pool: [Sushi] [o] [Tabemasu]..."
-    # This implies assembling Japanese.
+    try:
+        # MeCab output with -Owakati is space-separated tokens
+        result = tagger.parse(sentence).strip()
+        if not result:
+            return None
+        return result.split(" ")
+    except Exception:
+        return None
 
-    # Since we don't have a tokenizer, let's create a "Constructed" sentence for this purpose
-    # OR rely on `sentence_builder.py` logic which has broken_down parts.
-    # But this function takes a `Vocabulary` item.
-
-    # Workaround: For now, if we can't easily break down the sentence, fall back to "Input".
-    # BUT, we can make a pseudo-assemble for the Word itself if it's a phrase? No.
-
-    # Better approach:
-    # 1. Use `mine_sentence` logic to generate the PARTS first, then the sentence.
-    # But `mine_sentence` returns a string.
-    # Let's parse the simple templates we made.
-    # They are predictable: "Watashi", "wa", "[stem]masu".
-    # We can fake it by knowing the structure.
-
-    parts = []
-    target_sentence = example_sentence
-
-    # Reverse engineer the templates from `sentence_mining.py`
-    if "私は" in example_sentence and "ます。" in example_sentence:
-        # Verb sentence: "私は" + stem + "ます。"
-        # Parts: "私は", stem+"ます" (or split stem and masu?)
-        # Let's just split by particles roughly if possible, or character based? No.
-        # Let's just provide the full sentence as one block? No point.
-
-        # Let's fallback to `generate_input_question` if we can't generate parts properly without a tokenizer.
-        # UNLESS we update `mine_sentence` to return parts?
-        # That would be cleaner but requires touching that file again.
-
-        # Let's just create a dummy assemble for the WORD itself + particles?
-        # e.g. "Taberu" -> "Tabemasu"
-        # Question: "Conjugate to Polite Form"
-        # Options: "Tabemasu", "Taberumasu", "Tabe"
-        pass
-
-    # Alternative: The prompt says "Assemble... replaces some Input questions".
-    # Let's implement it for sentences from `sentence_builder` if available, or just generic Japanese construction?
-    # If we are quizzing a VOCAB word "Taberu", asking to translate "I eat" is good.
-    # We know the answer is "Watashi wa Tabemasu".
-    # Parts: ["Watashi", "wa", "Tabemasu", "Taberu", "ga", "desu"] (distractors).
-
-    # Logic:
-    # 1. Generate target sentence (Polite form usually).
-    # 2. Split into plausible chunks.
-    # 3. Add distractors.
-
-    # Simplified splitting for our templates:
-    parts = []
-    if "私は" in example_sentence:
-        parts.append("私は")
-        remainder = example_sentence.replace("私は", "").replace("。", "")
-        parts.append(remainder)
-        parts.append("。")
-    elif "これは" in example_sentence:
-        parts.append("これは")
-        remainder = example_sentence.replace("これは", "").replace("。", "")
-        parts.append(remainder)
-        parts.append("。")
-    else:
-        # Adjective/Default: "X desu"
-        parts.append(item.word)
-        parts.append("です")
-        parts.append("。")
-
-    correct_order = "".join(parts) # Should match example_sentence roughly (ignoring spaces)
+def generate_assemble_question(item: Vocabulary, example_sentence: str) -> Optional[Question]:
+    parts = decompose_sentence(example_sentence)
+    if not parts:
+        return None
 
     # Distractors
     pool = list(parts)
     distractors = ["が", "を", "ではありません", "か", "の"]
-    pool.extend(random.sample(distractors, 3))
+
+    # Ensure unique distractors
+    unique_distractors = [d for d in distractors if d not in parts]
+
+    count = min(3, len(unique_distractors))
+    if count > 0:
+        pool.extend(random.sample(unique_distractors, count))
+
     random.shuffle(pool)
 
     return Question(
         type="assemble",
-        question_text=f"Assemble: '{item.meaning}'\n(Hint: {example_sentence})", # Giving hint because tokenization is weak
+        question_text=f"Assemble the sentence for: '{item.meaning}'",
         correct_answers=[example_sentence],
         options=pool,
         explanation=f"Answer: {example_sentence}",
@@ -175,14 +129,19 @@ class QuizSession:
              display_mode = "furigana" if self.settings.show_furigana else "kanji"
 
         rand_val = random.random()
-        # 33% chance of Assemble if sentence exists
+
+        # Try to generate an Assemble question (33% chance if sentence exists)
         if item.example_sentence and rand_val > 0.66:
-            return generate_assemble_question(item, item.example_sentence)
+            q = generate_assemble_question(item, item.example_sentence)
+            if q:
+                return q
+            # If decomposition failed, fall through to other types
+
         # 33% chance of Multiple Choice if enough items exist
-        elif len(self.all_vocab) >= 4 and rand_val > 0.33:
+        if len(self.all_vocab) >= 4 and rand_val > 0.33:
             return generate_mc_question(item, self.all_vocab, display_mode)
-        else:
-            return generate_input_question(item, display_mode)
+
+        return generate_input_question(item, display_mode)
 
     def check_answer(self, question: Question, user_answer: str) -> bool:
         # For assemble, remove spaces from user answer to match target if target has no spaces (Japanese)
