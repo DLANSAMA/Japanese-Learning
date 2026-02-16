@@ -45,6 +45,32 @@ class TestGamification(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn("Not enough gems", response.json()["detail"])
 
+    @patch('src.api.load_user_profile')
+    def test_buy_item_not_found(self, mock_load):
+        # Mock profile
+        profile = MagicMock()
+        profile.gems = 1000
+        profile.inventory = []
+        mock_load.return_value = profile
+
+        # Buy non-existent item
+        response = client.post("/api/shop/buy", json={"item_id": "non_existent_item"})
+        self.assertEqual(response.status_code, 404)
+        self.assertIn("Item not found", response.json()["detail"])
+
+    @patch('src.api.load_user_profile')
+    def test_buy_item_already_owned(self, mock_load):
+        # Mock profile with item already owned
+        profile = MagicMock()
+        profile.gems = 1000
+        profile.inventory = ["theme_cyberpunk"]
+        mock_load.return_value = profile
+
+        # Buy item again
+        response = client.post("/api/shop/buy", json={"item_id": "theme_cyberpunk"})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("Item already owned", response.json()["detail"])
+
     def test_curriculum_endpoint(self):
         response = client.get("/api/curriculum")
         self.assertEqual(response.status_code, 200)
