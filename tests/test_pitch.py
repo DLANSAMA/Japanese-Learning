@@ -1,41 +1,110 @@
 import unittest
-from src.pitch import get_pitch_pattern, COMMON_ACCENTS
+from unittest.mock import patch, MagicMock
+from src.pitch import get_pitch_pattern, get_moras
 
 class TestPitchPattern(unittest.TestCase):
-    def test_known_words(self):
-        """Test words present in COMMON_ACCENTS."""
-        for word, expected_pattern in COMMON_ACCENTS.items():
-            self.assertEqual(get_pitch_pattern(word, ""), expected_pattern)
+    def test_get_moras(self):
+        """Test mora tokenization."""
+        # Simple
+        self.assertEqual(get_moras("すし"), ["す", "し"])
+        # Small kana
+        self.assertEqual(get_moras("とうきょう"), ["と", "う", "きょ", "う"])
+        # Sokuon
+        self.assertEqual(get_moras("きっぷ"), ["き", "っ", "ぷ"])
+        # Choonpu
+        self.assertEqual(get_moras("コーヒー"), ["コ", "ー", "ヒ", "ー"])
+        # Small kana combo
+        self.assertEqual(get_moras("キャ"), ["キャ"])
 
-    def test_heuristic_simple(self):
-        """Test simple words without small characters."""
-        # 2 moras: L H
-        self.assertEqual(get_pitch_pattern("sushi", "すし"), "LH")
-        # 3 moras: L H H
-        self.assertEqual(get_pitch_pattern("watashi", "わたし"), "LHH")
+    def test_mecab_integration_neko(self):
+        """Test 'neko' (Cat) -> HL (Atamadaka)."""
+        # Neko is Atamadaka [1].
+        # Mora 1 (Ne): H
+        # Mora 2 (Ko): L
+        # Chars: 2. Pattern: HL.
+        self.assertEqual(get_pitch_pattern("猫", "ねこ"), "HL")
 
-    def test_heuristic_yoon(self):
-        """Test words with contracted sounds (yoon)."""
-        # "kyo" (きょ) -> 1 mora: H (or L? Implementation returns H for 1 mora)
-        self.assertEqual(get_pitch_pattern("kyo", "きょ"), "H")
-        # "kyou" (きょう) -> 2 moras: L H
-        self.assertEqual(get_pitch_pattern("kyou", "きょう"), "LH")
+    def test_mecab_integration_inu(self):
+        """Test 'inu' (Dog) -> LH (Heiban)."""
+        # Inu is Heiban [0].
+        # Mora 1 (I): L
+        # Mora 2 (Nu): H
+        # Pattern: LH.
+        self.assertEqual(get_pitch_pattern("犬", "いぬ"), "LH")
 
-    def test_heuristic_sokuon(self):
-        """Test words with sokuon (small tsu)."""
-        # "kippu" (きっぷ) -> 3 moras: L H H
-        # Current implementation treats 'っ' as small char (-1 count), so it returns LH (2 moras).
-        # This test expects the correct behavior (3 moras).
-        self.assertEqual(get_pitch_pattern("kippu", "きっぷ"), "LHH")
+    def test_mecab_integration_taberu(self):
+        """Test 'taberu' (Eat) -> LHL (Nakadaka [2])."""
+        # Taberu [2].
+        # Mora 1 (Ta): L
+        # Mora 2 (Be): H (kernel)
+        # Mora 3 (Ru): L
+        self.assertEqual(get_pitch_pattern("食べる", "たべる"), "LHL")
 
-    def test_single_mora(self):
-        """Test single mora words."""
-        # 1 mora: H
-        self.assertEqual(get_pitch_pattern("ki", "き"), "H")
+    def test_small_kana_expansion_tokyo(self):
+        """Test 'Tokyo' -> LHHHH (Heiban [0])."""
+        # Tokyo [0].
+        # Moras: To, u, kyo, u. (4 moras).
+        # Kernel 0 -> L H H H.
+        # Expansion:
+        # To (L) -> 1 char -> L
+        # u (H) -> 1 char -> H
+        # kyo (H) -> 2 chars -> HH
+        # u (H) -> 1 char -> H
+        # Result: L H HH H -> LHHHH.
+        self.assertEqual(get_pitch_pattern("東京", "とうきょう"), "LHHHH")
+
+    def test_small_kana_expansion_kyou(self):
+        """Test 'Kyou' (Today) -> HHL (Atamadaka [1])."""
+        # Kyou [1].
+        # Moras: Kyo, u. (2 moras).
+        # Kernel 1 -> H L.
+        # Expansion:
+        # Kyo (H) -> 2 chars -> HH
+        # u (L) -> 1 char -> L
+        # Result: HHL.
+        self.assertEqual(get_pitch_pattern("今日", "きょう"), "HHL")
 
     def test_empty_input(self):
-        """Test empty input."""
         self.assertEqual(get_pitch_pattern("", ""), "")
+
+    @patch('src.pitch.get_tagger')
+    def test_robustness_alternate_index(self, mock_get_tagger):
+        """Test adaptive index search (e.g., if accent is at index 17)."""
+        # Mock tagger behavior
+        mock_tagger = MagicMock()
+        mock_node = MagicMock()
+
+        # Simulate a feature string where index 23 is NOT accent (e.g. empty or non-digit),
+        # but index 17 IS accent (e.g., '1' for Atamadaka).
+        # Schema length usually > 24.
+        # Let's make index 23 '*' and index 17 '1'.
+        features = ["*"] * 30
+        features[17] = "1" # Accent Kernel
+        features[23] = "*" # Invalid/Missing
+
+        mock_node.surface = "MockWord"
+        mock_node.feature = ",".join(features)
+        mock_node.next = None
+
+        mock_tagger.parseToNode.return_value = mock_node
+        mock_get_tagger.return_value = mock_tagger
+
+        # Word: "Test" -> "tesu" (2 moras)
+        # Kernel 1 (Atamadaka) -> HL.
+        # Check if it correctly finds '1' at index 17.
+        result = get_pitch_pattern("MockWord", "てす")
+        self.assertEqual(result, "HL")
+
+    @patch('src.pitch.get_tagger')
+    def test_fallback_logic(self, mock_get_tagger):
+        """Test fallback when MeCab fails."""
+        # Mock get_tagger to return None or raise exception
+        mock_get_tagger.return_value = None
+
+        # Fallback assumes Heiban [0].
+        # Word: "Test" -> "tesuto" (3 moras: te, su, to).
+        # Heiban: L H H.
+        self.assertEqual(get_pitch_pattern("Test", "てすと"), "LHH")
 
 if __name__ == '__main__':
     unittest.main()
