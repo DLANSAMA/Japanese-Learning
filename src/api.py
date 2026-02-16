@@ -11,7 +11,7 @@ import random
 import os
 from datetime import datetime, timedelta
 
-from .auth import verify_api_key
+from .auth import verify_api_key, API_KEY
 from .data_manager import (
     load_vocab, save_vocab, load_user_profile, save_user_profile,
     get_vocab_item, update_vocab_item, add_vocab_item, load_curriculum,
@@ -29,6 +29,11 @@ from .pitch import get_pitch_pattern
 
 app = FastAPI(title="Japanese Learning API", version="1.0", dependencies=[Depends(verify_api_key)])
 
+@app.on_event("startup")
+async def startup_event():
+    print(f"\n{'='*40}")
+    print(f"API Key: {API_KEY}")
+    print(f"{'='*40}\n")
 
 # Security Headers Middleware
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
@@ -387,12 +392,10 @@ def get_word_of_the_day():
 
     # Use today's date as seed
     seed = datetime.now().strftime('%Y%m%d')
-    random.seed(seed)
+    # Use a local Random instance to avoid affecting global state
+    rng = random.Random(seed)
 
-    item = random.choice(candidates)
-
-    # Reset seed
-    random.seed()
+    item = rng.choice(candidates)
 
     pitch = get_pitch_pattern(item.word, item.kana)
     return StudyItemResponse(
