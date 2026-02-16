@@ -2,7 +2,13 @@ import random
 from typing import List, Optional, Any
 from dataclasses import dataclass
 
+import MeCab
+import unidic_lite
+
 from .models import Vocabulary, GrammarLesson, UserSettings, UserProfile
+
+# Initialize MeCab tagger once
+tagger = MeCab.Tagger(f"-d {unidic_lite.DICDIR} -Owakati")
 
 @dataclass
 class Question:
@@ -50,35 +56,20 @@ def generate_mc_question(item: Vocabulary, all_vocab: List[Vocabulary], display_
 
 def decompose_sentence(sentence: str) -> Optional[List[str]]:
     """
-    Decomposes a sentence into parts based on known templates from `sentence_mining.py`.
-    Returns None if the sentence structure is unknown.
+    Decomposes a sentence into tokens using MeCab.
+    Returns None if the sentence is empty.
     """
     if not sentence:
         return None
 
-    # Template: "私は" + stem + "します。" (Suru Verb)
-    # Check this before "ます。" because "します。" ends with "ます。"
-    if sentence.startswith("私は") and sentence.endswith("します。"):
-        stem = sentence[2:-4]
-        return ["私は", stem, "します", "。"]
-
-    # Template: "私は" + stem + "ます。" (Verb)
-    if sentence.startswith("私は") and sentence.endswith("ます。"):
-        stem = sentence[2:-3]
-        return ["私は", stem, "ます", "。"]
-
-    # Template: "これは" + word + "です。" (Noun)
-    if sentence.startswith("これは") and sentence.endswith("です。"):
-        word = sentence[3:-3]
-        return ["これは", word, "です", "。"]
-
-    # Template: word + "です。" (Adjective/Default)
-    # Check this last to avoid partial matches with "これは..."
-    if sentence.endswith("です。"):
-        word = sentence[:-3]
-        return [word, "です", "。"]
-
-    return None
+    try:
+        # MeCab output with -Owakati is space-separated tokens
+        result = tagger.parse(sentence).strip()
+        if not result:
+            return None
+        return result.split(" ")
+    except Exception:
+        return None
 
 def generate_assemble_question(item: Vocabulary, example_sentence: str) -> Optional[Question]:
     parts = decompose_sentence(example_sentence)
