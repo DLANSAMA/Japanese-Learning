@@ -2,11 +2,15 @@ import sqlite3
 import random
 import threading
 import string
+import logging
 from typing import List, Dict, Any
 from jamdict import Jamdict
 
 # Use thread-local storage for Jamdict connection
 _local = threading.local()
+
+# Configure logger
+logger = logging.getLogger(__name__)
 
 def get_jam():
     if not hasattr(_local, "jam"):
@@ -53,7 +57,7 @@ def search(query: str):
     try:
         result = jam.lookup(query)
     except Exception as e:
-        print(f"Jamdict lookup error: {e}")
+        logger.error(f"Jamdict lookup error: {e}", exc_info=True)
         return []
 
     entries = []
@@ -96,7 +100,7 @@ def get_recommendations(track: str = "General", limit: int = 5, exclude_words: L
         idseqs = [r[0] for r in rows]
         # Connection is persistent, do not close
     except Exception as e:
-        print(f"DB Error: {e}")
+        logger.error(f"DB Error: {e}", exc_info=True)
         return []
 
     results = []
@@ -198,7 +202,7 @@ def get_recommendations(track: str = "General", limit: int = 5, exclude_words: L
             count += 1
 
         except Exception as e:
-            # print(f"Error processing entry {idseq}: {e}")
+            logger.error(f"Error processing entry {idseq}: {e}", exc_info=True)
             continue
 
     return results
