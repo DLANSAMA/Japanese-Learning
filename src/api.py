@@ -27,14 +27,6 @@ from .pitch import get_pitch_pattern
 
 app = FastAPI(title="Japanese Learning API", version="1.0", dependencies=[Depends(verify_api_key)])
 
-# Add CORS Middleware to allow frontend development requests
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for local development flexibility
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # Security Headers Middleware
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):

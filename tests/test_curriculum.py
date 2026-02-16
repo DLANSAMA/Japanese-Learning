@@ -4,12 +4,19 @@ import os
 import json
 from fastapi.testclient import TestClient
 from src.api import app
+from src.auth import verify_api_key
 import src.data_manager
 from unittest.mock import patch
 
 client = TestClient(app)
 
 class TestCurriculum(unittest.TestCase):
+    def setUp(self):
+        app.dependency_overrides[verify_api_key] = lambda: True
+
+    def tearDown(self):
+        app.dependency_overrides = {}
+
     def test_get_curriculum_endpoint(self):
         """Test the /api/curriculum endpoint returns valid JSON structure."""
         response = client.get("/api/curriculum")
