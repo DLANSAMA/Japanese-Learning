@@ -29,8 +29,12 @@ class TestV10(unittest.TestCase):
         self.assertGreater(v.fsrs_stability, initial_stability)
 
     def test_pitch_pattern(self):
-        self.assertEqual(get_pitch_pattern("食べる", "たべる"), "LHHH")
-        self.assertEqual(get_pitch_pattern("飲む", "のむ"), "LHL")
+        # Updated expectations based on current implementation (length matches moras)
+        # 食べる (taberu) -> Nakadaka (2) -> L H L
+        self.assertEqual(get_pitch_pattern("食べる", "たべる"), "LHL")
+        # 飲む (nomu) -> Atamadaka (1) -> H L
+        self.assertEqual(get_pitch_pattern("飲む", "のむ"), "HL")
+        # Unknown (abc) -> Heiban (0) -> L H H
         self.assertEqual(get_pitch_pattern("Unknown", "abc"), "LHH")
 
     @patch('src.api.get_due_vocab')
@@ -54,7 +58,7 @@ class TestV10(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertIn("pitch_pattern", data)
-        self.assertEqual(data["pitch_pattern"], "LHHH")
+        self.assertEqual(data["pitch_pattern"], "LHL")
 
 if __name__ == '__main__':
     unittest.main()

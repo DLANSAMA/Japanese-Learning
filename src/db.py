@@ -32,7 +32,9 @@ def init_db():
             fsrs_stability REAL,
             fsrs_difficulty REAL,
             fsrs_retrievability REAL,
-            fsrs_last_review TEXT
+            fsrs_last_review TEXT,
+            failure_count INTEGER DEFAULT 0,
+            is_leech BOOLEAN DEFAULT 0
         )
     ''')
 

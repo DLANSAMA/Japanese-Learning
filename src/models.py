@@ -21,6 +21,8 @@ class Vocabulary:
     fsrs_difficulty: float = 0.0
     fsrs_retrievability: Optional[float] = None
     fsrs_last_review: Optional[str] = None # ISO format datetime
+    failure_count: int = 0
+    is_leech: bool = False
 
 @dataclass
 class GrammarExample:

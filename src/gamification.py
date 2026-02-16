@@ -27,3 +27,18 @@ def update_streak(profile: UserProfile):
             profile.streak = 1
 
     profile.last_login = today
+
+def calculate_rewards(is_correct: bool, current_streak: int) -> tuple[int, int]:
+    """
+    Calculates XP and Gems based on correctness and streak.
+    Returns (xp, gems)
+    """
+    if not is_correct:
+        return 0, 0
+
+    xp = 10 + (current_streak * 1) # Bonus XP for streak
+    xp = min(xp, 50) # Cap XP per answer
+
+    gems = 1 # Flat rate for now
+
+    return xp, gems

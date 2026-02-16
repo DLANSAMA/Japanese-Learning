@@ -1,4 +1,6 @@
 import random
+import unicodedata
+import re
 from typing import List, Optional, Any
 from dataclasses import dataclass
 
@@ -9,6 +11,21 @@ from .models import Vocabulary, GrammarLesson, UserSettings, UserProfile
 
 # Initialize MeCab tagger once
 tagger = MeCab.Tagger(f"-d {unidic_lite.DICDIR} -Owakati")
+
+def normalize_answer(text: str) -> str:
+    """
+    Normalizes text for comparison:
+    - NFKC normalization (handles wide/narrow width)
+    - Strips punctuation (Japanese and English)
+    - Lowercase
+    - Strips whitespace
+    """
+    if not text:
+        return ""
+    text = unicodedata.normalize('NFKC', text)
+    # Remove punctuation
+    text = re.sub(r'[.,!?;:。、！？]', '', text)
+    return text.strip().lower()
 
 @dataclass
 class Question:
@@ -155,7 +172,9 @@ class QuizSession:
             correct_clean = [a.replace(" ", "") for a in question.correct_answers]
             is_correct = user_clean in correct_clean
         else:
-            is_correct = user_answer.strip().lower() in [a.lower() for a in question.correct_answers]
+            user_norm = normalize_answer(user_answer)
+            correct_norm = [normalize_answer(a) for a in question.correct_answers]
+            is_correct = user_norm in correct_norm
 
         if is_correct:
             self.score += 1
@@ -186,7 +205,9 @@ class GrammarQuizSession:
         )
 
     def check_answer(self, question: Question, user_answer: str) -> bool:
-        is_correct = user_answer.strip().lower() in [a.lower() for a in question.correct_answers]
+        user_norm = normalize_answer(user_answer)
+        correct_norm = [normalize_answer(a) for a in question.correct_answers]
+        is_correct = user_norm in correct_norm
         if is_correct:
             self.score += 1
         self.total += 1
