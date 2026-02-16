@@ -3,7 +3,6 @@ from typing import List, Optional, Any
 from dataclasses import dataclass
 
 from .models import Vocabulary, GrammarLesson, UserSettings, UserProfile
-from .sentence_builder import get_random_sentence, check_sentence_answer, Sentence
 
 @dataclass
 class Question:
@@ -145,24 +144,6 @@ def generate_assemble_question(item: Vocabulary, example_sentence: str) -> Quest
         context=item
     )
 
-def generate_sentence_question(level: int = 5) -> Optional[Question]:
-    sentence = get_random_sentence(level)
-    if not sentence:
-        return None
-
-    # Shuffle the components for "Assemble" hint
-    components = sentence.broken_down[:]
-    random.shuffle(components)
-    hint = " / ".join(components)
-
-    return Question(
-        type="sentence",
-        question_text=f"Translate into Japanese (Romaji): '{sentence.english}'\nHint: {hint}",
-        correct_answers=[sentence.romaji.lower()],
-        explanation=f"Answer: {sentence.romaji}\nJP: {sentence.japanese}",
-        context=sentence
-    )
-
 class QuizSession:
     def __init__(self, items: List[Vocabulary], all_vocab: List[Vocabulary], settings: UserSettings = None):
         self.items = items
@@ -204,9 +185,6 @@ class QuizSession:
             return generate_input_question(item, display_mode)
 
     def check_answer(self, question: Question, user_answer: str) -> bool:
-        if question.type == "sentence":
-            return check_sentence_answer(question.context, user_answer)
-
         # For assemble, remove spaces from user answer to match target if target has no spaces (Japanese)
         # But if we constructed target with no spaces, and user joined with spaces?
         # script.js does `join(' ')`.
